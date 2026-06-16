@@ -1,0 +1,12 @@
+apiVersion: unleash.nais.io/v1
+kind: ApiToken
+metadata:
+  name: hm-newsadmin
+  namespace: teamdigihot
+spec:
+  unleashInstance:
+    apiVersion: unleash.nais.io/v1
+    kind: RemoteUnleash
+    name: teamdigihot
+  secretName: hm-newsadmin-unleash-secret
+  environment: {{unleash_environment}}

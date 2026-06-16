@@ -1,0 +1,20 @@
+{
+  "ingress": [
+    "https://finnhjelpemiddel.nav.no/newsadmin",
+    "https://finnhjelpemiddel.nav.no/newsadmin"
+  ],
+  "cluster": "prod-gcp",
+  "runtime_env": "prod",
+  "public_origin": "https://finnhjelpemiddel.nav.no/newsadmin",
+  "hm_register_url": "https://finnhjelpemiddel.nav.no",
+  "hm_register_external_url": "not_used",
+  "image_proxy_url": "https://finnhjelpemiddel.nav.no/imageproxy",
+  "faro_url": "https://telemetry.nav.no/collect",
+  "image_proxy_external_url": "not_used",
+  "replicas": {
+    "min": 1,
+    "max": 2
+  },
+  "app_name": "hm-newsadmin",
+  "unleash_environment": "production"
+}

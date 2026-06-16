@@ -1,0 +1,47 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: {{app_name}}
+  namespace: teamdigihot
+  labels:
+    app: {{app_name}}
+    team: teamdigihot
+spec:
+  image: {{image}}
+  port: 3000
+  ingresses:
+  {{#each ingress as |url|}}
+    - {{url}}
+  {{/each}}
+  accessPolicy:
+    outbound:
+      rules:
+        - application: hm-grunndata-register
+          namespace: teamdigihot
+          cluster: {{cluster}}
+      external:
+        - host: teamdigihot-unleash-api.nav.cloud.nais.io
+  envFrom:
+    - secret: hm-newsadmin-unleash-secret
+  env:
+    - name: RUNTIME_ENVIRONMENT
+      value: {{runtime_env}}
+    - name: PUBLIC_ORIGIN
+      value: {{public_origin}}
+    - name: PORT
+      value: '3000'
+    - name: VITE_HM_REGISTER_URL
+      value: {{hm_register_url}}
+    - name: VITE_IMAGE_PROXY_URL
+      value: {{image_proxy_url}}
+    - name: VITE_HM_REGISTER_EXTERNAL_URL
+      value: {{hm_register_external_url}}
+    - name: VITE_IMAGE_PROXY_EXTERNAL_URL
+      value: {{image_proxy_external_url}}
+    - name: UNLEASH_SERVER_API_URL
+      value: 'https://teamdigihot-unleash-api.nav.cloud.nais.io'
+    - name: VITE_FARO_URL
+      value: {{faro_url}}
+  replicas:
+    min: {{replicas.min}}
+    max: {{replicas.max}}

@@ -1,0 +1,82 @@
+name: Manuell deploy til NAIS (ENV)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Deploy to environment
+        default: 'dev'
+        options:
+          - dev
+          - prod
+
+run-name: Bygg og deploy til ${{ inputs.environment }}
+
+env:
+  BUILD_ENV: ${{ inputs.environment == 'prod' && 'production' || inputs.environment }}
+  CLUSTER: ${{ inputs.environment == 'prod' && 'prod-gcp' || 'dev-gcp' }}
+
+jobs:
+  test:
+    name: run tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Set up node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          cache: npm
+
+      - name: Install dependencies
+        run: npm run ciAll
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+
+      - name: Run tests
+        run: npm test
+
+  build:
+    needs: [test]
+    name: Build and push docker container
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.docker-build.outputs.image }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: nais/docker-build-push@v0
+        id: docker-build
+        with:
+          team: teamdigihot
+          build_args: |
+            BUILD_ENV=${{ env.BUILD_ENV }}
+            CLUSTER=${{ env.CLUSTER }}
+          build_secrets: |
+            "NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}"
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+
+  deploy:
+    name: Deploy ${{ inputs.environment }}
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: nais/deploy/actions/deploy@8a6fb62e73f837af6287d5db84a46ea96aa6c30d # v2
+        env:
+          CLUSTER: ${{ env.CLUSTER }}
+          RESOURCE: .nais/nais.yaml
+          IMAGE: ${{ needs.build.outputs.image }}
+          VARS: .nais/nais-${{ inputs.environment }}.json
