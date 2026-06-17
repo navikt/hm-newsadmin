@@ -1,10 +1,5 @@
 name: Bygg og deploy til dev og prod
 
-on:
-  push:
-    branches:
-      - main
-
 run-name: Bygg og deploy til dev og prod
 
 jobs:
