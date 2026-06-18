@@ -1,6 +1,7 @@
 import {VStack, HStack, Box, Heading, BodyShort, Button, Page, Search} from "@navikt/ds-react";
 import { PencilIcon, TrashIcon, PlusIcon } from "@navikt/aksel-icons";
 import { useNavigate } from "react-router-dom";
+import useSWR from "swr";
 
 type NewsDTO = {
   id: string
@@ -9,13 +10,21 @@ type NewsDTO = {
 }
 
 export const Startside = () => {
-  const navigate = useNavigate();
+  async function getNews(): Promise<NewsDTO[]> {
+    const res = await fetch("/news" , {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
 
-  const mockNewsList: NewsDTO[] = [
-    { id: "1", title: "nyhet1", body: "Dette er en stor nyhet" },
-    { id: "2", title: "nyhet2", body: "Dette er en større nyhet" },
-    { id: "3", title: "nyhet3", body: "Dette er en jævelig viktig nyhet" },
-  ]
+      return res.json()
+    }
+
+    const navigate = useNavigate();
+  const { data: news} = useSWR<NewsDTO[]>('news', () => getNews())
+
+    console.log(news)
 
   return (
     <Page>
@@ -34,22 +43,21 @@ export const Startside = () => {
             </Button>
           </HStack>
             <Search label="Søk etter nyheter" variant="secondary" hideLabel={false}/>
-          <VStack gap="6">
-            {mockNewsList.map((news) => (
+          <VStack gap="space-0 space-6">
+            {news?.map((news, index) => (
               <Box
-                key={news.id}
-                padding="6"
+                key={index}
+                padding="space-6"
                 margin={"space-12"}
                 borderRadius={"8"}
                 background={"accent-soft"}
-                shadow="xsmall"
               >
-                <HStack justify="space-between" align="start" gap="4">
-                  <VStack gap="1">
+                <HStack justify="space-between" align="start" gap="space-0 space-4">
+                  <VStack gap='space-0 space-6'>
                     <Heading size="small" level="2">{news.title}</Heading>
                     <BodyShort textColor="subtle">{news.body}</BodyShort>
                   </VStack>
-                  <HStack gap="2" style={{ flexShrink: 0 }}>
+                  <HStack gap="space-0 space-2" style={{ flexShrink: 0 }}>
                     <Button
                       variant={"primary"}
                       size="small"
