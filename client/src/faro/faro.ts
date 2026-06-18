@@ -15,7 +15,7 @@ function getFaro(): Faro | null {
     paused: process.env.NODE_ENV !== 'production',
     url: window.appSettings.VITE_FARO_URL,
     app: {
-      name: 'hm-adminregister',
+      name: 'hm-newsadmin',
     },
     instrumentations: [
       ...getWebInstrumentations({
