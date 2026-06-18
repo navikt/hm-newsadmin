@@ -72,4 +72,14 @@ export default defineConfig((env) => ({
     setupFiles: ['vitest-setup.ts'],
   },
   customLogger: logger,
+  server: {
+    forwardConsole: true,
+    proxy: {
+      '/news': {
+        target: 'http://localhost:8084',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 }))
