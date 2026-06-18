@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 
 export const Startside = () => {
    async function getNews(): Promise<NewsDTO[]> {
-    const res = await fetch("http://localhost:8084/news" , {
+    const res = await fetch("/news" , {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
