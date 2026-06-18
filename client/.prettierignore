@@ -1,0 +1,8 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+**/*.yml
+**/*.yaml
+nais-alpha.yaml
+mockServiceWorker.js
