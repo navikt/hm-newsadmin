@@ -1,13 +1,15 @@
-import { VStack, HStack, Box, Heading, BodyShort, Button, Page, Search, Dialog, BodyLong } from '@navikt/ds-react'
+import {VStack, HStack, Box, Heading, Button, Page, Search, Dialog, BodyLong, LinkCard} from '@navikt/ds-react'
 import { PencilIcon, TrashIcon, PlusIcon } from '@navikt/aksel-icons'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
+import { useState } from 'react'
 
 type NewsDTO = {
   id: string
   title: string
   description: string
   body: string
+  created: string
 }
 
 export const Startside = () => {
@@ -35,17 +37,24 @@ export const Startside = () => {
   const navigate = useNavigate()
   const { data: news, mutate } = useSWR<NewsDTO[]>('news', () => getNews())
 
-  console.log(news)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredNews =
+    news?.filter((item) => {
+      const query = searchQuery.toLowerCase()
+      const matchesTitle = item.title?.toLowerCase().includes(query)
+      const matchesDescription = item.description?.toLowerCase().includes(query)
+      return matchesTitle || matchesDescription
+    }) || []
 
   return (
     <Page>
       <Page.Block as="main" width="xl" gutters>
-        <Box margin={'space-20'}>
-          <HStack justify="space-between" align="center" style={{ marginBottom: '48px' }}>
+        <VStack gap="space-8" margin="space-20">
+          <HStack justify="space-between" align="center">
             <Heading size="large" level="1">
               Nyheter
             </Heading>
-
             <Button
               variant="primary"
               icon={<PlusIcon aria-hidden />}
@@ -55,32 +64,30 @@ export const Startside = () => {
               Opprett nyhet
             </Button>
           </HStack>
-          <Search label="Søk etter nyheter" variant="secondary" hideLabel={false} />
-          <VStack gap="space-0 space-6">
-            {news?.map((news, index) => (
-              <Box key={index} padding="space-6" margin={'space-12'} borderRadius={'8'} background={'accent-soft'}>
-                <HStack justify="space-between" align="start" gap="space-0 space-4">
-                  <VStack gap="space-0 space-6">
+          <Search
+            label="Søk etter nyheter"
+            variant="secondary"
+            hideLabel={false}
+            value={searchQuery}
+            onChange={(value) => setSearchQuery(value)}
+            onClear={() => setSearchQuery('')}
+          />
+          <VStack gap="space-12">
+              {filteredNews.map((news) => (
+                  // {news?.map((news, index) => (
+              <LinkCard key={news.id} onClick={() => navigate(`/news/${news.id}/edit`)} >
+                <HStack justify="space-between" align="start" gap="space-8" wrap={false}>
+                  <VStack gap="space-2" style={{ flex: 1, minWidth: 0 }}>
                     <Heading size="small" level="2">
                       {news.title}
                     </Heading>
-                    <Heading size="small" level="3">
-                      {news.description}
-                    </Heading>
-                    <BodyShort textColor="subtle">{news.body}</BodyShort>
+                    <BodyLong>{news.description}</BodyLong>
+                    <BodyLong>{news.created}</BodyLong>
                   </VStack>
-                  <HStack gap="space-0 space-2" style={{ flexShrink: 0 }}>
-                    <Button
-                      variant={'primary'}
-                      size="small"
-                      icon={<PencilIcon aria-hidden />}
-                      onClick={() => navigate(`/news/${news.id}/edit`)}
-                    >
-                      Rediger
-                    </Button>
+                  <HStack gap="space-2">
                     <Dialog>
                       <Dialog.Trigger>
-                        <Button data-color={'danger'} size={'small'} icon={<TrashIcon aria-hidden />}>
+                        <Button data-color="danger" size="small" icon={<TrashIcon aria-hidden />}>
                           Slett
                         </Button>
                       </Dialog.Trigger>
@@ -109,10 +116,11 @@ export const Startside = () => {
                     </Dialog>
                   </HStack>
                 </HStack>
-              </Box>
+              </LinkCard>
             ))}
+            {news && filteredNews.length === 0 && <BodyLong>Ingen nyheter matchet søket ditt.</BodyLong>}
           </VStack>
-        </Box>
+        </VStack>
       </Page.Block>
     </Page>
   )
