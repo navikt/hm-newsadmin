@@ -1,11 +1,10 @@
-import { Bleed, BodyLong, Box, Button, HStack, Link, Page, Textarea, TextField, VStack } from '@navikt/ds-react'
+import { BodyLong, Box, Button, HStack, Link, Page, Textarea, TextField, VStack } from '@navikt/ds-react'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 
 type CreateNewsDto = {
-  tittel: string
-  ingress: string
+  title: string
+  description: string
   body: string
 }
 type Props = {
