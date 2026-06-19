@@ -1,4 +1,4 @@
-import { VStack, HStack, Box, Heading, Button, Page, Search, Dialog, BodyLong } from '@navikt/ds-react'
+import {VStack, HStack, Box, Heading, Button, Page, Search, Dialog, BodyLong, LinkCard} from '@navikt/ds-react'
 import { PencilIcon, TrashIcon, PlusIcon } from '@navikt/aksel-icons'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
@@ -52,10 +52,10 @@ export const Startside = () => {
               Opprett nyhet
             </Button>
           </HStack>
-          <Search label="Søk etter nyheter" variant="secondary" hideLabel={false} />
+            <Search label="Søk etter nyheter" variant="secondary" hideLabel={false} />
           <VStack gap="space-12">
             {news?.map((news, index) => (
-              <Box key={index} padding="space-6" borderRadius="8" background={'accent-soft'}>
+              <LinkCard key={index} onClick={() => navigate(`/news/${news.id}/edit`)} >
                 <HStack justify="space-between" align="start" gap="space-8" wrap={false}>
                   <VStack gap="space-2" style={{ flex: 1, minWidth: 0 }}>
                     <Heading size="small" level="2">
@@ -64,14 +64,6 @@ export const Startside = () => {
                     <BodyLong>{news.description}</BodyLong>
                   </VStack>
                   <HStack gap="space-2">
-                    <Button
-                      variant="primary"
-                      size="small"
-                      icon={<PencilIcon aria-hidden />}
-                      onClick={() => navigate(`/news/${news.id}/edit`)}
-                    >
-                      Rediger
-                    </Button>
                     <Dialog>
                       <Dialog.Trigger>
                         <Button data-color="danger" size="small" icon={<TrashIcon aria-hidden />}>
@@ -103,7 +95,7 @@ export const Startside = () => {
                     </Dialog>
                   </HStack>
                 </HStack>
-              </Box>
+              </LinkCard>
             ))}
           </VStack>
         </VStack>
