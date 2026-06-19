@@ -1,26 +1,44 @@
-import { BodyLong, Box, Button, Link, Page, Textarea, TextField, VStack } from '@navikt/ds-react'
+import { BodyLong, Box, Button, HStack, Link, Page, Textarea, TextField, VStack } from '@navikt/ds-react'
+import { ArrowLeftIcon } from '@navikt/aksel-icons'
+import { useForm } from 'react-hook-form'
 
-export const NewsComponent = () => {
+type CreateNewsDto = {
+  title: string
+  description: string
+  body: string
+}
+type Props = {
+  onSubmit: (data: CreateNewsDto) => void
+}
+
+export const NewsComponent = ({ onSubmit }: Props) => {
+  const { register, handleSubmit } = useForm<CreateNewsDto>()
   return (
     <Box background="neutral-soft" minHeight={'100vh'}>
-      <Page.Block as="main" width="text" gutters>
-        <VStack gap="space-24" justify={'center'}>
-          <h1>Opprett Sak</h1>
-          <Box
-            background="neutral-soft"
-            borderColor="brand-blue"
-            padding="space-16"
-            borderWidth="2"
-            borderRadius="12 12 0 0"
-          >
-            <BodyLong align={'center'}>Her skal det være et bilde!</BodyLong>
-          </Box>
-          <TextField label="Tittel" width="text"></TextField>
-          <Textarea label="Ingress" maxLength={250}></Textarea>
-          <Textarea label="Innhold" minRows={10}></Textarea>
-
-          <Button variant={'primary'}>Opprett sak</Button>
-        </VStack>
+      <Page.Block as="main" width="text">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <VStack gap="space-16" justify={'center'}>
+            <Button variant="tertiary" icon={<ArrowLeftIcon />}>
+              Tilbake
+            </Button>{' '}
+            <h2>Opprett Sak</h2>
+            <Box
+              background="neutral-soft"
+              borderColor="brand-blue"
+              padding="space-16"
+              borderWidth="2"
+              borderRadius="12 12 0 0"
+            >
+              <BodyLong align={'center'}>Her skal det være et bilde!</BodyLong>
+            </Box>
+            <TextField {...register('title')} label="Tittel" width="text"></TextField>
+            <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
+            <Textarea {...register('body')} label="Innhold" minRows={10}></Textarea>
+            <Button type="submit" variant={'primary'}>
+              Opprett sak
+            </Button>
+          </VStack>
+        </form>
       </Page.Block>
     </Box>
   )

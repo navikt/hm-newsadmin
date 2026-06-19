@@ -2,24 +2,22 @@ import { VStack, TextField, Textarea, Button, Link } from '@navikt/ds-react'
 import { Route, Routes } from 'react-router-dom'
 import { CreateNewsCard } from 'CreateNewsCard.tsx'
 import { NewsComponent } from 'NewsComponent.tsx'
-
+type CreateNewsDto = {
+  title: string
+  description: string
+  body: string
+}
 export const CreateNewsPage = () => {
-  async function createNews(): Promise<NewsDTO[]> {
-    const res = await fetch('http://localhost:8084/news', {
+  async function createNews(data: CreateNewsDto) {
+    const res = await fetch('admin/news', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(data),
     })
-    return res.json()
-  }
-  type NewsDTO = {
-    id: string
-    title: string
-    body: string
+    return console.log(res.json())
   }
 
-  console.log(createNews())
-
-  return <NewsComponent />
+  return <NewsComponent onSubmit={createNews} />
 }
