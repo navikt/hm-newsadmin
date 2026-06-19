@@ -6,6 +6,7 @@ import useSWR from 'swr'
 type NewsDTO = {
   id: string
   title: string
+  description: string
   body: string
 }
 
@@ -62,6 +63,9 @@ export const Startside = () => {
                   <VStack gap="space-0 space-6">
                     <Heading size="small" level="2">
                       {news.title}
+                    </Heading>
+                    <Heading size="small" level="3">
+                      {news.description}
                     </Heading>
                     <BodyShort textColor="subtle">{news.body}</BodyShort>
                   </VStack>
