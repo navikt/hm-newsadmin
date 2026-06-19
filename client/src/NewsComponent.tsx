@@ -3,8 +3,8 @@ import { ArrowLeftIcon } from '@navikt/aksel-icons'
 import { useForm } from 'react-hook-form'
 
 type CreateNewsDto = {
-  tittel: string
-  ingress: string
+  title: string
+  description: string
   body: string
 }
 type Props = {
@@ -31,8 +31,8 @@ export const NewsComponent = ({ onSubmit }: Props) => {
             >
               <BodyLong align={'center'}>Her skal det være et bilde!</BodyLong>
             </Box>
-            <TextField {...register('tittel')} label="Tittel" width="text"></TextField>
-            <Textarea {...register('ingress')} label="Ingress" maxLength={250}></Textarea>
+            <TextField {...register('title')} label="Tittel" width="text"></TextField>
+            <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
             <Textarea {...register('body')} label="Innhold" minRows={10}></Textarea>
             <Button type="submit" variant={'primary'}>
               Opprett sak
