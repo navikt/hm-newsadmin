@@ -9,6 +9,7 @@ type NewsDTO = {
   title: string
   description: string
   body: string
+  created: string
 }
 
 export const Startside = () => {
@@ -81,6 +82,7 @@ export const Startside = () => {
                       {news.title}
                     </Heading>
                     <BodyLong>{news.description}</BodyLong>
+                    <BodyLong>{news.created}</BodyLong>
                   </VStack>
                   <HStack gap="space-2">
                     <Dialog>
