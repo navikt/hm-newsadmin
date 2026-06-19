@@ -79,7 +79,12 @@ export default defineConfig((env) => ({
         target: 'http://localhost:8084',
         changeOrigin: true,
         secure: false,
-      }
-    }
-  }
+      },
+      '/admin': {
+        target: 'http://localhost:8084',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 }))
