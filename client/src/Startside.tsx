@@ -1,5 +1,6 @@
-import {VStack, HStack, Box, Heading, Button, Page, Search, Dialog, BodyLong, LinkCard} from '@navikt/ds-react'
-import { PencilIcon, TrashIcon, PlusIcon } from '@navikt/aksel-icons'
+import { VStack, HStack, Heading, Button, Page, Search, Dialog, BodyLong, LinkCard } from '@navikt/ds-react'
+import { toReadableDateTimeString } from './utils/date-util'
+import { TrashIcon, PlusIcon } from '@navikt/aksel-icons'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
 import { useState } from 'react'
@@ -40,12 +41,14 @@ export const Startside = () => {
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredNews =
-    news?.filter((item) => {
-      const query = searchQuery.toLowerCase()
-      const matchesTitle = item.title?.toLowerCase().includes(query)
-      const matchesDescription = item.description?.toLowerCase().includes(query)
-      return matchesTitle || matchesDescription
-    }) || []
+    news
+      ?.filter((item) => {
+        const query = searchQuery.toLowerCase()
+        const matchesTitle = item.title?.toLowerCase().includes(query)
+        const matchesDescription = item.description?.toLowerCase().includes(query)
+        return matchesTitle || matchesDescription
+      })
+      .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) || []
 
   return (
     <Page>
@@ -73,16 +76,16 @@ export const Startside = () => {
             onClear={() => setSearchQuery('')}
           />
           <VStack gap="space-12">
-              {filteredNews.map((news) => (
-                  // {news?.map((news, index) => (
-              <LinkCard key={news.id} onClick={() => navigate(`/news/${news.id}/edit`)} >
+            {filteredNews.map((news) => (
+              // {news?.map((news, index) => (
+              <LinkCard key={news.id} onClick={() => navigate(`/news/${news.id}/edit`)}>
                 <HStack justify="space-between" align="start" gap="space-8" wrap={false}>
                   <VStack gap="space-2" style={{ flex: 1, minWidth: 0 }}>
                     <Heading size="small" level="2">
                       {news.title}
                     </Heading>
                     <BodyLong>{news.description}</BodyLong>
-                    <BodyLong>{news.created}</BodyLong>
+                    <BodyLong>{toReadableDateTimeString(news.created)}</BodyLong>
                   </VStack>
                   <HStack gap="space-2">
                     <Dialog>
