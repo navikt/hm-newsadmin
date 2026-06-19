@@ -1,4 +1,4 @@
-import { VStack, HStack, Box, Heading, BodyShort, Button, Page, Search, Dialog, BodyLong } from '@navikt/ds-react'
+import { VStack, HStack, Box, Heading, Button, Page, Search, Dialog, BodyLong } from '@navikt/ds-react'
 import { PencilIcon, TrashIcon, PlusIcon } from '@navikt/aksel-icons'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
@@ -35,17 +35,14 @@ export const Startside = () => {
   const navigate = useNavigate()
   const { data: news, mutate } = useSWR<NewsDTO[]>('news', () => getNews())
 
-  console.log(news)
-
   return (
     <Page>
       <Page.Block as="main" width="xl" gutters>
-        <Box margin={'space-20'}>
-          <HStack justify="space-between" align="center" style={{ marginBottom: '48px' }}>
+        <VStack gap="space-8" margin="space-20">
+          <HStack justify="space-between" align="center">
             <Heading size="large" level="1">
               Nyheter
             </Heading>
-
             <Button
               variant="primary"
               icon={<PlusIcon aria-hidden />}
@@ -56,22 +53,19 @@ export const Startside = () => {
             </Button>
           </HStack>
           <Search label="Søk etter nyheter" variant="secondary" hideLabel={false} />
-          <VStack gap="space-0 space-6">
+          <VStack gap="space-12">
             {news?.map((news, index) => (
-              <Box key={index} padding="space-6" margin={'space-12'} borderRadius={'8'} background={'accent-soft'}>
-                <HStack justify="space-between" align="start" gap="space-0 space-4">
-                  <VStack gap="space-0 space-6">
+              <Box key={index} padding="space-6" borderRadius="8" background={'accent-soft'}>
+                <HStack justify="space-between" align="start" gap="space-8" wrap={false}>
+                  <VStack gap="space-2" style={{ flex: 1, minWidth: 0 }}>
                     <Heading size="small" level="2">
                       {news.title}
                     </Heading>
-                    <Heading size="small" level="3">
-                      {news.description}
-                    </Heading>
-                    <BodyShort textColor="subtle">{news.body}</BodyShort>
+                    <BodyLong>{news.description}</BodyLong>
                   </VStack>
-                  <HStack gap="space-0 space-2" style={{ flexShrink: 0 }}>
+                  <HStack gap="space-2">
                     <Button
-                      variant={'primary'}
+                      variant="primary"
                       size="small"
                       icon={<PencilIcon aria-hidden />}
                       onClick={() => navigate(`/news/${news.id}/edit`)}
@@ -80,7 +74,7 @@ export const Startside = () => {
                     </Button>
                     <Dialog>
                       <Dialog.Trigger>
-                        <Button data-color={'danger'} size={'small'} icon={<TrashIcon aria-hidden />}>
+                        <Button data-color="danger" size="small" icon={<TrashIcon aria-hidden />}>
                           Slett
                         </Button>
                       </Dialog.Trigger>
@@ -112,7 +106,7 @@ export const Startside = () => {
               </Box>
             ))}
           </VStack>
-        </Box>
+        </VStack>
       </Page.Block>
     </Page>
   )
