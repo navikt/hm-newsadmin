@@ -45,16 +45,21 @@ export const CreateComponent = ({ onSubmit }: Props) => {
   return (
     <Box>
       <VStack gap="space-24" justify={'center'}>
-        <Bleed marginInline={'full space-0'} asChild>
-          {/*TODO: fiks styling på knappen?*/}
-          <Button as={Link} href={'/'} variant={'tertiary'} icon={<ArrowLeftIcon />}>
-            Tilbake
-          </Button>
-        </Bleed>
         <Page.Block as="main" width="text">
           <form onSubmit={handleSubmit(onSubmit)}>
             <VStack gap="space-16">
-              <h2>Opprett Sak</h2>
+              <HStack align={'center'} style={{ position: 'relative' }}>
+                <Button
+                  as={Link}
+                  href={'/'}
+                  variant={'tertiary'}
+                  icon={<ArrowLeftIcon />}
+                  style={{ position: 'absolute', right: '100%' }}
+                >
+                  Tilbake
+                </Button>
+                <h2>Opprett Sak</h2>
+              </HStack>
               <Box
                 background="neutral-soft"
                 borderColor="brand-blue"
