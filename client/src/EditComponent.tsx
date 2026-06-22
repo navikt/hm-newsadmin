@@ -12,11 +12,12 @@ import {
   VStack,
 } from '@navikt/ds-react'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { CreateUpdateNewsDTO } from 'utils/types/response-types.ts'
 import { EditNewsDto } from 'utils/admin-util.ts'
+import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 
 type Props = {
   onSubmit: (data: EditNewsDto) => void
@@ -24,7 +25,9 @@ type Props = {
 }
 
 export const EditComponent = ({ onSubmit, defaultValues }: Props) => {
-  const { register, handleSubmit, reset } = useForm<EditNewsDto>()
+  const { register, handleSubmit, reset, control } = useForm<EditNewsDto>({
+    defaultValues,
+  })
 
   useEffect(() => {
     if (defaultValues) reset(defaultValues)
@@ -79,7 +82,13 @@ export const EditComponent = ({ onSubmit, defaultValues }: Props) => {
                   <DatePicker.Input {...toInputProps} label="Velg dato" description="Format: dd.mm.åååå" />
                 </DatePicker>
               </HStack>
-              <Textarea {...register('body')} label="Innhold" minRows={10}></Textarea>
+              <Controller
+                name="body"
+                control={control}
+                render={({ field }) => (
+                  <RichTextEditorQuill onTextChange={(html) => field.onChange(html)} defaultValue={field.value} />
+                )}
+              />{' '}
               <Button type="submit" variant={'primary'}>
                 Endre sak
               </Button>
