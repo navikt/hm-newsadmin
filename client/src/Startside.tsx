@@ -22,6 +22,7 @@ export const Startside = () => {
   const navigate = useNavigate()
   const { data: news } = useSWR<NewsDTO[]>('news', () => getNews())
   const [searchQuery, setSearchQuery] = useState('')
+  const [filterValue, setFilterValue] = useState('alle')
 
   const filteredNews =
     news
@@ -30,6 +31,15 @@ export const Startside = () => {
         const matchesTitle = item.title?.toLowerCase().includes(query)
         const matchesDescription = item.description?.toLowerCase().includes(query)
         return matchesTitle || matchesDescription
+      })
+      .filter((item) => {
+        const now = new Date()
+        const from = new Date(item.publishedFrom)
+        const to = new Date(item.publishedTo)
+        if (filterValue === 'fremtidig') return from > now
+        if (filterValue === 'publisert') return from <= now && to >= now
+        if (filterValue === 'historikk') return to < now
+        return true
       })
       .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime()) || []
 
@@ -47,14 +57,14 @@ export const Startside = () => {
             </Button>
           </HStack>
           <Search
-            label="Søk etter nyheter"
+            label="Søk etter nyh eter"
             variant="secondary"
             hideLabel={false}
             value={searchQuery}
             onChange={(value) => setSearchQuery(value)}
             onClear={() => setSearchQuery('')}
           />
-          <ToggleGroup defaultValue="alle" onChange={console.info} label={'Filtrer nyheter'}>
+          <ToggleGroup value={filterValue} onChange={setFilterValue} label={'Filtrer nyheter'}>
             <ToggleGroup.Item value="alle" label="Alle" />
             <ToggleGroup.Item value="fremtidig" label="Fremtidig" />
             <ToggleGroup.Item value="publisert" label="Publisert" />
