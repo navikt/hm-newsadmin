@@ -21,6 +21,8 @@ export interface NewsDTO {
   body: string
   created: string
   updated: string
+  publishedFrom: string
+  publishedTo: string
 }
 
 export interface CreateNewsDto {
