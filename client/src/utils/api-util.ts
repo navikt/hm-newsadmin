@@ -1,4 +1,4 @@
-import { NewsDTO } from 'utils/admin-util.ts'
+import {NewsDTO} from 'utils/admin-util.ts'
 import { mutate } from 'swr'
 
 export async function getNews(): Promise<NewsDTO[]> {
@@ -12,7 +12,7 @@ export async function getNews(): Promise<NewsDTO[]> {
   return res.json()
 }
 
-export async function deleteNews(id: string): Promise<void> {
+export async function deleteNews(id: String): Promise<void> {
   const response = await fetch(`/admin/news/${id}`, {
     method: 'DELETE',
   })

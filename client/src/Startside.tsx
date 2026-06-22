@@ -59,35 +59,6 @@ export const Startside = () => {
                     <BodyLong>{toReadableDateTimeString(news.created)}</BodyLong>
                   </VStack>
                   <HStack gap="space-2">
-                    <Dialog>
-                      <Dialog.Trigger>
-                        <Button data-color="danger" size="small" icon={<TrashIcon aria-hidden />}>
-                          Slett
-                        </Button>
-                      </Dialog.Trigger>
-                      <Dialog.Popup role="alertdialog" closeOnOutsideClick={false}>
-                        <Dialog.Header withClosebutton={false}>
-                          <Dialog.Title>Er du sikker?</Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                          <BodyLong>
-                            Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres.
-                          </BodyLong>
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                          <Dialog.CloseTrigger>
-                            <Button variant="secondary" data-color="neutral">
-                              Avbryt
-                            </Button>
-                          </Dialog.CloseTrigger>
-                          <Dialog.CloseTrigger>
-                            <Button variant="danger" onClick={() => deleteNews(news.id)}>
-                              Ja, slett
-                            </Button>
-                          </Dialog.CloseTrigger>
-                        </Dialog.Footer>
-                      </Dialog.Popup>
-                    </Dialog>
                   </HStack>
                 </HStack>
               </LinkCard>
