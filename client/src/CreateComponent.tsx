@@ -13,16 +13,17 @@ import {
   VStack,
 } from '@navikt/ds-react'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CreateNewsDto } from 'utils/admin-util.ts'
+import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 
 type Props = {
   onSubmit: (data: CreateNewsDto) => void
 }
 
 export const CreateComponent = ({ onSubmit }: Props) => {
-  const { register, handleSubmit } = useForm<CreateNewsDto>()
+  const { register, handleSubmit, control } = useForm<CreateNewsDto>()
   const navigate = useNavigate()
 
   const {
@@ -79,7 +80,16 @@ export const CreateComponent = ({ onSubmit }: Props) => {
                   <DatePicker.Input {...toInputProps} label="Velg dato" description="Format: dd.mm.åååå" />
                 </DatePicker>
               </HStack>
-              <Textarea {...register('body')} label="Innhold" minRows={10}></Textarea>
+              <Controller
+                name="body"
+                control={control}
+                render={({ field }) => (
+                  <RichTextEditorQuill
+                    onTextChange={(html) => field.onChange(html)}
+                    defaultValue={field.value}
+                  />
+                )}
+              />
               <Button type="submit" variant={'primary'}>
                 Opprett sak
               </Button>

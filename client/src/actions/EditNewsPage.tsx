@@ -20,9 +20,11 @@ export const EditNewsPage = () => {
     })
     if (res.ok) {
       await mutate('news')
+      await mutate(`/news/${id}`)
       navigate('/')
     }
   }
+  if (!news) return <div>Laster...</div>
 
   async function handleDelete() {
     await deleteNews(id!)

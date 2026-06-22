@@ -1,0 +1,55 @@
+.quill-wrapper {
+  border: 1px solid var(--ax-border-neutral);
+  border-radius: var(--ax-radius-4);
+  background: var(--ax-bg-default);
+
+  &:hover {
+    border-color: var(--ax-border-neutral-hover);
+  }
+
+  &:focus-within {
+    outline: var(--ax-border-focus-width) solid var(--ax-border-focus);
+    outline-offset: 0;
+  }
+}
+
+.ql-toolbar,
+.ql-container {
+  border: none !important;
+}
+
+.ql-toolbar {
+  border-bottom: 1px solid var(--ax-border-neutral) !important;
+}
+
+.ql-editor {
+  font-size: var(--ax-font-size-large);
+  font-family: var(--ax-font-family);
+  min-height: 10rem;
+  padding: var(--ax-space-12) var(--ax-space-16);
+}
+
+.ql-bold:focus {
+  outline: var(--ax-border-focus) var(--ax-space-0) solid;
+  border-radius: var(--ax-space-0);
+}
+
+.ql-italic:focus {
+  outline: var(--ax-border-focus) var(--ax-space-0) solid;
+  border-radius: var(--ax-space-0);
+}
+
+.ql-list:focus {
+  outline: var(--ax-border-focus) var(--ax-space-0) solid;
+  border-radius: var(--ax-space-0);
+}
+
+.ql-link:focus {
+  outline: var(--ax-border-focus) var(--ax-space-0) solid;
+  border-radius: var(--ax-space-0);
+}
+
+.quill-ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}

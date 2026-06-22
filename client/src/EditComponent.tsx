@@ -14,11 +14,12 @@ import {
   VStack,
 } from '@navikt/ds-react'
 import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { CreateUpdateNewsDTO } from 'utils/types/response-types.ts'
 import { EditNewsDto } from 'utils/admin-util.ts'
+import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 
 type Props = {
   onSubmit: (data: EditNewsDto) => void
@@ -27,7 +28,9 @@ type Props = {
 }
 
 export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
-  const { register, handleSubmit, reset } = useForm<EditNewsDto>()
+  const { register, handleSubmit, reset, control } = useForm<EditNewsDto>({
+    defaultValues,
+  })
 
   useEffect(() => {
     if (defaultValues) reset(defaultValues)
@@ -54,16 +57,21 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
   return (
     <Box>
       <VStack gap="space-24" justify={'center'}>
-        <Bleed marginInline={'full space-0'} asChild>
-          {/*TODO: fiks styling på knappen?*/}
-          <Button as={Link} href={'/'} variant={'tertiary'} icon={<ArrowLeftIcon />}>
-            Tilbake
-          </Button>
-        </Bleed>
         <Page.Block as="main" width="text">
           <form onSubmit={handleSubmit(onSubmit)}>
             <VStack gap="space-16">
-              <h2>Rediger Sak</h2>
+              <HStack align={'center'} style={{ position: 'relative' }}>
+                <Button
+                  as={Link}
+                  href={'/'}
+                  variant={'tertiary'}
+                  icon={<ArrowLeftIcon />}
+                  style={{ position: 'absolute', right: '100%' }}
+                >
+                  Tilbake
+                </Button>
+                <h2>Rediger Sak</h2>
+              </HStack>
               <Box
                 background="neutral-soft"
                 borderColor="brand-blue"
@@ -83,7 +91,13 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
                   <DatePicker.Input {...toInputProps} label="Velg dato" description="Format: dd.mm.åååå" />
                 </DatePicker>
               </HStack>
-              <Textarea {...register('body')} label="Innhold" minRows={10}></Textarea>
+              <Controller
+                name="body"
+                control={control}
+                render={({ field }) => (
+                  <RichTextEditorQuill onTextChange={(html) => field.onChange(html)} defaultValue={field.value} />
+                )}
+              />{' '}
               <Button type="submit" variant={'primary'}>
                 Endre sak
               </Button>
