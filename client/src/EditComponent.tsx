@@ -4,14 +4,16 @@ import {
   Box,
   Button,
   DatePicker,
+  Dialog,
   HStack,
+  Link,
   Page,
   Textarea,
   TextField,
   useDatepicker,
   VStack,
 } from '@navikt/ds-react'
-import { ArrowLeftIcon } from '@navikt/aksel-icons'
+import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
@@ -21,10 +23,11 @@ import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 
 type Props = {
   onSubmit: (data: EditNewsDto) => void
+  onDelete: () => void
   defaultValues?: CreateUpdateNewsDTO
 }
 
-export const EditComponent = ({ onSubmit, defaultValues }: Props) => {
+export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
   const { register, handleSubmit, reset, control } = useForm<EditNewsDto>({
     defaultValues,
   })
@@ -54,15 +57,21 @@ export const EditComponent = ({ onSubmit, defaultValues }: Props) => {
   return (
     <Box>
       <VStack gap="space-24" justify={'center'}>
-        <Bleed marginInline={'full space-0'} asChild>
-          <Button variant="tertiary" icon={<ArrowLeftIcon />} onClick={() => navigate('/')}>
-            Tilbake
-          </Button>
-        </Bleed>
         <Page.Block as="main" width="text">
           <form onSubmit={handleSubmit(onSubmit)}>
             <VStack gap="space-16">
-              <h2>Rediger Sak</h2>
+              <HStack align={'center'} style={{ position: 'relative' }}>
+                <Button
+                  as={Link}
+                  href={'/'}
+                  variant={'tertiary'}
+                  icon={<ArrowLeftIcon />}
+                  style={{ position: 'absolute', right: '100%' }}
+                >
+                  Tilbake
+                </Button>
+                <h2>Rediger Sak</h2>
+              </HStack>
               <Box
                 background="neutral-soft"
                 borderColor="brand-blue"
@@ -92,6 +101,35 @@ export const EditComponent = ({ onSubmit, defaultValues }: Props) => {
               <Button type="submit" variant={'primary'}>
                 Endre sak
               </Button>
+              <VStack gap={'space-16'} paddingBlock={'space-0 space-16'}>
+                <Dialog>
+                  <Dialog.Trigger>
+                    <Button data-color="danger" icon={<TrashIcon aria-hidden />}>
+                      Slett
+                    </Button>
+                  </Dialog.Trigger>
+                  <Dialog.Popup role="alertdialog" closeOnOutsideClick={false}>
+                    <Dialog.Header withClosebutton={false}>
+                      <Dialog.Title>Er du sikker?</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                      <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres.</BodyLong>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                      <Dialog.CloseTrigger>
+                        <Button variant="secondary" data-color="neutral">
+                          Avbryt
+                        </Button>
+                      </Dialog.CloseTrigger>
+                      <Dialog.CloseTrigger>
+                        <Button variant="danger" onClick={() => onDelete()}>
+                          Ja, slett
+                        </Button>
+                      </Dialog.CloseTrigger>
+                    </Dialog.Footer>
+                  </Dialog.Popup>
+                </Dialog>
+              </VStack>
             </VStack>
           </form>
         </Page.Block>

@@ -1,11 +1,10 @@
-import { VStack, HStack, Heading, Button, Page, Search, Dialog, BodyLong, LinkCard } from '@navikt/ds-react'
+import { VStack, HStack, Heading, Button, Page, Search, BodyLong, LinkCard, Link, ToggleGroup } from '@navikt/ds-react'
 import { toReadableDateTimeString } from './utils/date-util'
-import { TrashIcon, PlusIcon } from '@navikt/aksel-icons'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
 import { useState } from 'react'
 import { NewsDTO } from 'utils/admin-util.ts'
-import { deleteNews, getNews } from 'utils/api-util.ts'
+import { getNews } from 'utils/api-util.ts'
 
 export const Startside = () => {
   const navigate = useNavigate()
@@ -30,12 +29,8 @@ export const Startside = () => {
             <Heading size="large" level="1">
               Nyheter
             </Heading>
-            <Button
-              variant="primary"
-              icon={<PlusIcon aria-hidden />}
-              iconPosition="left"
-              onClick={() => navigate('/createNewsPage')}
-            >
+            {/*TODO: fiks styling på knappen?*/}
+            <Button as={Link} href={'/createNewsPage'} variant={'secondary'}>
               Opprett nyhet
             </Button>
           </HStack>
@@ -47,6 +42,12 @@ export const Startside = () => {
             onChange={(value) => setSearchQuery(value)}
             onClear={() => setSearchQuery('')}
           />
+          <ToggleGroup defaultValue="alle" onChange={console.info}>
+            <ToggleGroup.Item value="alle" label="Alle" />
+            <ToggleGroup.Item value="fremtidig" label="Fremtidig" />
+            <ToggleGroup.Item value="publisert" label="Publisert" />
+            <ToggleGroup.Item value="historikk" label="Historikk" />
+          </ToggleGroup>
           <VStack gap="space-12">
             {filteredNews.map((news) => (
               <LinkCard key={news.id} onClick={() => navigate(`/news/${news.id}/edit`)}>
@@ -58,37 +59,7 @@ export const Startside = () => {
                     <BodyLong>{news.description}</BodyLong>
                     <BodyLong>{toReadableDateTimeString(news.created)}</BodyLong>
                   </VStack>
-                  <HStack gap="space-2">
-                    <Dialog>
-                      <Dialog.Trigger>
-                        <Button data-color="danger" size="small" icon={<TrashIcon aria-hidden />}>
-                          Slett
-                        </Button>
-                      </Dialog.Trigger>
-                      <Dialog.Popup role="alertdialog" closeOnOutsideClick={false}>
-                        <Dialog.Header withClosebutton={false}>
-                          <Dialog.Title>Er du sikker?</Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                          <BodyLong>
-                            Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres.
-                          </BodyLong>
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                          <Dialog.CloseTrigger>
-                            <Button variant="secondary" data-color="neutral">
-                              Avbryt
-                            </Button>
-                          </Dialog.CloseTrigger>
-                          <Dialog.CloseTrigger>
-                            <Button variant="danger" onClick={() => deleteNews(news.id)}>
-                              Ja, slett
-                            </Button>
-                          </Dialog.CloseTrigger>
-                        </Dialog.Footer>
-                      </Dialog.Popup>
-                    </Dialog>
-                  </HStack>
+                  <HStack gap="space-2"></HStack>
                 </HStack>
               </LinkCard>
             ))}
