@@ -1,6 +1,4 @@
-import { VStack, TextField, Textarea, Button, Link } from '@navikt/ds-react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import { CreateNewsCard } from 'CreateNewsCard.tsx'
+import { useNavigate } from 'react-router-dom'
 import { NewsComponent } from 'NewsComponent.tsx'
 import { mutate } from 'swr'
 type CreateNewsDto = {
