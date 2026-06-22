@@ -8,7 +8,7 @@ export function App() {
     <Routes>
       <Route path="/" element={<Startside />} />
       <Route path="/createNewsPage" element={<CreateNewsPage />} />
-      <Route path="/editNewsPage" element={<EditNewsPage />} />
+      <Route path="/news/:id/edit" element={<EditNewsPage />} />
     </Routes>
   )
 }
