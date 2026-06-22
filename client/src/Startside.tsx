@@ -1,11 +1,10 @@
-import { VStack, HStack, Heading, Button, Page, Search, Dialog, BodyLong, LinkCard } from '@navikt/ds-react'
+import { VStack, HStack, Heading, Button, Page, Search, BodyLong, LinkCard, Link } from '@navikt/ds-react'
 import { toReadableDateTimeString } from './utils/date-util'
-import { TrashIcon, PlusIcon } from '@navikt/aksel-icons'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
 import { useState } from 'react'
 import { NewsDTO } from 'utils/admin-util.ts'
-import { deleteNews, getNews } from 'utils/api-util.ts'
+import { getNews } from 'utils/api-util.ts'
 
 export const Startside = () => {
   const navigate = useNavigate()
@@ -30,12 +29,8 @@ export const Startside = () => {
             <Heading size="large" level="1">
               Nyheter
             </Heading>
-            <Button
-              variant="primary"
-              icon={<PlusIcon aria-hidden />}
-              iconPosition="left"
-              onClick={() => navigate('/createNewsPage')}
-            >
+            {/*TODO: fiks styling på knappen?*/}
+            <Button as={Link} href={'/createNewsPage'} variant={'secondary'}>
               Opprett nyhet
             </Button>
           </HStack>
@@ -58,8 +53,7 @@ export const Startside = () => {
                     <BodyLong>{news.description}</BodyLong>
                     <BodyLong>{toReadableDateTimeString(news.created)}</BodyLong>
                   </VStack>
-                  <HStack gap="space-2">
-                  </HStack>
+                  <HStack gap="space-2"></HStack>
                 </HStack>
               </LinkCard>
             ))}

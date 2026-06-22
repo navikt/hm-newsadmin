@@ -3,15 +3,17 @@ import {
   BodyLong,
   Box,
   Button,
-  DatePicker, Dialog,
+  DatePicker,
+  Dialog,
   HStack,
+  Link,
   Page,
   Textarea,
   TextField,
   useDatepicker,
   VStack,
 } from '@navikt/ds-react'
-import {ArrowLeftIcon, TrashIcon} from '@navikt/aksel-icons'
+import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
@@ -53,7 +55,8 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
     <Box>
       <VStack gap="space-24" justify={'center'}>
         <Bleed marginInline={'full space-0'} asChild>
-          <Button variant="tertiary" icon={<ArrowLeftIcon />} onClick={() => navigate('/')}>
+          {/*TODO: fiks styling på knappen?*/}
+          <Button as={Link} href={'/'} variant={'tertiary'} icon={<ArrowLeftIcon />}>
             Tilbake
           </Button>
         </Bleed>
@@ -96,9 +99,7 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
                       <Dialog.Title>Er du sikker?</Dialog.Title>
                     </Dialog.Header>
                     <Dialog.Body>
-                      <BodyLong>
-                        Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres.
-                      </BodyLong>
+                      <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres.</BodyLong>
                     </Dialog.Body>
                     <Dialog.Footer>
                       <Dialog.CloseTrigger>

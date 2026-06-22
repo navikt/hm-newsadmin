@@ -5,6 +5,7 @@ import {
   Button,
   DatePicker,
   HStack,
+  Link,
   Page,
   Textarea,
   TextField,
@@ -45,7 +46,8 @@ export const CreateComponent = ({ onSubmit }: Props) => {
     <Box>
       <VStack gap="space-24" justify={'center'}>
         <Bleed marginInline={'full space-0'} asChild>
-          <Button variant="tertiary" icon={<ArrowLeftIcon />} onClick={() => navigate('/')}>
+          {/*TODO: fiks styling på knappen?*/}
+          <Button as={Link} href={'/'} variant={'tertiary'} icon={<ArrowLeftIcon />}>
             Tilbake
           </Button>
         </Bleed>
