@@ -1,13 +1,11 @@
 import { useNavigate } from 'react-router-dom'
-import { NewsComponent } from 'NewsComponent.tsx'
-import { mutate } from 'swr'
-type CreateNewsDto = {
-  title: string
-  description: string
-  body: string
-}
+import { CreateComponent } from 'CreateComponent.tsx'
+import { useSWRConfig } from 'swr'
+import { CreateNewsDto } from 'utils/admin-util.ts'
+
 export const CreateNewsPage = () => {
   const navigate = useNavigate()
+  const { mutate } = useSWRConfig()
   async function createNews(data: CreateNewsDto) {
     const res = await fetch('admin/news', {
       method: 'POST',
@@ -23,5 +21,5 @@ export const CreateNewsPage = () => {
     return console.log(res.json())
   }
 
-  return <NewsComponent onSubmit={createNews} />
+  return <CreateComponent onSubmit={createNews} />
 }

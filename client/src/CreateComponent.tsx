@@ -14,17 +14,13 @@ import {
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { CreateNewsDto } from 'utils/admin-util.ts'
 
-type CreateNewsDto = {
-  title: string
-  description: string
-  body: string
-}
 type Props = {
   onSubmit: (data: CreateNewsDto) => void
 }
 
-export const NewsComponent = ({ onSubmit }: Props) => {
+export const CreateComponent = ({ onSubmit }: Props) => {
   const { register, handleSubmit } = useForm<CreateNewsDto>()
   const navigate = useNavigate()
 

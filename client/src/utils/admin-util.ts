@@ -13,3 +13,23 @@ export interface NewHmsUserDTO {
   roles: string[]
   attributes: {}
 }
+
+export interface NewsDTO {
+  id: string
+  title: string
+  description: string
+  body: string
+  created: string
+}
+
+export interface CreateNewsDto {
+  title: string
+  description: string
+  body: string
+}
+
+export interface EditNewsDto {
+  title: string
+  description: string
+  body: string
+}

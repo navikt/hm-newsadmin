@@ -16,12 +16,8 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { CreateUpdateNewsDTO } from 'utils/types/response-types.ts'
+import { EditNewsDto } from 'utils/admin-util.ts'
 
-type EditNewsDto = {
-  title: string
-  description: string
-  body: string
-}
 type Props = {
   onSubmit: (data: EditNewsDto) => void
   defaultValues?: CreateUpdateNewsDTO

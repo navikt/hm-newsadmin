@@ -4,40 +4,12 @@ import { TrashIcon, PlusIcon } from '@navikt/aksel-icons'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
 import { useState } from 'react'
-
-type NewsDTO = {
-  id: string
-  title: string
-  description: string
-  body: string
-  created: string
-}
+import { NewsDTO } from 'utils/admin-util.ts'
+import { deleteNews, getNews } from 'utils/api-util.ts'
 
 export const Startside = () => {
-  async function getNews(): Promise<NewsDTO[]> {
-    const res = await fetch('/news', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    return res.json()
-  }
-
-  async function deleteNews(id: string): Promise<void> {
-    const response = await fetch(`/admin/news/${id}`, {
-      method: 'DELETE',
-    })
-    if (!response.ok) {
-      throw new Error(`Sletting feilet: ${response.status}`)
-    }
-    await mutate()
-  }
-
   const navigate = useNavigate()
-  const { data: news, mutate } = useSWR<NewsDTO[]>('news', () => getNews())
-
+  const { data: news } = useSWR<NewsDTO[]>('news', () => getNews())
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredNews =
@@ -77,7 +49,6 @@ export const Startside = () => {
           />
           <VStack gap="space-12">
             {filteredNews.map((news) => (
-              // {news?.map((news, index) => (
               <LinkCard key={news.id} onClick={() => navigate(`/news/${news.id}/edit`)}>
                 <HStack justify="space-between" align="start" gap="space-8" wrap={false}>
                   <VStack gap="space-2" style={{ flex: 1, minWidth: 0 }}>
