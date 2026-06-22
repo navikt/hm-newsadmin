@@ -1,4 +1,4 @@
-import { VStack, HStack, Heading, Button, Page, Search, BodyLong, LinkCard, Link } from '@navikt/ds-react'
+import { VStack, HStack, Heading, Button, Page, Search, BodyLong, LinkCard, Link, ToggleGroup } from '@navikt/ds-react'
 import { toReadableDateTimeString } from './utils/date-util'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
@@ -42,6 +42,12 @@ export const Startside = () => {
             onChange={(value) => setSearchQuery(value)}
             onClear={() => setSearchQuery('')}
           />
+          <ToggleGroup defaultValue="alle" onChange={console.info}>
+            <ToggleGroup.Item value="alle" label="Alle" />
+            <ToggleGroup.Item value="fremtidig" label="Fremtidig" />
+            <ToggleGroup.Item value="publisert" label="Publisert" />
+            <ToggleGroup.Item value="historikk" label="Historikk" />
+          </ToggleGroup>
           <VStack gap="space-12">
             {filteredNews.map((news) => (
               <LinkCard key={news.id} onClick={() => navigate(`/news/${news.id}/edit`)}>
