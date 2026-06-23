@@ -12,6 +12,7 @@ import {
   Textarea,
   TextField,
   useDatepicker,
+  useRangeDatepicker,
   VStack,
 } from '@navikt/ds-react'
 import { Controller, useForm } from 'react-hook-form'
@@ -39,29 +40,18 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
   }, [defaultValues])
   const navigate = useNavigate()
 
-  const {
-    datepickerProps: fromProps,
-    inputProps: fromInputProps,
-    selectedDay: fromDay,
-  } = useDatepicker({
-    defaultSelected: defaultValues?.publishedFrom ? new Date(defaultValues.publishedFrom) : undefined,
-    fromDate: new Date('Aug 23 2019'),
-    onDateChange: (date) => {
-      if (date) setValue('publishedFrom', date.toISOString())
+  const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
+    fromDate: new Date(),
+    onRangeChange: (range) => {
+      if (range?.from) setValue('publishedFrom', range.from.toISOString())
+      if (range?.to) setValue('publishedTo', range.to?.toISOString())
+    },
+    defaultSelected: {
+      from: defaultValues?.publishedFrom ? new Date(defaultValues.publishedFrom) : undefined,
+      to: defaultValues?.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
     },
   })
 
-  const {
-    datepickerProps: toProps,
-    inputProps: toInputProps,
-    selectedDay: toDay,
-  } = useDatepicker({
-    defaultSelected: defaultValues?.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
-    fromDate: new Date('Aug 24 2019'),
-    onDateChange: (date) => {
-      if (date) setValue('publishedTo', date.toISOString())
-    },
-  })
   return (
     <Box>
       <VStack gap="space-24" justify={'center'}>
@@ -91,12 +81,12 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
               </Box>
               <TextField {...register('title')} label="Tittel" width="text"></TextField>
               <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
-              <HStack align={'start'} gap={'space-24'} paddingInline={'space-32'} justify={'space-between'}>
-                <DatePicker {...fromProps}>
-                  <DatePicker.Input {...fromInputProps} label="Fra dato" description="Format: dd.mm.åååå" />
-                </DatePicker>
-                <DatePicker {...toProps}>
-                  <DatePicker.Input {...toInputProps} label="Velg dato" description="Format: dd.mm.åååå" />
+              <HStack justify={'center'}>
+                <DatePicker {...datepickerProps}>
+                  <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'space-between'}>
+                    <DatePicker.Input {...fromInputProps} label={'Fra dato'}></DatePicker.Input>
+                    <DatePicker.Input {...toInputProps} label={'Til dato'}></DatePicker.Input>
+                  </HStack>
                 </DatePicker>
               </HStack>
               <VStack gap="space-8">
