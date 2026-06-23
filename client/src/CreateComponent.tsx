@@ -19,6 +19,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CreateNewsDto } from 'utils/admin-util.ts'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
+import { ImageUpload } from 'ImageUpload.tsx'
 
 type Props = {
   onSubmit: (data: CreateNewsDto) => void
@@ -61,7 +62,7 @@ export const CreateComponent = ({ onSubmit }: Props) => {
                 borderWidth="2"
                 borderRadius="12 12 0 0"
               >
-                <BodyLong align={'center'}>Her skal det være et bilde!</BodyLong>
+                <ImageUpload />
               </Box>
               <TextField {...register('title')} label="Tittel" width="text"></TextField>
               <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
