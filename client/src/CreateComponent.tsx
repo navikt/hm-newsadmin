@@ -1,8 +1,8 @@
 import {
-  BodyLong,
   Box,
   Button,
   DatePicker,
+  ErrorMessage,
   HStack,
   Label,
   Link,
@@ -10,11 +10,11 @@ import {
   Textarea,
   TextField,
   VStack,
-  ErrorMessage,
 } from '@navikt/ds-react'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
+import { ImageUpload } from 'ImageUpload.tsx'
 import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
 
 type Props = {
@@ -49,7 +49,7 @@ export const CreateComponent = ({ onSubmit }: Props) => {
                 borderWidth="2"
                 borderRadius="12 12 0 0"
               >
-                <BodyLong align={'center'}>Her skal det være et bilde!</BodyLong>
+                <ImageUpload />
               </Box>
               <TextField
                 {...register('title', { required: 'Mangler tittel' })}
