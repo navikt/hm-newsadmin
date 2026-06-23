@@ -57,7 +57,7 @@ export const Startside = () => {
             </Button>
           </HStack>
           <Search
-            label="Søk etter nyh eter"
+            label="Søk etter nyheter"
             variant="secondary"
             hideLabel={false}
             value={searchQuery}

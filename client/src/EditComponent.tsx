@@ -18,7 +18,6 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import { CreateUpdateNewsDTO } from 'utils/types/response-types.ts'
 import { EditNewsDto } from 'utils/admin-util.ts'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
