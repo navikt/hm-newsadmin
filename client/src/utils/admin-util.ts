@@ -19,6 +19,7 @@ export interface NewsDTO {
   title: string
   description: string
   body: string
+  image_url?: string
   created: string
   updated: string
   publishedFrom: string
@@ -29,6 +30,7 @@ export interface CreateNewsDto {
   title: string
   description: string
   body: string
+  image_url?: string
   publishedFrom: string
   publishedTo: string
 }

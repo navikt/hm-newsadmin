@@ -20,13 +20,19 @@ import { useNavigate } from 'react-router-dom'
 import { CreateNewsDto } from 'utils/admin-util.ts'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 import { ImageUpload } from 'ImageUpload.tsx'
+import diktator from '/Users/Andreas.Danielsen.Fageraas/IdeaProjects/hm-newsadmin/client/public/supreme_leader 2.png'
 
 type Props = {
   onSubmit: (data: CreateNewsDto) => void
 }
 
 export const CreateComponent = ({ onSubmit }: Props) => {
-  const { register, handleSubmit, control, setValue } = useForm<CreateNewsDto>()
+  const { register, handleSubmit, control, setValue } = useForm<CreateNewsDto>({
+    defaultValues: {
+      image_url: diktator,
+    },
+  })
+
   const navigate = useNavigate()
 
   const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({

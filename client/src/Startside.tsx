@@ -17,6 +17,7 @@ import useSWR from 'swr'
 import { useState } from 'react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { getNews } from 'utils/api-util.ts'
+import diktator from '/Users/Andreas.Danielsen.Fageraas/IdeaProjects/hm-newsadmin/client/public/supreme_leader 2.png'
 
 export const Startside = () => {
   const navigate = useNavigate()
@@ -77,6 +78,12 @@ export const Startside = () => {
                 onClick={() => navigate(`/news/${news.id}/edit`)}
                 style={{ height: '100%', minHeight: '180px' }}
               >
+                <img
+                  src={news.image_url}
+                  alt=""
+                  aria-hidden
+                  style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '4px 4px 0 0' }}
+                />
                 <HStack justify="space-between" align="start" gap="space-8" wrap={false} style={{ height: '100%' }}>
                   <VStack gap="space-2" style={{ flex: 1, minWidth: 0, height: '100%' }}>
                     <Heading size="small" level="2">
