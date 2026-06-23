@@ -11,25 +11,25 @@ import '@navikt/ds-css'
 import {App} from 'App'
 
 export function baseUrl(url: string = '') {
-  if (process.env.NODE_ENV === 'production') {
-    return `/adminregister${url}`
-  } else {
-    return url
-  }
+    if (process.env.NODE_ENV === 'production') {
+        return `/adminregister${url}`
+    } else {
+        return url
+    }
 }
 
 initMsw().then(() => {
-  initUmami()
-  initInstrumentation()
-  initUmami()
-  initSkyra()
+    initUmami()
+    initInstrumentation()
+    initUmami()
+    initSkyra()
 
-  const container = document.getElementById('root')!
-  createRoot(container).render(
-    <>
-      <BrowserRouter basename={baseUrl()}>
-        <App />
-      </BrowserRouter>
-    </>
-  )
+    const container = document.getElementById('root')!
+    createRoot(container).render(
+        <>
+            <BrowserRouter basename={baseUrl()}>
+                <App />
+            </BrowserRouter>
+        </>
+    )
 })

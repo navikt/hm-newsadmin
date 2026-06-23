@@ -20,6 +20,7 @@ export interface NewsDTO {
   description: string
   body: string
   created: string
+  updated: string
   publishedFrom: string
   publishedTo: string
 }
