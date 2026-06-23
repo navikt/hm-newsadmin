@@ -11,6 +11,15 @@
     outline: var(--ax-border-focus-width) solid var(--ax-border-focus);
     outline-offset: 0;
   }
+
+  &--error {
+    border-color: var(--ax-border-danger);
+    border-width: 2px;
+
+    &:hover {
+      border-color: var(--ax-border-danger);
+    }
+  }
 }
 
 .ql-toolbar,

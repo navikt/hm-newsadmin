@@ -1,5 +1,4 @@
 import {
-  Bleed,
   BodyLong,
   Box,
   Button,
@@ -11,45 +10,24 @@ import {
   Page,
   Textarea,
   TextField,
-  useDatepicker,
-  useRangeDatepicker,
   VStack,
+  ErrorMessage,
 } from '@navikt/ds-react'
-import { Controller, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
-import { EditNewsDto } from 'utils/admin-util.ts'
+import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
+import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
 
 type Props = {
-  onSubmit: (data: EditNewsDto) => void
+  onSubmit: (data: NewsFormValues) => void
   onDelete: () => void
-  defaultValues?: EditNewsDto
+  defaultValues?: NewsFormValues
 }
 
 export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
-  const { register, handleSubmit, reset, control, setValue } = useForm<EditNewsDto>({
-    defaultValues,
-  })
-
-  useEffect(() => {
-    if (defaultValues) reset(defaultValues)
-  }, [defaultValues])
-  const navigate = useNavigate()
-
-  const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
-    fromDate: new Date(),
-    onRangeChange: (range) => {
-      if (range?.from) setValue('publishedFrom', range.from.toISOString())
-      if (range?.to) setValue('publishedTo', range.to?.toISOString())
-    },
-    defaultSelected: {
-      from: defaultValues?.publishedFrom ? new Date(defaultValues.publishedFrom) : undefined,
-      to: defaultValues?.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
-    },
-  })
+  const { register, handleSubmit, control, errors, datepickerProps, fromInputProps, toInputProps } =
+    useNewsForm(defaultValues)
 
   return (
     <Box>
@@ -78,13 +56,18 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
               >
                 <BodyLong align={'center'}>Her skal det være et bilde!</BodyLong>
               </Box>
-              <TextField {...register('title')} label="Tittel" width="text"></TextField>
+              <TextField
+                {...register('title', { required: 'Mangler tittel' })}
+                label="Tittel"
+                error={errors.title?.message}
+                width="text"
+              />
               <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
               <HStack justify={'center'}>
                 <DatePicker {...datepickerProps}>
                   <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'space-between'}>
-                    <DatePicker.Input {...fromInputProps} label={'Fra dato'}></DatePicker.Input>
-                    <DatePicker.Input {...toInputProps} label={'Til dato'}></DatePicker.Input>
+                    <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
+                    <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
                   </HStack>
                 </DatePicker>
               </HStack>
@@ -93,8 +76,16 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 <Controller
                   name="body"
                   control={control}
-                  render={({ field }) => (
-                    <RichTextEditorQuill onTextChange={(html) => field.onChange(html)} defaultValue={field.value} />
+                  rules={{ required: 'Mangler innhold' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <RichTextEditorQuill
+                        onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
+                        defaultValue={field.value}
+                        error={!!fieldState.error}
+                      />
+                      {fieldState.error && <ErrorMessage showIcon>{fieldState.error.message}</ErrorMessage>}
+                    </>
                   )}
                 />
               </VStack>

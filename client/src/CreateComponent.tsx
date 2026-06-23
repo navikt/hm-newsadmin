@@ -1,5 +1,4 @@
 import {
-  Bleed,
   BodyLong,
   Box,
   Button,
@@ -10,31 +9,20 @@ import {
   Page,
   Textarea,
   TextField,
-  useDatepicker,
   VStack,
-  useRangeDatepicker,
+  ErrorMessage,
 } from '@navikt/ds-react'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
-import { useForm, Controller } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { CreateNewsDto } from 'utils/admin-util.ts'
+import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
+import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
 
 type Props = {
-  onSubmit: (data: CreateNewsDto) => void
+  onSubmit: (data: NewsFormValues) => void
 }
 
 export const CreateComponent = ({ onSubmit }: Props) => {
-  const { register, handleSubmit, control, setValue } = useForm<CreateNewsDto>()
-  const navigate = useNavigate()
-
-  const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
-    fromDate: new Date(),
-    onRangeChange: (range) => {
-      if (range?.from) setValue('publishedFrom', range.from.toISOString())
-      if (range?.to) setValue('publishedTo', range.to?.toISOString())
-    },
-  })
+  const { register, handleSubmit, control, errors, datepickerProps, fromInputProps, toInputProps } = useNewsForm()
 
   return (
     <Box>
@@ -63,13 +51,22 @@ export const CreateComponent = ({ onSubmit }: Props) => {
               >
                 <BodyLong align={'center'}>Her skal det være et bilde!</BodyLong>
               </Box>
-              <TextField {...register('title')} label="Tittel" width="text"></TextField>
+              <TextField
+                {...register('title', { required: 'Mangler tittel' })}
+                label="Tittel"
+                error={errors.title?.message}
+                width="text"
+              ></TextField>
               <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
               <HStack justify={'center'}>
                 <DatePicker {...datepickerProps}>
                   <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
-                    <DatePicker.Input {...fromInputProps} label={'Fra dato'}></DatePicker.Input>
-                    <DatePicker.Input {...toInputProps} label={'Til dato'}></DatePicker.Input>
+                    <DatePicker.Input
+                      {...fromInputProps}
+                      label={'Fra dato'}
+                      error={errors.publishedFrom?.message}
+                    ></DatePicker.Input>
+                    <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
                   </HStack>
                 </DatePicker>
               </HStack>
@@ -78,8 +75,16 @@ export const CreateComponent = ({ onSubmit }: Props) => {
                 <Controller
                   name="body"
                   control={control}
-                  render={({ field }) => (
-                    <RichTextEditorQuill onTextChange={(html) => field.onChange(html)} defaultValue={field.value} />
+                  rules={{ required: 'Mangler innhold' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <RichTextEditorQuill
+                        onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
+                        defaultValue={field.value}
+                        error={!!fieldState.error}
+                      />
+                      {fieldState.error && <ErrorMessage showIcon>{fieldState.error.message}</ErrorMessage>}
+                    </>
                   )}
                 />
               </VStack>
