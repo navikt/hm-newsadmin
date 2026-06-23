@@ -20,7 +20,8 @@ import { useEffect } from 'react'
 import { CreateUpdateNewsDTO } from 'utils/types/response-types.ts'
 import { EditNewsDto } from 'utils/admin-util.ts'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
-import { ArrowLeftIcon } from '@navikt/aksel-icons'
+import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
+import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
 
 type Props = {
   onSubmit: (data: EditNewsDto) => void
@@ -111,6 +112,34 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
               <Button type="submit" variant={'primary'}>
                 Endre sak
               </Button>
+              <VStack gap={'space-16'} paddingBlock={'space-0 space-16'}>
+                <Dialog>
+                  <Dialog.Trigger>
+                    <Button data-color={'danger'} icon={<TrashIcon aria-hidden />}>
+                      Slett
+                    </Button>
+                  </Dialog.Trigger>
+                  <Dialog.Popup role={'alertdialog'} closeOnOutsideClick={false}>
+                    <DialogHeader>
+                      <DialogBody>
+                        <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
+                      </DialogBody>
+                      <DialogFooter>
+                        <Dialog.CloseTrigger>
+                          <Button variant={'secondary'} data-color={'neutral'}>
+                            Avbryt
+                          </Button>
+                        </Dialog.CloseTrigger>
+                        <Dialog.CloseTrigger>
+                          <Button variant={'danger'} onClick={() => onDelete()}>
+                            Ja, slett
+                          </Button>
+                        </Dialog.CloseTrigger>
+                      </DialogFooter>
+                    </DialogHeader>
+                  </Dialog.Popup>
+                </Dialog>
+              </VStack>
             </VStack>
           </form>
         </Page.Block>
