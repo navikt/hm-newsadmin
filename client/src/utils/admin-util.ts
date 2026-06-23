@@ -20,16 +20,22 @@ export interface NewsDTO {
   description: string
   body: string
   created: string
+  publishedFrom: string
+  publishedTo: string
 }
 
 export interface CreateNewsDto {
   title: string
   description: string
   body: string
+  publishedFrom: string
+  publishedTo: string
 }
 
 export interface EditNewsDto {
   title: string
   description: string
   body: string
+  publishedFrom: string
+  publishedTo: string
 }

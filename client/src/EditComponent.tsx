@@ -6,6 +6,7 @@ import {
   DatePicker,
   Dialog,
   HStack,
+  Label,
   Link,
   Page,
   Textarea,
@@ -13,22 +14,22 @@ import {
   useDatepicker,
   VStack,
 } from '@navikt/ds-react'
-import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { CreateUpdateNewsDTO } from 'utils/types/response-types.ts'
 import { EditNewsDto } from 'utils/admin-util.ts'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
+import { ArrowLeftIcon } from '@navikt/aksel-icons'
 
 type Props = {
   onSubmit: (data: EditNewsDto) => void
   onDelete: () => void
-  defaultValues?: CreateUpdateNewsDTO
+  defaultValues?: EditNewsDto
 }
 
 export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
-  const { register, handleSubmit, reset, control } = useForm<EditNewsDto>({
+  const { register, handleSubmit, reset, control, setValue } = useForm<EditNewsDto>({
     defaultValues,
   })
 
@@ -42,8 +43,11 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
     inputProps: fromInputProps,
     selectedDay: fromDay,
   } = useDatepicker({
+    defaultSelected: defaultValues?.publishedFrom ? new Date(defaultValues.publishedFrom) : undefined,
     fromDate: new Date('Aug 23 2019'),
-    onDateChange: console.info,
+    onDateChange: (date) => {
+      if (date) setValue('publishedFrom', date.toISOString())
+    },
   })
 
   const {
@@ -51,8 +55,11 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
     inputProps: toInputProps,
     selectedDay: toDay,
   } = useDatepicker({
+    defaultSelected: defaultValues?.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
     fromDate: new Date('Aug 24 2019'),
-    onDateChange: console.info,
+    onDateChange: (date) => {
+      if (date) setValue('publishedTo', date.toISOString())
+    },
   })
   return (
     <Box>
@@ -91,45 +98,19 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
                   <DatePicker.Input {...toInputProps} label="Velg dato" description="Format: dd.mm.åååå" />
                 </DatePicker>
               </HStack>
-              <Controller
-                name="body"
-                control={control}
-                render={({ field }) => (
-                  <RichTextEditorQuill onTextChange={(html) => field.onChange(html)} defaultValue={field.value} />
-                )}
-              />{' '}
+              <VStack gap="space-8">
+                <Label>Innhold</Label>
+                <Controller
+                  name="body"
+                  control={control}
+                  render={({ field }) => (
+                    <RichTextEditorQuill onTextChange={(html) => field.onChange(html)} defaultValue={field.value} />
+                  )}
+                />
+              </VStack>
               <Button type="submit" variant={'primary'}>
                 Endre sak
               </Button>
-              <VStack gap={'space-16'} paddingBlock={'space-0 space-16'}>
-                <Dialog>
-                  <Dialog.Trigger>
-                    <Button data-color="danger" icon={<TrashIcon aria-hidden />}>
-                      Slett
-                    </Button>
-                  </Dialog.Trigger>
-                  <Dialog.Popup role="alertdialog" closeOnOutsideClick={false}>
-                    <Dialog.Header withClosebutton={false}>
-                      <Dialog.Title>Er du sikker?</Dialog.Title>
-                    </Dialog.Header>
-                    <Dialog.Body>
-                      <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres.</BodyLong>
-                    </Dialog.Body>
-                    <Dialog.Footer>
-                      <Dialog.CloseTrigger>
-                        <Button variant="secondary" data-color="neutral">
-                          Avbryt
-                        </Button>
-                      </Dialog.CloseTrigger>
-                      <Dialog.CloseTrigger>
-                        <Button variant="danger" onClick={() => onDelete()}>
-                          Ja, slett
-                        </Button>
-                      </Dialog.CloseTrigger>
-                    </Dialog.Footer>
-                  </Dialog.Popup>
-                </Dialog>
-              </VStack>
             </VStack>
           </form>
         </Page.Block>

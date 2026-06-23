@@ -5,6 +5,7 @@ import {
   Button,
   DatePicker,
   HStack,
+  Label,
   Link,
   Page,
   Textarea,
@@ -23,7 +24,7 @@ type Props = {
 }
 
 export const CreateComponent = ({ onSubmit }: Props) => {
-  const { register, handleSubmit, control } = useForm<CreateNewsDto>()
+  const { register, handleSubmit, control, setValue } = useForm<CreateNewsDto>()
   const navigate = useNavigate()
 
   const {
@@ -32,16 +33,19 @@ export const CreateComponent = ({ onSubmit }: Props) => {
     selectedDay: fromDay,
   } = useDatepicker({
     fromDate: new Date('Aug 23 2019'),
-    onDateChange: console.info,
+    onDateChange: (date) => {
+      if (date) setValue('publishedFrom', date.toISOString())
+    },
   })
-
   const {
     datepickerProps: toProps,
     inputProps: toInputProps,
     selectedDay: toDay,
   } = useDatepicker({
     fromDate: new Date('Aug 24 2019'),
-    onDateChange: console.info,
+    onDateChange: (date) => {
+      if (date) setValue('publishedTo', date.toISOString())
+    },
   })
   return (
     <Box>
@@ -80,16 +84,16 @@ export const CreateComponent = ({ onSubmit }: Props) => {
                   <DatePicker.Input {...toInputProps} label="Velg dato" description="Format: dd.mm.åååå" />
                 </DatePicker>
               </HStack>
-              <Controller
-                name="body"
-                control={control}
-                render={({ field }) => (
-                  <RichTextEditorQuill
-                    onTextChange={(html) => field.onChange(html)}
-                    defaultValue={field.value}
-                  />
-                )}
-              />
+              <VStack gap="space-8">
+                <Label>Innhold</Label>
+                <Controller
+                  name="body"
+                  control={control}
+                  render={({ field }) => (
+                    <RichTextEditorQuill onTextChange={(html) => field.onChange(html)} defaultValue={field.value} />
+                  )}
+                />
+              </VStack>
               <Button type="submit" variant={'primary'}>
                 Opprett sak
               </Button>
