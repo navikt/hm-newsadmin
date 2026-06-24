@@ -1,6 +1,4 @@
 import {
-  Bleed,
-  BodyLong,
   Box,
   Button,
   DatePicker,
@@ -11,7 +9,7 @@ import {
   Textarea,
   TextField,
   VStack,
-  useRangeDatepicker, ErrorMessage,
+  ErrorMessage,
 } from '@navikt/ds-react'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
 import { Controller } from 'react-hook-form'
@@ -27,9 +25,16 @@ type Props = {
 }
 
 export const CreateComponent = ({ onSubmit }: Props) => {
-  const { register, handleSubmit, control, errors, datepickerProps, fromInputProps, toInputProps } = useNewsForm(
-    CREATE_DEFAULTS,
-  )
+  const {
+    register,
+    handleSubmit,
+    control,
+    errors,
+    fromDatepickerProps,
+    fromInputProps,
+    toDatepickerProps,
+    toInputProps,
+  } = useNewsForm(CREATE_DEFAULTS)
 
   return (
     <Box>
@@ -66,16 +71,14 @@ export const CreateComponent = ({ onSubmit }: Props) => {
               ></TextField>
               <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
               <HStack justify={'center'}>
-                <DatePicker {...datepickerProps}>
-                  <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
-                    <DatePicker.Input
-                      {...fromInputProps}
-                      label={'Fra dato'}
-                      error={errors.publishedFrom?.message}
-                    ></DatePicker.Input>
+                <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
+                  <DatePicker {...fromDatepickerProps}>
+                    <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
+                  </DatePicker>
+                  <DatePicker {...toDatepickerProps}>
                     <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
-                  </HStack>
-                </DatePicker>
+                  </DatePicker>
+                </HStack>
               </HStack>
               <VStack gap="space-8">
                 <Label>Innhold</Label>

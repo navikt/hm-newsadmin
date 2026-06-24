@@ -18,6 +18,7 @@ import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
 import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
+import { ImageUpload } from 'ImageUpload.tsx'
 
 type Props = {
   onSubmit: (data: NewsFormValues) => void
@@ -26,7 +27,7 @@ type Props = {
 }
 
 export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
-  const { register, handleSubmit, control, errors, datepickerProps, fromInputProps, toInputProps } =
+  const { register, handleSubmit, control, errors, fromDatepickerProps, fromInputProps, toDatepickerProps, toInputProps } =
     useNewsForm(defaultValues)
 
   return (
@@ -54,7 +55,7 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 borderWidth="2"
                 borderRadius="12 12 0 0"
               >
-                <BodyLong align={'center'}>Her skal det være et bilde!</BodyLong>
+                <ImageUpload />
               </Box>
               <TextField
                 {...register('title', { required: 'Mangler tittel' })}
@@ -63,12 +64,12 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 width="text"
               />
               <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
-              <HStack justify={'center'}>
-                <DatePicker {...datepickerProps}>
-                  <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'space-between'}>
-                    <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
-                    <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
-                  </HStack>
+              <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
+                <DatePicker {...fromDatepickerProps}>
+                  <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
+                </DatePicker>
+                <DatePicker {...toDatepickerProps}>
+                  <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
                 </DatePicker>
               </HStack>
               <VStack gap="space-8">

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
-import { useRangeDatepicker } from '@navikt/ds-react'
-import { useEffect } from 'react'
+import { useDatepicker } from '@navikt/ds-react'
+import { useEffect, useRef } from 'react'
 
 export type NewsFormValues = {
   title: string
@@ -17,6 +17,8 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     handleSubmit,
     control,
     setValue,
+    getValues,
+    watch,
     reset,
     formState: { errors },
   } = useForm<NewsFormValues>({ defaultValues })
@@ -28,20 +30,35 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
   register('publishedFrom', { required: 'Mangler fra-dato' })
   register('publishedTo', { required: 'Mangler til-dato' })
 
-  const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
+  const publishedFrom = watch('publishedFrom')
+  const fromDateValue = publishedFrom ? new Date(publishedFrom) : new Date()
+
+  const resetToDateRef = useRef<(() => void) | null>(null)
+
+  const { datepickerProps: fromDatepickerProps, inputProps: fromInputProps } = useDatepicker({
     fromDate: new Date(),
-    onRangeChange: (range) => {
-      setValue('publishedFrom', range?.from?.toISOString() ?? '')
-      setValue('publishedTo', range?.to?.toISOString() ?? '')
+    defaultSelected: defaultValues?.publishedFrom ? new Date(defaultValues.publishedFrom) : undefined,
+    onDateChange: (date) => {
+      setValue('publishedFrom', date?.toISOString() ?? '')
+      if (date) {
+        const currentTo = getValues('publishedTo')
+        if (currentTo && new Date(currentTo) < date) {
+          setValue('publishedTo', '')
+          resetToDateRef.current?.()
+        }
+      }
     },
-    defaultSelected:
-      defaultValues?.publishedFrom
-        ? {
-            from: new Date(defaultValues.publishedFrom),
-            to: defaultValues.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
-          }
-        : undefined,
   })
 
-  return { register, handleSubmit, control, errors, datepickerProps, fromInputProps, toInputProps }
+  const { datepickerProps: toDatepickerProps, inputProps: toInputProps, reset: resetToDate } = useDatepicker({
+    fromDate: fromDateValue,
+    defaultSelected: defaultValues?.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
+    onDateChange: (date) => {
+      setValue('publishedTo', date?.toISOString() ?? '')
+    },
+  })
+
+  resetToDateRef.current = resetToDate
+
+  return { register, handleSubmit, control, errors, fromDatepickerProps, fromInputProps, toDatepickerProps, toInputProps }
 }
