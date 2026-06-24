@@ -10,12 +10,16 @@ import {
   TextField,
   VStack,
   ErrorMessage,
+  ActionMenu,
 } from '@navikt/ds-react'
-import { ArrowLeftIcon } from '@navikt/aksel-icons'
+import {ArrowLeftIcon, ChevronDownIcon} from '@navikt/aksel-icons'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 import { ImageUpload } from 'ImageUpload.tsx'
 import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
+import useSWR from "swr";
+import {TagsDTO} from "utils/admin-util.ts";
+import {getTags} from "utils/api-util.ts";
 
 const diktator = '/supreme_leader 2.png'
 const CREATE_DEFAULTS = { image_url: diktator }
@@ -35,6 +39,8 @@ export const CreateComponent = ({ onSubmit }: Props) => {
     toDatepickerProps,
     toInputProps,
   } = useNewsForm(CREATE_DEFAULTS)
+
+  const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
 
   return (
     <Box>
@@ -81,6 +87,27 @@ export const CreateComponent = ({ onSubmit }: Props) => {
                 </HStack>
               </HStack>
               <VStack gap="space-8">
+                <ActionMenu>
+                  <ActionMenu.Trigger>
+                    <Button
+                        data-color="neutral"
+                        variant="secondary"
+                        icon={<ChevronDownIcon aria-hidden />}
+                        iconPosition="right"
+                    >
+                      Tags
+                    </Button>
+                  </ActionMenu.Trigger>
+                  <ActionMenu.Content>
+                    <ActionMenu.Group label="Tags">
+                      {tags?.map((tag) => (
+                        <ActionMenu.Item key={tag.id} onSelect={() => console.info(tag.id)}>
+                          {tag.name}
+                        </ActionMenu.Item>
+                      ))}
+                    </ActionMenu.Group>
+                  </ActionMenu.Content>
+                </ActionMenu>
                 <Label>Innhold</Label>
                 <Controller
                   name="body"

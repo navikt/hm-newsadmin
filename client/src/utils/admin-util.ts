@@ -42,3 +42,8 @@ export interface EditNewsDto {
   publishedFrom: string
   publishedTo: string
 }
+
+export interface TagsDTO {
+  id: string
+  name: string
+}

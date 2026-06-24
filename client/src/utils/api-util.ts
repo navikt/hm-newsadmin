@@ -1,4 +1,4 @@
-import {NewsDTO} from 'utils/admin-util.ts'
+import {NewsDTO, TagsDTO} from 'utils/admin-util.ts'
 import { mutate } from 'swr'
 
 export async function getNews(): Promise<NewsDTO[]> {
@@ -20,4 +20,19 @@ export async function deleteNews(id: String): Promise<void> {
     throw new Error(`Sletting feilet: ${response.status}`)
   }
   await mutate('news')
+}
+
+export async function getTags(): Promise<TagsDTO[]> {
+  const res = await fetch('/admin/tags', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error(`Henting av tags feilet: ${res.status}`)
+  }
+
+  return res.json()
 }
