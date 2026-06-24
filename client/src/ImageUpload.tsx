@@ -26,7 +26,12 @@ export const ImageUpload = () => {
         </BodyShort>
       </VStack>
       <FileUpload.Trigger accept="image/*" onSelect={handleSelect} multiple={false}>
-        <Button aria-describedby={`${labelId} ${descId}`} variant="secondary" icon={<UploadIcon aria-hidden />}>
+        <Button
+          type="button"
+          aria-describedby={`${labelId} ${descId}`}
+          variant="secondary"
+          icon={<UploadIcon aria-hidden />}
+        >
           {imageUri ? 'Bytt bilde' : 'Velg fil'}
         </Button>
       </FileUpload.Trigger>
