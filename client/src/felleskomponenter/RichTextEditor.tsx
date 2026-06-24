@@ -29,10 +29,11 @@ type Props = {
   toolbar?: (string[] | { list: string }[])[]
   formats?: string[]
   onBlur?: () => void
+  error?: boolean
 }
 
 const RichTextEditorQuill = forwardRef(function TempComp(
-  { onTextChange, defaultValue, className, toolbar, formats, onBlur }: Props,
+  { onTextChange, defaultValue, className, toolbar, formats, onBlur, error }: Props,
   ref
 ) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -88,11 +89,11 @@ const RichTextEditorQuill = forwardRef(function TempComp(
   }, [ref])
 
   return onBlur ? (
-    <div className="quill-wrapper">
+    <div className={`quill-wrapper${error ? ' quill-wrapper--error' : ''}`}>
       <div ref={containerRef} className={className} onBlur={() => onBlur()} />
     </div>
   ) : (
-    <div className="quill-wrapper">
+    <div className={`quill-wrapper${error ? ' quill-wrapper--error' : ''}`}>
       <div ref={containerRef} className={className} />
     </div>
   )
