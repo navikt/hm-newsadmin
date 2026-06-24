@@ -17,7 +17,6 @@ import useSWR from 'swr'
 import { useState } from 'react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { getNews } from 'utils/api-util.ts'
-import diktator from '/Users/Andreas.Danielsen.Fageraas/IdeaProjects/hm-newsadmin/client/public/supreme_leader 2.png'
 
 export const Startside = () => {
   const navigate = useNavigate()

@@ -20,7 +20,8 @@ import { useNavigate } from 'react-router-dom'
 import { CreateNewsDto } from 'utils/admin-util.ts'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
 import { ImageUpload } from 'ImageUpload.tsx'
-import diktator from '/Users/Andreas.Danielsen.Fageraas/IdeaProjects/hm-newsadmin/client/public/supreme_leader 2.png'
+
+const diktator = '/supreme_leader 2.png'
 
 type Props = {
   onSubmit: (data: CreateNewsDto) => void
