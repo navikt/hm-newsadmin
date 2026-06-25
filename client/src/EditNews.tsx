@@ -32,7 +32,7 @@ type Props = {
   defaultValues?: NewsFormValues
 }
 
-export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
+export const EditNews = ({ onSubmit, onDelete, defaultValues }: Props) => {
   const {
     register,
     handleSubmit,

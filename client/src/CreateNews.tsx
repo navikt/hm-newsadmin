@@ -30,7 +30,7 @@ type Props = {
   onSubmit: (data: NewsFormValues) => void
 }
 
-export const CreateComponent = ({ onSubmit }: Props) => {
+export const CreateNews = ({ onSubmit }: Props) => {
   const {
     register,
     handleSubmit,

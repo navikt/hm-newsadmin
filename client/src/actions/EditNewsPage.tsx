@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { EditComponent } from 'EditComponent.tsx'
-import useSWR, {useSWRConfig} from 'swr'
+import { EditNews } from 'EditNews.tsx'
+import useSWR, { useSWRConfig } from 'swr'
 import { EditNewsDto } from 'utils/admin-util.ts'
-import {deleteNews} from "utils/api-util.ts";
+import { deleteNews } from 'utils/api-util.ts'
 
 export const EditNewsPage = () => {
   const navigate = useNavigate()
@@ -31,5 +31,5 @@ export const EditNewsPage = () => {
     navigate('/')
   }
 
-  return <EditComponent onSubmit={editNews} onDelete={handleDelete} defaultValues={news} />
+  return <EditNews onSubmit={editNews} onDelete={handleDelete} defaultValues={news} />
 }

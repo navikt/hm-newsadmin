@@ -11,14 +11,14 @@ import {
   ToggleGroup,
   HGrid,
 } from '@navikt/ds-react'
-import { toReadableDateTimeString } from './utils/date-util'
+import { toReadableDateTimeStringFromDate } from './utils/date-util'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
 import { useState } from 'react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { getNews } from 'utils/api-util.ts'
 
-export const Startside = () => {
+export const NyhetsOversikt = () => {
   const navigate = useNavigate()
   const { data: news } = useSWR<NewsDTO[]>('news', () => getNews())
   const [searchQuery, setSearchQuery] = useState('')
@@ -36,9 +36,20 @@ export const Startside = () => {
         const now = new Date()
         const from = new Date(item.publishedFrom)
         const to = new Date(item.publishedTo)
-        if (filterValue === 'fremtidig') return from > now
-        if (filterValue === 'publisert') return from <= now && to >= now
-        if (filterValue === 'historikk') return to < now
+        enum FilterValue {
+          fremtidig = 'fremtidig',
+          publisert = 'publisert',
+          historikk = 'historikk',
+          alle = 'alle',
+        }
+        switch (filterValue) {
+          case FilterValue.publisert:
+            return from <= now && to >= now
+          case FilterValue.historikk:
+            return to < now
+          case FilterValue.fremtidig:
+            return from > now
+        }
         return true
       })
       .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime()) || []
@@ -98,7 +109,7 @@ export const Startside = () => {
                     >
                       {news.description}
                     </BodyLong>
-                    <BodyLong>{toReadableDateTimeString(news.created)}</BodyLong>
+                    <BodyLong>{toReadableDateTimeStringFromDate(news.created)}</BodyLong>
                   </VStack>
                   <HStack gap="space-2"></HStack>
                 </HStack>

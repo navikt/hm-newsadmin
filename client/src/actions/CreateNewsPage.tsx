@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { CreateComponent } from 'CreateComponent.tsx'
+import { CreateNews } from 'CreateNews.tsx'
 import { useSWRConfig } from 'swr'
 import { CreateNewsDto } from 'utils/admin-util.ts'
 
@@ -21,5 +21,5 @@ export const CreateNewsPage = () => {
     return console.log(res.json())
   }
 
-  return <CreateComponent onSubmit={createNews} />
+  return <CreateNews onSubmit={createNews} />
 }
