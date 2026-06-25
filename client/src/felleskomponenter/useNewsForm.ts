@@ -9,6 +9,7 @@ export type NewsFormValues = {
   publishedFrom: string
   publishedTo: string
   image_url: string
+  tags: string[]
 }
 
 export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
@@ -29,6 +30,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
 
   register('publishedFrom', { required: 'Mangler fra-dato' })
   register('publishedTo', { required: 'Mangler til-dato' })
+  register('tags', { validate: (v) => v?.length > 0 || 'Mangler tag' })
 
   const publishedFrom = watch('publishedFrom')
   const fromDateValue = publishedFrom ? new Date(publishedFrom) : new Date()
@@ -50,7 +52,11 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     },
   })
 
-  const { datepickerProps: toDatepickerProps, inputProps: toInputProps, reset: resetToDate } = useDatepicker({
+  const {
+    datepickerProps: toDatepickerProps,
+    inputProps: toInputProps,
+    reset: resetToDate,
+  } = useDatepicker({
     fromDate: fromDateValue,
     defaultSelected: defaultValues?.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
     onDateChange: (date) => {
@@ -60,5 +66,15 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
 
   resetToDateRef.current = resetToDate
 
-  return { register, handleSubmit, control, errors, fromDatepickerProps, fromInputProps, toDatepickerProps, toInputProps }
+  return {
+    register,
+    handleSubmit,
+    control,
+    errors,
+    fromDatepickerProps,
+    fromInputProps,
+    toDatepickerProps,
+    toInputProps,
+    setValue,
+  }
 }

@@ -24,6 +24,7 @@ export interface NewsDTO {
   updated: string
   publishedFrom: string
   publishedTo: string
+  tags?: string[]
 }
 
 export interface CreateNewsDto {
@@ -33,17 +34,20 @@ export interface CreateNewsDto {
   image_url?: string
   publishedFrom: string
   publishedTo: string
+  tags: string[]
 }
 
 export interface EditNewsDto {
   title: string
   description: string
   body: string
+  image_url?: string
   publishedFrom: string
   publishedTo: string
+  tags: string[]
 }
 
 export interface TagsDTO {
   id: string
-  name: string
+  tag: string
 }

@@ -1,4 +1,4 @@
-import {NewsDTO, TagsDTO} from 'utils/admin-util.ts'
+import { NewsDTO, TagsDTO } from 'utils/admin-util.ts'
 import { mutate } from 'swr'
 
 export async function getNews(): Promise<NewsDTO[]> {

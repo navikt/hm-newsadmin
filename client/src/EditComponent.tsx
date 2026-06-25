@@ -12,13 +12,19 @@ import {
   TextField,
   VStack,
   ErrorMessage,
+  ActionMenu,
+  Chips,
 } from '@navikt/ds-react'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
-import { ArrowLeftIcon, TrashIcon } from '@navikt/aksel-icons'
+import { ArrowLeftIcon, ChevronDownIcon, TrashIcon } from '@navikt/aksel-icons'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
 import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
 import { ImageUpload } from 'ImageUpload.tsx'
+import useSWR from 'swr'
+import { TagsDTO } from 'utils/admin-util.ts'
+import { getTags } from 'utils/api-util.ts'
+import { useState, useEffect } from 'react'
 
 type Props = {
   onSubmit: (data: NewsFormValues) => void
@@ -27,14 +33,44 @@ type Props = {
 }
 
 export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
-  const { register, handleSubmit, control, errors, fromDatepickerProps, fromInputProps, toDatepickerProps, toInputProps } =
-    useNewsForm(defaultValues)
+  const {
+    register,
+    handleSubmit,
+    control,
+    errors,
+    fromDatepickerProps,
+    fromInputProps,
+    toDatepickerProps,
+    toInputProps,
+    setValue,
+  } = useNewsForm(defaultValues)
+
+  const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+
+  useEffect(() => {
+    if (tags && defaultValues?.tags) {
+      const ids = defaultValues.tags
+        .map((name) => tags.find((t) => t.tag === name)?.id)
+        .filter((id): id is string => Boolean(id))
+      setSelectedTagIds(ids)
+      setValue('tags', ids)
+    }
+  }, [tags, defaultValues?.tags])
+
+  const toggleTag = (id: string) => {
+    setSelectedTagIds((prev) => {
+      const next = prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
+      setValue('tags', next, { shouldValidate: true })
+      return next
+    })
+  }
 
   return (
     <Box>
       <VStack gap="space-24" justify={'center'}>
         <Page.Block as="main" width="text">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit((data) => onSubmit({ ...data, tags: selectedTagIds }))}>
             <VStack gap="space-16">
               <HStack align={'center'} style={{ position: 'relative' }}>
                 <Button
@@ -73,6 +109,40 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 </DatePicker>
               </HStack>
               <VStack gap="space-8">
+                <ActionMenu>
+                  <ActionMenu.Trigger>
+                    <Button
+                      data-color="neutral"
+                      variant="secondary"
+                      icon={<ChevronDownIcon aria-hidden />}
+                      iconPosition="right"
+                    >
+                      Tags
+                    </Button>
+                  </ActionMenu.Trigger>
+                  <ActionMenu.Content>
+                    <ActionMenu.Group label="Tags">
+                      {tags?.map((tag) => (
+                        <ActionMenu.Item key={tag.id} onSelect={() => toggleTag(tag.id)}>
+                          {tag.tag}
+                        </ActionMenu.Item>
+                      ))}
+                    </ActionMenu.Group>
+                  </ActionMenu.Content>
+                </ActionMenu>
+                {errors.tags && <ErrorMessage showIcon>{errors.tags.message}</ErrorMessage>}
+                {selectedTagIds.length > 0 && (
+                  <Chips>
+                    {selectedTagIds.map((id) => {
+                      const tag = tags?.find((t) => t.id === id)
+                      return tag ? (
+                        <Chips.Removable key={id} onDelete={() => toggleTag(id)}>
+                          {tag.tag}
+                        </Chips.Removable>
+                      ) : null
+                    })}
+                  </Chips>
+                )}
                 <Label>Innhold</Label>
                 <Controller
                   name="body"
@@ -91,7 +161,7 @@ export const EditComponent = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 />
               </VStack>
               <Button type="submit" variant={'primary'}>
-                Endre sak
+                Lagre sak
               </Button>
               <VStack gap={'space-16'} paddingBlock={'space-0 space-16'}>
                 <Dialog>
