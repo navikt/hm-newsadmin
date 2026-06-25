@@ -12,7 +12,7 @@ import {
   HGrid,
 } from '@navikt/ds-react'
 import { toReadableDateTimeStringFromDate } from './utils/date-util'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
 import { useState } from 'react'
 import { NewsDTO } from 'utils/admin-util.ts'
@@ -21,13 +21,14 @@ import { getNews } from 'utils/api-util.ts'
 export const NyhetsOversikt = () => {
   const navigate = useNavigate()
   const { data: news } = useSWR<NewsDTO[]>('news', () => getNews())
-  const [searchQuery, setSearchQuery] = useState('')
   const [filterValue, setFilterValue] = useState('alle')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchTerm = searchParams.get('term') || ''
 
   const filteredNews =
     news
       ?.filter((item) => {
-        const query = searchQuery.toLowerCase()
+        const query = searchTerm.toLowerCase()
         const matchesTitle = item.title?.toLowerCase().includes(query)
         const matchesDescription = item.description?.toLowerCase().includes(query)
         return matchesTitle || matchesDescription
@@ -71,9 +72,9 @@ export const NyhetsOversikt = () => {
             label="Søk etter nyheter"
             variant="secondary"
             hideLabel={false}
-            value={searchQuery}
-            onChange={(value) => setSearchQuery(value)}
-            onClear={() => setSearchQuery('')}
+            value={searchTerm}
+            onChange={(value) => setSearchParams({ term: value })}
+            onClear={() => setSearchParams('')}
           />
           <ToggleGroup value={filterValue} onChange={setFilterValue} label={'Filtrer nyheter'}>
             <ToggleGroup.Item value="alle" label="Alle" />
