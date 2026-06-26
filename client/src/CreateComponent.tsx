@@ -22,6 +22,7 @@ import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
 import useSWR from 'swr'
 import { TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
+import { useNavigate } from 'react-router-dom'
 
 const diktator = '/supreme_leader 2.png'
 const CREATE_DEFAULTS = { image_url: diktator }
@@ -43,6 +44,7 @@ export const CreateComponent = ({ onSubmit }: Props) => {
     setValue,
   } = useNewsForm(CREATE_DEFAULTS)
 
+  const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
 
@@ -63,9 +65,9 @@ export const CreateComponent = ({ onSubmit }: Props) => {
               <HStack align={'center'} style={{ position: 'relative' }}>
                 <Button
                   as={Link}
-                  href={'/'}
                   variant={'tertiary'}
                   icon={<ArrowLeftIcon />}
+                  onClick={() => navigate(-1)}
                   style={{ position: 'absolute', right: '100%' }}
                 >
                   Tilbake
