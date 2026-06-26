@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { Startside } from './Startside'
+import { NyhetsOversikt } from './NyhetsOversikt'
 
-describe('Startside', () => {
+describe('NyhetsOversikt', () => {
   it('viser overskrift, søkefelt og opprett-knapp', () => {
     render(
       <MemoryRouter>
-        <Startside />
+        <NyhetsOversikt />
       </MemoryRouter>
     )
 

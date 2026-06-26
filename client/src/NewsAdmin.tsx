@@ -2,6 +2,7 @@ import {
   BodyLong,
   Box,
   Button,
+  Chips,
   DatePicker,
   Dialog,
   HStack,
@@ -13,19 +14,21 @@ import {
   VStack,
   ErrorMessage,
   ActionMenu,
-  Chips,
 } from '@navikt/ds-react'
+import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
+import { ArrowLeftIcon, ChevronDownIcon, TrashIcon } from '@navikt/aksel-icons'
+import { useState, useEffect } from 'react'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
-import { ArrowLeftIcon, ChevronDownIcon, TrashIcon } from '@navikt/aksel-icons'
-import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
-import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
 import { ImageUpload } from 'ImageUpload.tsx'
+import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
 import useSWR from 'swr'
 import { TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+const diktator = '/supreme_leader 2.png'
+const CREATE_DEFAULTS = { image_url: diktator }
 
 type Props = {
   onSubmit: (data: NewsFormValues) => void
@@ -33,7 +36,9 @@ type Props = {
   defaultValues?: NewsFormValues
 }
 
-export const EditNews = ({ onSubmit, onDelete, defaultValues }: Props) => {
+export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
+  const isEdit = !!defaultValues?.title
+
   const {
     register,
     handleSubmit,
@@ -44,11 +49,11 @@ export const EditNews = ({ onSubmit, onDelete, defaultValues }: Props) => {
     toDatepickerProps,
     toInputProps,
     setValue,
-  } = useNewsForm(defaultValues)
+  } = useNewsForm(isEdit ? defaultValues : CREATE_DEFAULTS)
 
+  const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (tags && defaultValues?.tags) {
@@ -84,7 +89,7 @@ export const EditNews = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 >
                   Tilbake
                 </Button>
-                <h2>Rediger Sak</h2>
+                <h2>{isEdit ? 'Rediger' : 'Opprett'}</h2>
               </HStack>
               <Box
                 background="neutral-soft"
@@ -100,15 +105,17 @@ export const EditNews = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 label="Tittel"
                 error={errors.title?.message}
                 width="text"
-              />
+              ></TextField>
               <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
-              <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
-                <DatePicker {...fromDatepickerProps}>
-                  <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
-                </DatePicker>
-                <DatePicker {...toDatepickerProps}>
-                  <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
-                </DatePicker>
+              <HStack justify={'center'}>
+                <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
+                  <DatePicker {...fromDatepickerProps}>
+                    <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
+                  </DatePicker>
+                  <DatePicker {...toDatepickerProps}>
+                    <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
+                  </DatePicker>
+                </HStack>
               </HStack>
               <VStack gap="space-8">
                 <ActionMenu>
@@ -163,36 +170,38 @@ export const EditNews = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 />
               </VStack>
               <Button type="submit" variant={'primary'}>
-                Lagre sak
+                {isEdit ? 'Lagre sak' : 'Opprett sak'}
               </Button>
-              <VStack gap={'space-16'} paddingBlock={'space-0 space-16'}>
-                <Dialog>
-                  <Dialog.Trigger>
-                    <Button data-color={'danger'} icon={<TrashIcon aria-hidden />}>
-                      Slett
-                    </Button>
-                  </Dialog.Trigger>
-                  <Dialog.Popup role={'alertdialog'} closeOnOutsideClick={false}>
-                    <DialogHeader>
-                      <DialogBody>
-                        <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
-                      </DialogBody>
-                      <DialogFooter>
-                        <Dialog.CloseTrigger>
-                          <Button variant={'secondary'} data-color={'neutral'}>
-                            Avbryt
-                          </Button>
-                        </Dialog.CloseTrigger>
-                        <Dialog.CloseTrigger>
-                          <Button variant={'danger'} onClick={() => onDelete()}>
-                            Ja, slett
-                          </Button>
-                        </Dialog.CloseTrigger>
-                      </DialogFooter>
-                    </DialogHeader>
-                  </Dialog.Popup>
-                </Dialog>
-              </VStack>
+              {isEdit && (
+                <VStack gap={'space-16'} paddingBlock={'space-0 space-16'}>
+                  <Dialog>
+                    <Dialog.Trigger>
+                      <Button data-color={'danger'} icon={<TrashIcon aria-hidden />}>
+                        Slett
+                      </Button>
+                    </Dialog.Trigger>
+                    <Dialog.Popup role={'alertdialog'} closeOnOutsideClick={false}>
+                      <DialogHeader>
+                        <DialogBody>
+                          <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
+                        </DialogBody>
+                        <DialogFooter>
+                          <Dialog.CloseTrigger>
+                            <Button variant={'secondary'} data-color={'neutral'}>
+                              Avbryt
+                            </Button>
+                          </Dialog.CloseTrigger>
+                          <Dialog.CloseTrigger>
+                            <Button variant={'danger'} onClick={() => onDelete()}>
+                              Ja, slett
+                            </Button>
+                          </Dialog.CloseTrigger>
+                        </DialogFooter>
+                      </DialogHeader>
+                    </Dialog.Popup>
+                  </Dialog>
+                </VStack>
+              )}
             </VStack>
           </form>
         </Page.Block>

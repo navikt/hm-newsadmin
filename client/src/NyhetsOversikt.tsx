@@ -1,21 +1,28 @@
 import { BodyLong, Button, Heading, HGrid, HStack, Link, Page, Search, ToggleGroup, VStack } from '@navikt/ds-react'
 import { useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { useState } from 'react'
-import { NewsDTO } from 'utils/admin-util.ts'
 import { getNews } from 'utils/api-util.ts'
 import NewsCard from 'NewsCard.tsx'
 import { filterBySearch, filterByStatus, FilterValue } from 'utils/news-filter-util.ts'
 
 export const NyhetsOversikt = () => {
-  const { data: news } = useSWR<NewsDTO[]>('news', () => getNews())
-  const [filterValue, setFilterValue] = useState<FilterValue>(FilterValue.alle)
+  const { data: news } = useSWR('news', () => getNews())
   const [searchParams, setSearchParams] = useSearchParams()
   const searchTerm = searchParams.get('term') || ''
+  const filterValue = (searchParams.get('filter') as FilterValue) || FilterValue.alle
 
-  const filteredNews = filterByStatus(filterBySearch(news ?? [], searchTerm), filterValue).sort(
-    (a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime()
-  )
+  const filteredNews = filterByStatus(filterBySearch(news ?? [], searchTerm), filterValue).sort((a, b) => {
+    const dateA = new Date(a.updated ?? a.created).getTime()
+    const dateB = new Date(b.updated ?? b.created).getTime()
+    return dateB - dateA
+  })
+
+  const clearTerm = () =>
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.delete('term')
+      return next
+    })
 
   return (
     <Page>
@@ -25,7 +32,6 @@ export const NyhetsOversikt = () => {
             <Heading size="large" level="1">
               Nyheter
             </Heading>
-            {/*TODO: fiks styling på knappen?*/}
             <Button as={Link} href={'/createNewsPage'} variant={'secondary'}>
               Opprett nyhet
             </Button>
@@ -35,12 +41,12 @@ export const NyhetsOversikt = () => {
             variant="secondary"
             hideLabel={false}
             value={searchTerm}
-            onChange={(value) => setSearchParams({ term: value })}
-            onClear={() => setSearchParams('')}
+            onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value }))}
+            onClear={clearTerm}
           />
           <ToggleGroup
             value={filterValue}
-            onChange={(value) => setFilterValue(value as FilterValue)}
+            onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), filter: v }))}
             label={'Filtrer nyheter'}
           >
             <ToggleGroup.Item value="alle" label="Alle" />

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import { CreateNews } from 'CreateNews.tsx'
 import { useSWRConfig } from 'swr'
 import { CreateNewsDto } from 'utils/admin-util.ts'
+import { NewsAdmin } from 'NewsAdmin.tsx'
 
 export const CreateNewsPage = () => {
   const navigate = useNavigate()
@@ -21,5 +21,5 @@ export const CreateNewsPage = () => {
     return console.log(res.json())
   }
 
-  return <CreateNews onSubmit={createNews} />
+  return <NewsAdmin onSubmit={createNews} onDelete={() => {}} />
 }
