@@ -25,6 +25,7 @@ import useSWR from 'swr'
 import { TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Props = {
   onSubmit: (data: NewsFormValues) => void
@@ -47,6 +48,7 @@ export const EditNews = ({ onSubmit, onDelete, defaultValues }: Props) => {
 
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (tags && defaultValues?.tags) {
@@ -75,9 +77,9 @@ export const EditNews = ({ onSubmit, onDelete, defaultValues }: Props) => {
               <HStack align={'center'} style={{ position: 'relative' }}>
                 <Button
                   as={Link}
-                  href={'/'}
                   variant={'tertiary'}
                   icon={<ArrowLeftIcon />}
+                  onClick={() => navigate(-1)}
                   style={{ position: 'absolute', right: '100%' }}
                 >
                   Tilbake

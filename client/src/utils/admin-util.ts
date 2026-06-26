@@ -51,3 +51,10 @@ export interface TagsDTO {
   id: string
   tag: string
 }
+
+export enum NewsFilter {
+  Alle = 'alle',
+  Fremtidig = 'fremtidig',
+  Publisert = 'publisert',
+  Historikk = 'historikk',
+}

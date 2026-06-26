@@ -24,7 +24,7 @@ export const EditNewsPage = () => {
       navigate('/')
     }
   }
-  if (!news) return <div>Laster...</div>
+  if (!news) return <div></div>
 
   async function handleDelete() {
     await deleteNews(id!)
