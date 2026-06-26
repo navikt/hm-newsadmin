@@ -14,16 +14,15 @@ import {
 import { toReadableDateTimeString } from './utils/date-util'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { useState } from 'react'
 import { NewsDTO, NewsFilter } from 'utils/admin-util.ts'
 import { getNews } from 'utils/api-util.ts'
 
 export const Startside = () => {
   const navigate = useNavigate()
   const { data: news } = useSWR<NewsDTO[]>('news', () => getNews())
-  const [filterValue, setFilterValue] = useState(NewsFilter.Alle)
   const [searchParams, setSearchParams] = useSearchParams()
   const searchTerm = searchParams.get('term') || ''
+  const filterValue = (searchParams.get('filter') as NewsFilter) || NewsFilter.Alle
 
   const filteredNews =
     news
@@ -44,6 +43,13 @@ export const Startside = () => {
       })
       .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime()) || []
 
+  const clearTerm = () =>
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.delete('term')
+      return next
+    })
+
   return (
     <Page>
       <Page.Block as="main" width="xl" gutters>
@@ -62,10 +68,14 @@ export const Startside = () => {
             variant="secondary"
             hideLabel={false}
             value={searchTerm}
-            onChange={(value) => setSearchParams({ term: value })}
-            onClear={() => setSearchParams('')}
+            onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value }))}
+            onClear={clearTerm}
           />
-          <ToggleGroup value={filterValue} onChange={(v) => setFilterValue(v as NewsFilter)} label={'Filtrer nyheter'}>
+          <ToggleGroup
+            value={filterValue}
+            onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), filter: v }))}
+            label={'Filtrer nyheter'}
+          >
             <ToggleGroup.Item value="alle" label="Alle" />
             <ToggleGroup.Item value={NewsFilter.Fremtidig} label="Fremtidig" />
             <ToggleGroup.Item value={NewsFilter.Publisert} label="Publisert" />
