@@ -1,27 +1,27 @@
 import {
-  VStack,
-  HStack,
-  Heading,
+  BodyLong,
   Button,
+  Heading,
+  HGrid,
+  HStack,
+  Link,
+  LinkCard,
   Page,
   Search,
-  BodyLong,
-  LinkCard,
-  Link,
   ToggleGroup,
-  HGrid,
+  VStack,
 } from '@navikt/ds-react'
 import { toReadableDateTimeString } from './utils/date-util'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
 import { useState } from 'react'
-import { NewsDTO } from 'utils/admin-util.ts'
+import { NewsDTO, NewsFilter } from 'utils/admin-util.ts'
 import { getNews } from 'utils/api-util.ts'
 
 export const Startside = () => {
   const navigate = useNavigate()
   const { data: news } = useSWR<NewsDTO[]>('news', () => getNews())
-  const [filterValue, setFilterValue] = useState('alle')
+  const [filterValue, setFilterValue] = useState(NewsFilter.Alle)
   const [searchParams, setSearchParams] = useSearchParams()
   const searchTerm = searchParams.get('term') || ''
 
@@ -37,9 +37,9 @@ export const Startside = () => {
         const now = new Date()
         const from = new Date(item.publishedFrom)
         const to = new Date(item.publishedTo)
-        if (filterValue === 'fremtidig') return from > now
-        if (filterValue === 'publisert') return from <= now && to >= now
-        if (filterValue === 'historikk') return to < now
+        if (filterValue === NewsFilter.Fremtidig) return from > now
+        if (filterValue === NewsFilter.Publisert) return from <= now && to >= now
+        if (filterValue === NewsFilter.Historikk) return to < now
         return true
       })
       .sort((a, b) => new Date(b.updated).getTime() - new Date(a.updated).getTime()) || []
@@ -65,11 +65,11 @@ export const Startside = () => {
             onChange={(value) => setSearchParams({ term: value })}
             onClear={() => setSearchParams('')}
           />
-          <ToggleGroup value={filterValue} onChange={setFilterValue} label={'Filtrer nyheter'}>
+          <ToggleGroup value={filterValue} onChange={(v) => setFilterValue(v as NewsFilter)} label={'Filtrer nyheter'}>
             <ToggleGroup.Item value="alle" label="Alle" />
-            <ToggleGroup.Item value="fremtidig" label="Fremtidig" />
-            <ToggleGroup.Item value="publisert" label="Publisert" />
-            <ToggleGroup.Item value="historikk" label="Historikk" />
+            <ToggleGroup.Item value={NewsFilter.Fremtidig} label="Fremtidig" />
+            <ToggleGroup.Item value={NewsFilter.Publisert} label="Publisert" />
+            <ToggleGroup.Item value={NewsFilter.Historikk} label="Historikk" />
           </ToggleGroup>
           <HGrid gap="space-12" columns={{ xs: 'repeat(auto-fit, minmax(10rem, 1fr))', md: 3 }}>
             {filteredNews.map((news) => (
