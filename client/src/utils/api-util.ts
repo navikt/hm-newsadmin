@@ -9,7 +9,8 @@ export async function getNews(): Promise<NewsDTO[]> {
     },
   })
 
-  return res.json()
+  const data = await res.json()
+  return data.content
 }
 
 export async function deleteNews(id: String): Promise<void> {

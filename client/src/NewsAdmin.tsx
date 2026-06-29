@@ -64,7 +64,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
 
   const toggleTag = (id: string) => {
     setSelectedTagIds((prev) => {
-      const next = prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
+      const next = prev.includes(id) ? [] : [id]
       setValue('tags', next, { shouldValidate: true })
       return next
     })
@@ -171,7 +171,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
               <HStack gap={'space-8'}>
                 <Dialog>
                   <Dialog.Trigger style={{ flex: 1, display: 'flex' }}>
-                    <Button data-color={'danger'} icon={<TrashIcon aria-hidden />} fullWidth>
+                    <Button data-color={'danger'} icon={<TrashIcon aria-hidden />}>
                       Slett
                     </Button>
                   </Dialog.Trigger>
@@ -200,7 +200,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 </Button>
               </HStack>
             ) : (
-              <Button type="submit" variant={'primary'} fullWidth>
+              <Button type="submit" variant={'primary'}>
                 Opprett sak
               </Button>
             )}
