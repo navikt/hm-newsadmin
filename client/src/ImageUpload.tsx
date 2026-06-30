@@ -2,6 +2,7 @@ import { BodyShort, Button, ErrorMessage, FileObject, FileUpload, Label, VStack 
 import { useId, useState } from 'react'
 import { UploadIcon } from '@navikt/aksel-icons'
 import { uploadNewsMedia } from 'utils/api-util.ts'
+import { mediumImageLoader } from 'utils/image-util.ts'
 
 type Props = {
   newsId?: string
@@ -12,7 +13,9 @@ type Props = {
 export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload }: Props) => {
   const labelId = useId()
   const descId = useId()
-  const [previewUrl, setPreviewUrl] = useState<string | undefined>(defaultImageUrl)
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>(
+    defaultImageUrl ? mediumImageLoader(defaultImageUrl) : undefined
+  )
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | undefined>()
 

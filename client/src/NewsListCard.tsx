@@ -12,7 +12,7 @@ export default function NewsListCard({ news }: { news: NewsDTO }) {
     <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)}>
       <VStack justify="center" height="100%" asChild>
         <LinkCard.Icon>
-          <NewsImage />
+          <NewsImage imageUrl={news.image_url} />
         </LinkCard.Icon>
       </VStack>
       <LinkCard.Title>{news.title}</LinkCard.Title>
