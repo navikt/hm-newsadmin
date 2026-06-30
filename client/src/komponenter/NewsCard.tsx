@@ -1,7 +1,7 @@
 import { LinkCard, Tag, HStack } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { useNavigate } from 'react-router-dom'
-import NewsImage from 'NewsImage.tsx'
+import NewsImage from 'komponenter/NewsImage.tsx'
 import { getNewsStatus, statusTagProps } from 'utils/news-filter-util.ts'
 
 export default function NewsCard({ news }: { news: NewsDTO }) {

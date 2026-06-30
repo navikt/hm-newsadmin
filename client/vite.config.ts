@@ -74,14 +74,13 @@ export default defineConfig((env) => ({
   customLogger: logger,
   server: {
     forwardConsole: true,
-    historyApiFallback: true,
     proxy: {
       '/news': {
         target: 'http://localhost:8084',
         changeOrigin: true,
         secure: false,
         bypass: (req) => {
-          if (req.url?.includes('/edit')) return req.url
+          if (req.url?.includes('/edit')) return '/index.html'
         },
       },
       '/admin': {

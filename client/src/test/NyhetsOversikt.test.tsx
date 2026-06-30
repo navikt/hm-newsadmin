@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { NyhetsOversikt } from './NyhetsOversikt'
+import { NyhetsOversikt } from '../pages/NyhetsOversikt.tsx'
 
 describe('NyhetsOversikt', () => {
   it('viser overskrift, søkefelt og opprett-knapp', () => {
