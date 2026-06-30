@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
-import { NyhetsOversikt } from 'NyhetsOversikt.tsx'
+import { NyhetsOversikt } from 'pages/NyhetsOversikt.tsx'
 import { CreateNewsPage } from '/actions/CreateNewsPage'
 import { EditNewsPage } from 'actions/EditNewsPage.tsx'
 

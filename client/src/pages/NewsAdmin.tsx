@@ -19,9 +19,9 @@ import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
 import { ArrowLeftIcon, ChevronDownIcon, TrashIcon } from '@navikt/aksel-icons'
 import { useState, useEffect } from 'react'
 import { Controller } from 'react-hook-form'
-import RichTextEditorQuill from 'felleskomponenter/RichTextEditor.tsx'
-import { ImageUpload } from 'ImageUpload.tsx'
-import { useNewsForm, NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
+import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
+import { ImageUpload } from 'utils/ImageUpload.tsx'
+import { useNewsForm, NewsFormValues } from 'komponenter/useNewsForm.ts'
 import useSWR from 'swr'
 import { TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
@@ -32,9 +32,10 @@ type Props = {
   onDelete: () => void
   defaultValues?: NewsFormValues
   newsId?: string
+  onFileSelect?: (file: File) => void
 }
 
-export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId }: Props) => {
+export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSelect }: Props) => {
   const isEdit = !!defaultValues?.title
 
   const {
@@ -99,6 +100,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId }: Props) 
                 newsId={newsId}
                 defaultImageUrl={defaultValues?.image_url}
                 onImageUpload={(uri) => setValue('image_url', uri)}
+                onFileSelect={onFileSelect}
               />
             </Box>
             <TextField

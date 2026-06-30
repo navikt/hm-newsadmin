@@ -7,9 +7,10 @@ type Props = {
   newsId?: string
   defaultImageUrl?: string
   onImageUpload?: (uri: string) => void
+  onFileSelect?: (file: File) => void
 }
 
-export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload }: Props) => {
+export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload, onFileSelect }: Props) => {
   const labelId = useId()
   const descId = useId()
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(defaultImageUrl)
@@ -18,12 +19,17 @@ export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload }: Props) =
 
   async function handleSelect(files: FileObject[]) {
     const file = files[0]?.file
-    if (!file || !newsId) return
+    if (!file) return
 
     setPreviewUrl(URL.createObjectURL(file))
     setUploadError(undefined)
-    setIsUploading(true)
 
+    if (!newsId) {
+      onFileSelect?.(file)
+      return
+    }
+
+    setIsUploading(true)
     try {
       const media = await uploadNewsMedia(newsId, file)
       const uri = media[0]?.uri
@@ -49,7 +55,7 @@ export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload }: Props) =
           Last opp bilde
         </Label>
         <BodyShort id={descId} textColor="subtle">
-          {newsId ? 'Du kan laste opp maks 1 bilde.' : 'Lagre nyheten først for å laste opp bilde.'}
+          Du kan laste opp maks 1 bilde.
         </BodyShort>
       </VStack>
       {uploadError && <ErrorMessage showIcon>{uploadError}</ErrorMessage>}
@@ -60,7 +66,6 @@ export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload }: Props) =
           variant="secondary"
           icon={<UploadIcon aria-hidden />}
           loading={isUploading}
-          disabled={!newsId}
         >
           {previewUrl ? 'Bytt bilde' : 'Velg fil'}
         </Button>

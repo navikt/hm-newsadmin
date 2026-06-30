@@ -2,8 +2,8 @@ import { BodyLong, Button, Heading, HGrid, HStack, Link, Page, Search, ToggleGro
 import { useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
 import { getNews } from 'utils/api-util.ts'
-import NewsCard from 'NewsCard.tsx'
-import NewsListCard from 'NewsListCard.tsx'
+import NewsCard from 'komponenter/NewsCard.tsx'
+import NewsListCard from 'komponenter/NewsListCard.tsx'
 import { filterBySearch, filterByStatus, FilterValue } from 'utils/news-filter-util.ts'
 import { SquareGridIcon, BulletListIcon } from '@navikt/aksel-icons'
 

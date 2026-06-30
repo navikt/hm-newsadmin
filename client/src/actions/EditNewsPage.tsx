@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
 import { deleteNews } from 'utils/api-util.ts'
-import { NewsAdmin } from 'NewsAdmin.tsx'
-import { NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
+import { NewsAdmin } from 'pages/NewsAdmin.tsx'
+import { NewsFormValues } from 'komponenter/useNewsForm.ts'
 
 export const EditNewsPage = () => {
   const navigate = useNavigate()
