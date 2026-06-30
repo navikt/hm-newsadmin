@@ -9,17 +9,21 @@ export default function NewsListCard({ news }: { news: NewsDTO }) {
   const status = getNewsStatus(news)
   const { label, color } = statusTagProps[status]
   return (
-    <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)}>
+    <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)} style={{ height: '14rem' }}>
       <VStack justify="center" height="100%" asChild>
-        <LinkCard.Icon>
+        <LinkCard.Icon style={{ width: '16rem', flexShrink: 0 }}>
           <NewsImage imageUrl={news.image_url} />
         </LinkCard.Icon>
       </VStack>
-      <LinkCard.Title>{news.title}</LinkCard.Title>
+      <LinkCard.Title
+        style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+      >
+        {news.title}
+      </LinkCard.Title>
       <LinkCard.Description
         style={{
           display: '-webkit-box',
-          WebkitLineClamp: 5,
+          WebkitLineClamp: 3,
           WebkitBoxOrient: 'vertical',
           overflow: 'hidden',
         }}

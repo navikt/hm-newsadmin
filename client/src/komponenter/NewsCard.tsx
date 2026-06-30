@@ -13,7 +13,11 @@ export default function NewsCard({ news }: { news: NewsDTO }) {
       <LinkCard.Image aspectRatio="16/9">
         <NewsImage fontSize="5rem" aria-hidden imageUrl={news.image_url} />
       </LinkCard.Image>
-      <LinkCard.Title>{news.title}</LinkCard.Title>
+      <LinkCard.Title
+        style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+      >
+        {news.title}
+      </LinkCard.Title>
       <LinkCard.Description
         style={{
           display: '-webkit-box',
