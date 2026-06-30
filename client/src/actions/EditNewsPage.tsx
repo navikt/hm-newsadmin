@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
-import { EditNewsDto } from 'utils/admin-util.ts'
 import { deleteNews } from 'utils/api-util.ts'
 import { NewsAdmin } from 'NewsAdmin.tsx'
+import { NewsFormValues } from 'felleskomponenter/useNewsForm.ts'
 
 export const EditNewsPage = () => {
   const navigate = useNavigate()
@@ -10,7 +10,7 @@ export const EditNewsPage = () => {
   const { mutate } = useSWRConfig()
   const { data: news } = useSWR(`/news/${id}`, () => fetch(`/news/${id}`).then((res) => res.json()))
 
-  async function editNews(data: EditNewsDto) {
+  async function editNews(data: NewsFormValues) {
     const res = await fetch(`/admin/news/${id}`, {
       method: 'PUT',
       headers: {
@@ -31,5 +31,5 @@ export const EditNewsPage = () => {
     navigate('/')
   }
 
-  return <NewsAdmin onSubmit={editNews} onDelete={handleDelete} defaultValues={news} />
+  return <NewsAdmin onSubmit={editNews} onDelete={handleDelete} defaultValues={news} newsId={id} />
 }

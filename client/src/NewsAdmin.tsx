@@ -31,9 +31,10 @@ type Props = {
   onSubmit: (data: NewsFormValues) => void
   onDelete: () => void
   defaultValues?: NewsFormValues
+  newsId?: string
 }
 
-export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
+export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId }: Props) => {
   const isEdit = !!defaultValues?.title
 
   const {
@@ -64,7 +65,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
 
   const toggleTag = (id: string) => {
     setSelectedTagIds((prev) => {
-      const next = prev.includes(id) ? [] : [id]
+      const next = prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
       setValue('tags', next, { shouldValidate: true })
       return next
     })
@@ -94,7 +95,11 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
               borderWidth="2"
               borderRadius="12 12 0 0"
             >
-              <ImageUpload />
+              <ImageUpload
+                newsId={newsId}
+                defaultImageUrl={defaultValues?.image_url}
+                onImageUpload={(uri) => setValue('image_url', uri)}
+              />
             </Box>
             <TextField
               {...register('title', { required: 'Mangler tittel' })}
@@ -171,7 +176,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
               <HStack gap={'space-8'}>
                 <Dialog>
                   <Dialog.Trigger style={{ flex: 1, display: 'flex' }}>
-                    <Button data-color={'danger'} icon={<TrashIcon aria-hidden />}>
+                    <Button data-color={'danger'} icon={<TrashIcon aria-hidden />} style={{ width: '100%' }}>
                       Slett
                     </Button>
                   </Dialog.Trigger>
@@ -200,7 +205,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues }: Props) => {
                 </Button>
               </HStack>
             ) : (
-              <Button type="submit" variant={'primary'}>
+              <Button type="submit" variant={'primary'} style={{ width: '100%' }}>
                 Opprett sak
               </Button>
             )}

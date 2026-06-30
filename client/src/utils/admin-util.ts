@@ -1,3 +1,11 @@
+export interface MediaDTO {
+  uri: string
+  sourceUri?: string
+  filename?: string
+  priority?: number
+  type?: string
+}
+
 export interface NewAdminUserDTO {
   name?: string | null
   email: string
