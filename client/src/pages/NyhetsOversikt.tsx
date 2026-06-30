@@ -1,5 +1,5 @@
-import { BodyLong, Button, Heading, HGrid, HStack, Link, Page, Search, ToggleGroup, VStack } from '@navikt/ds-react'
-import { useSearchParams } from 'react-router-dom'
+import { BodyLong, Button, Heading, HGrid, HStack, Page, Search, ToggleGroup, VStack } from '@navikt/ds-react'
+import { Link, useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
 import { getNews } from 'utils/api-util.ts'
 import NewsCard from 'komponenter/NewsCard.tsx'
@@ -34,7 +34,7 @@ export const NyhetsOversikt = () => {
             <Heading size="large" level="1">
               Nyheter
             </Heading>
-            <Button as={Link} href={'/createNewsPage'} variant={'secondary'}>
+            <Button as={Link} to={'/createNewsPage'} variant={'secondary'}>
               Opprett nyhet
             </Button>
           </HStack>
