@@ -1,19 +1,38 @@
-import { BodyLong, Button, Heading, HGrid, HStack, Page, Search, ToggleGroup, VStack } from '@navikt/ds-react'
+import { BodyLong, Button, Chips, Heading, HGrid, HStack, Page, Search, ToggleGroup, VStack } from '@navikt/ds-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { getNews } from 'utils/api-util.ts'
+import { getNews, getTags } from 'utils/api-util.ts'
 import NewsCard from 'komponenter/NewsCard.tsx'
 import NewsListCard from 'komponenter/NewsListCard.tsx'
-import { filterBySearch, filterByStatus, FilterValue } from 'utils/news-filter-util.ts'
+import { filterBySearch, filterByStatus, filterByTags, FilterValue } from 'utils/news-filter-util.ts'
 import { SquareGridIcon, BulletListIcon } from '@navikt/aksel-icons'
 
 export const NyhetsOversikt = () => {
   const { data: news } = useSWR('news', () => getNews())
+  const { data: tagsData } = useSWR('tags', () => getTags())
   const [searchParams, setSearchParams] = useSearchParams()
   const searchTerm = searchParams.get('term') || ''
   const filterValue = (searchParams.get('filter') as FilterValue) || FilterValue.alle
   const viewMode = (searchParams.get('view') as 'grid' | 'list') || 'grid'
-  const filteredNews = filterByStatus(filterBySearch(news ?? [], searchTerm), filterValue).sort((a, b) => {
+  const selectedTags = searchParams.get('tags') ? searchParams.get('tags')!.split(',') : []
+
+  const allTags = tagsData?.map((t) => t.tag) ?? []
+
+  const toggleTag = (tag: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      const current = prev.get('tags') ? prev.get('tags')!.split(',') : []
+      const updated = current.includes(tag) ? current.filter((t) => t !== tag) : [...current, tag]
+      if (updated.length === 0) next.delete('tags')
+      else next.set('tags', updated.join(','))
+      return next
+    })
+  }
+
+  const filteredNews = filterByTags(
+    filterByStatus(filterBySearch(news ?? [], searchTerm), filterValue),
+    selectedTags
+  ).sort((a, b) => {
     const dateA = new Date(a.updated ?? a.created).getTime()
     const dateB = new Date(b.updated ?? b.created).getTime()
     return dateB - dateA
@@ -29,8 +48,8 @@ export const NyhetsOversikt = () => {
   return (
     <Page>
       <Page.Block as="main" width="xl" gutters>
-        <VStack gap="space-32" margin="space-20">
-          <HStack justify="space-between" align="center">
+        <VStack gap="space-32" margin="space-20">'
+          <HStack justify="space-between" align="center">'
             <Heading size="large" level="1">
               Nyheter
             </Heading>
@@ -46,6 +65,15 @@ export const NyhetsOversikt = () => {
             onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value }))}
             onClear={clearTerm}
           />
+          {allTags.length > 0 && (
+            <Chips>
+              {allTags.map((tag) => (
+                <Chips.Toggle key={tag} selected={selectedTags.includes(tag)} onClick={() => toggleTag(tag)}>
+                  {tag}
+                </Chips.Toggle>
+              ))}
+            </Chips>
+          )}
           <HStack justify={'space-between'} align={'center'}>
             <ToggleGroup
               value={filterValue}

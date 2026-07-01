@@ -33,6 +33,11 @@ export function filterBySearch(news: NewsDTO[], searchTerm: string): NewsDTO[] {
   })
 }
 
+export function filterByTags(news: NewsDTO[], selectedTags: string[]): NewsDTO[] {
+  if (selectedTags.length === 0) return news
+  return news.filter((item) => selectedTags.every((tag) => item.tags?.includes(tag)))
+}
+
 export function filterByStatus(news: NewsDTO[], filter: FilterValue): NewsDTO[] {
   const now = new Date()
   return news.filter((item) => {
