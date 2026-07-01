@@ -22,20 +22,13 @@ export const CreateNewsPage = () => {
 
     if (!res.ok) return
 
-    const created: NewsDTO = await res.json()
+    const newsId: string = await res.json()
 
     if (pendingFile.current) {
       try {
-        const media = await uploadNewsMedia(created.id, pendingFile.current)
-        const uri = media[0]?.uri
-        if (uri) {
-          await fetch(`/admin/news/${created.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...data, image_url: uri }),
-          })
-        }
-      } catch {
+        await uploadNewsMedia(newsId, pendingFile.current)
+      } catch (error) {
+        console.error(error)
       }
     }
 

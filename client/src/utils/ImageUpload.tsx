@@ -35,7 +35,7 @@ export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload, onFileSele
     setIsUploading(true)
     try {
       const media = await uploadNewsMedia(newsId, file)
-      const uri = media[0]?.uri
+      const uri = media.uri
       if (uri) onImageUpload?.(uri)
     } catch {
       setUploadError('Kunne ikke laste opp bildet. Prøv igjen.')

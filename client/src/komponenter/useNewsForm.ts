@@ -31,6 +31,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
   register('publishedFrom', { required: 'Mangler fra-dato' })
   register('publishedTo', { required: 'Mangler til-dato' })
   register('tags', { validate: (v) => v?.length > 0 || 'Mangler tag' })
+  register('image_url')
 
   const publishedFrom = watch('publishedFrom')
   const fromDateValue = publishedFrom ? new Date(publishedFrom) : new Date()
