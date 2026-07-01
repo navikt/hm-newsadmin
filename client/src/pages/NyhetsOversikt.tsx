@@ -65,6 +65,15 @@ export const NyhetsOversikt = () => {
             onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value }))}
             onClear={clearTerm}
           />
+          {allTags.length > 0 && (
+            <Chips>
+              {allTags.map((tag) => (
+                <Chips.Toggle key={tag} selected={selectedTags.includes(tag)} onClick={() => toggleTag(tag)}>
+                  {tag}
+                </Chips.Toggle>
+              ))}
+            </Chips>
+          )}
           <HStack justify={'space-between'} align={'center'}>
             <ToggleGroup
               value={filterValue}
@@ -90,15 +99,6 @@ export const NyhetsOversikt = () => {
               </ToggleGroup.Item>
             </ToggleGroup>
           </HStack>
-          {allTags.length > 0 && (
-            <Chips>
-              {allTags.map((tag) => (
-                <Chips.Toggle key={tag} selected={selectedTags.includes(tag)} onClick={() => toggleTag(tag)}>
-                  {tag}
-                </Chips.Toggle>
-              ))}
-            </Chips>
-          )}
           {viewMode === 'grid' ? (
             <HGrid gap="space-12" columns={{ xs: 'repeat(auto-fit, minmax(10rem, 1fr))', md: 3 }}>
               {filteredNews.map((news) => (
