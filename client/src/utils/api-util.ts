@@ -1,16 +1,26 @@
-import { MediaDTO, NewsDTO, TagsDTO } from 'utils/admin-util.ts'
+import { MediaDTO, NewsPage, TagsDTO } from 'utils/admin-util.ts'
 import { mutate } from 'swr'
 
-export async function getNews(page = 0, size = 20): Promise<NewsDTO[]> {
-  const res = await fetch(`/news?page=${page}&size=${size}`, {
+export async function getNews(page = 0, size = 6, search?: string, tags?: string[], status?: string): Promise<NewsPage> {
+  const params = new URLSearchParams({ page: String(page), size: String(size) })
+  if (search) params.set('search', search)
+  if (status && status !== 'alle') params.set('status', status)
+  tags?.forEach((tag) => params.append('tag', tag))
+
+  const res = await fetch(`/admin/news?${params.toString()}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
   })
 
   const data = await res.json()
-  return Array.isArray(data) ? data : (data.content ?? [])
+  if (Array.isArray(data)) return { content: data, totalPages: 1, totalElements: data.length }
+  const totalSize = data.totalSize ?? 0
+  const pageSize = data.pageable?.size ?? size
+  return {
+    content: data.content ?? [],
+    totalPages: Math.ceil(totalSize / pageSize),
+    totalElements: totalSize,
+  }
 }
 
 export async function deleteNews(id: string): Promise<void> {

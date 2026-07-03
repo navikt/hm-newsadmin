@@ -22,6 +22,14 @@ export interface NewHmsUserDTO {
   attributes: {}
 }
 
+export interface NewsPage {
+  content: NewsDTO[]
+  totalPages: number
+  totalElements: number
+}
+
+export type NewsStatus = 'PUBLISHED' | 'DRAFT' | 'ARCHIVE'
+
 export interface NewsDTO {
   id: string
   title: string
@@ -32,6 +40,7 @@ export interface NewsDTO {
   updated: Date
   publishedFrom: Date
   publishedTo: Date
+  status: NewsStatus
   tags?: string[]
 }
 

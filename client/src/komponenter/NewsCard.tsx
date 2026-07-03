@@ -2,12 +2,11 @@ import { LinkCard, Tag, HStack } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { useNavigate } from 'react-router-dom'
 import NewsImage from 'komponenter/NewsImage.tsx'
-import { getNewsStatus, statusTagProps } from 'utils/news-filter-util.ts'
+import { statusTagProps } from 'utils/news-filter-util.ts'
 
 export default function NewsCard({ news }: { news: NewsDTO }) {
   const navigate = useNavigate()
-  const status = getNewsStatus(news)
-  const { label, color } = statusTagProps[status]
+  const { label, variant } = statusTagProps[news.status]
   return (
     <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)} style={{ minHeight: '490px' }}>
       <LinkCard.Image aspectRatio="16/9">
@@ -31,11 +30,11 @@ export default function NewsCard({ news }: { news: NewsDTO }) {
       <LinkCard.Footer>
         <HStack gap={'space-4'} wrap justify={'space-between'} width={'100%'}>
           {news.tags?.map((tag) => (
-            <Tag key={tag} data-color={'neutral'}>
+            <Tag key={tag} variant="neutral">
               {tag}
             </Tag>
           ))}
-          <Tag data-color={color}>{label}</Tag>
+          <Tag variant={variant}>{label}</Tag>
         </HStack>
       </LinkCard.Footer>
     </LinkCard>

@@ -4,17 +4,27 @@ import useSWR from 'swr'
 import { getNews, getTags } from 'utils/api-util.ts'
 import NewsCard from 'komponenter/NewsCard.tsx'
 import NewsListCard from 'komponenter/NewsListCard.tsx'
-import { filterBySearch, filterByStatus, filterByTags, FilterValue } from 'utils/news-filter-util.ts'
+import { FilterValue } from 'utils/news-filter-util.ts'
 import { SquareGridIcon, BulletListIcon } from '@navikt/aksel-icons'
+import { NewsDTO, NewsPage } from 'utils/admin-util.ts'
+import NewsPagination from 'komponenter/NewsPagination.tsx'
 
 export const NyhetsOversikt = () => {
-  const { data: news } = useSWR('news', () => getNews())
   const { data: tagsData } = useSWR('tags', () => getTags())
   const [searchParams, setSearchParams] = useSearchParams()
   const searchTerm = searchParams.get('term') || ''
   const filterValue = (searchParams.get('filter') as FilterValue) || FilterValue.alle
   const viewMode = (searchParams.get('view') as 'grid' | 'list') || 'grid'
   const selectedTags = searchParams.get('tags') ? searchParams.get('tags')!.split(',') : []
+  const currentPage = Number(searchParams.get('page') ?? '1')
+
+  const { data: newsPage } = useSWR<NewsPage>(
+    ['news', currentPage, searchTerm, selectedTags, filterValue],
+    () => getNews(currentPage - 1, 6, searchTerm || undefined, selectedTags.length ? selectedTags : undefined, filterValue),
+    { revalidateOnMount: true, revalidateOnFocus: true }
+  )
+  const news = newsPage?.content ?? []
+  const totalPages = newsPage?.totalPages ?? 1
 
   const allTags = tagsData?.map((t) => t.tag) ?? []
 
@@ -29,14 +39,7 @@ export const NyhetsOversikt = () => {
     })
   }
 
-  const filteredNews = filterByTags(
-    filterByStatus(filterBySearch(news ?? [], searchTerm), filterValue),
-    selectedTags
-  ).sort((a, b) => {
-    const dateA = new Date(a.updated ?? a.created).getTime()
-    const dateB = new Date(b.updated ?? b.created).getTime()
-    return dateB - dateA
-  })
+  const sortedNews = news
 
   const clearTerm = () =>
     setSearchParams((prev) => {
@@ -48,8 +51,8 @@ export const NyhetsOversikt = () => {
   return (
     <Page>
       <Page.Block as="main" width="xl" gutters>
-        <VStack gap="space-32" margin="space-20">'
-          <HStack justify="space-between" align="center">'
+        <VStack gap="space-32" margin="space-20">
+          <HStack justify="space-between" align="center">
             <Heading size="large" level="1">
               Nyheter
             </Heading>
@@ -81,9 +84,9 @@ export const NyhetsOversikt = () => {
               label={'Filtrer nyheter'}
             >
               <ToggleGroup.Item value="alle" label="Alle" />
-              <ToggleGroup.Item value="fremtidig" label="Fremtidig" />
-              <ToggleGroup.Item value="publisert" label="Publisert" />
-              <ToggleGroup.Item value="historikk" label="Historikk" />
+              <ToggleGroup.Item value="PUBLISHED" label="Publisert" />
+              <ToggleGroup.Item value="DRAFT" label="Utkast" />
+              <ToggleGroup.Item value="ARCHIVE" label="Arkiv" />
             </ToggleGroup>
             <ToggleGroup
               value={viewMode}
@@ -101,18 +104,23 @@ export const NyhetsOversikt = () => {
           </HStack>
           {viewMode === 'grid' ? (
             <HGrid gap="space-12" columns={{ xs: 'repeat(auto-fit, minmax(10rem, 1fr))', md: 3 }}>
-              {filteredNews.map((news) => (
+              {sortedNews.map((news: NewsDTO) => (
                 <NewsCard key={news.id} news={news} />
               ))}
             </HGrid>
           ) : (
             <VStack gap="space-12">
-              {filteredNews.map((news) => (
+              {sortedNews.map((news: NewsDTO) => (
                 <NewsListCard key={news.id} news={news} />
               ))}
             </VStack>
           )}
-          {news && filteredNews.length === 0 && <BodyLong>Ingen nyheter matchet søket ditt.</BodyLong>}
+          {newsPage && sortedNews.length === 0 && <BodyLong>Ingen nyheter matchet søket ditt.</BodyLong>}
+          {totalPages > 1 && (
+            <HStack justify="center">
+              <NewsPagination currentPage={currentPage} totalPages={totalPages} />
+            </HStack>
+          )}
         </VStack>
       </Page.Block>
     </Page>

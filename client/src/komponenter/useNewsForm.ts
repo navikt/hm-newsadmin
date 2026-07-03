@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { useDatepicker } from '@navikt/ds-react'
 import { useEffect, useRef } from 'react'
+import { NewsStatus } from 'utils/admin-util.ts'
 
 export type NewsFormValues = {
   title: string
@@ -9,6 +10,7 @@ export type NewsFormValues = {
   publishedFrom: string
   publishedTo: string
   image_url: string
+  status: NewsStatus
   tags: string[]
 }
 
@@ -32,6 +34,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
   register('publishedTo', { required: 'Mangler til-dato' })
   register('tags', { validate: (v) => v?.length > 0 || 'Mangler tag' })
   register('image_url')
+  register('status')
 
   const publishedFrom = watch('publishedFrom')
   const fromDateValue = publishedFrom ? new Date(publishedFrom) : new Date()

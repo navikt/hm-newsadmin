@@ -11,6 +11,7 @@ import {
   Page,
   Textarea,
   TextField,
+  ToggleGroup,
   VStack,
   ErrorMessage,
   ActionMenu,
@@ -23,7 +24,7 @@ import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
 import { ImageUpload } from 'utils/ImageUpload.tsx'
 import { useNewsForm, NewsFormValues } from 'komponenter/useNewsForm.ts'
 import useSWR from 'swr'
-import { TagsDTO } from 'utils/admin-util.ts'
+import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
 import { useNavigate } from 'react-router-dom'
 
@@ -53,6 +54,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
   const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+  const [status, setStatus] = useState<NewsStatus>(defaultValues?.status ?? 'DRAFT')
 
   useEffect(() => {
     if (tags && defaultValues?.tags) {
@@ -75,7 +77,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
   return (
     <Page>
       <Page.Block as="main" width="text">
-        <form onSubmit={handleSubmit((data) => onSubmit({ ...data, tags: selectedTagIds }))}>
+        <form onSubmit={handleSubmit((data) => onSubmit({ ...data, tags: selectedTagIds, status }))}>
           <VStack gap="space-16" paddingBlock={'space-0 space-24'}>
             <HStack align={'center'} style={{ position: 'relative' }}>
               <Button
@@ -174,6 +176,14 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 )}
               />
             </VStack>
+            <ToggleGroup
+              value={status}
+              onChange={(v) => setStatus(v as NewsStatus)}
+              label="Status"
+            >
+              <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
+              <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
+            </ToggleGroup>
             {isEdit ? (
               <HStack gap={'space-8'}>
                 <Dialog>
