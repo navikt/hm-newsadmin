@@ -11,8 +11,8 @@ describe('NyhetsOversikt', () => {
       </MemoryRouter>
     )
 
-    expect(screen.getByRole('heading', { name: 'Nyheter', level: 1 })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Opprett nyhet/i })).toBeInTheDocument()
-    expect(screen.getByLabelText('Søk etter nyheter')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Aktuelt', level: 1 })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Opprett sak/i })).toBeInTheDocument()
+    expect(screen.getByRole('searchbox', { name: 'Søk' })).toBeInTheDocument()
   })
 })
