@@ -52,6 +52,8 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
     setValue,
   } = useNewsForm(isEdit ? defaultValues : undefined)
 
+  const [hasImage, setHasImage] = useState(!!defaultValues?.image_url)
+
   const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
@@ -99,12 +101,26 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               borderWidth="2"
               borderRadius="12 12 0 0"
             >
-              <ImageUpload
-                newsId={newsId}
-                defaultImageUrl={defaultValues?.image_url}
-                onImageUpload={(uri) => setValue('image_url', uri)}
-                onFileSelect={onFileSelect}
-              />
+              <VStack gap="space-8">
+                <ImageUpload
+                  newsId={newsId}
+                  defaultImageUrl={defaultValues?.image_url}
+                  onImageUpload={(uri) => { setValue('image_url', uri); setHasImage(true) }}
+                  onImageRemove={() => { setValue('image_url', ''); setValue('imageDescription', ''); setHasImage(false) }}
+                  onFileSelect={(file) => { onFileSelect?.(file); setHasImage(true) }}
+                />
+                {hasImage && (
+                  <TextField
+                    {...register('imageDescription', {
+                      validate: (v) => !hasImage || !!v?.trim() || 'Alt-tekst er obligatorisk når bilde er lastet opp',
+                    })}
+                    defaultValue={defaultValues?.imageDescription}
+                    label="Alt-tekst"
+                    description="Beskriv bildet for skjermlesere"
+                    error={errors.imageDescription?.message}
+                  />
+                )}
+              </VStack>
             </Box>
             <TextField
               {...register('title', { required: 'Mangler tittel' })}

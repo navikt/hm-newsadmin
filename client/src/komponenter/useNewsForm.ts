@@ -15,6 +15,7 @@ export type NewsFormValues = {
   publishedFrom: string
   publishedTo: string
   image_url: string
+  imageDescription: string
   status: NewsStatus
   tags: string[]
 }
@@ -39,6 +40,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
   register('publishedTo', { required: 'Mangler til-dato' })
   register('tags', { validate: (v) => v?.length > 0 || 'Mangler tag' })
   register('image_url')
+  register('imageDescription')
   register('status')
 
   const publishedFrom = watch('publishedFrom')
@@ -80,6 +82,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     handleSubmit,
     control,
     errors,
+    watch,
     fromDatepickerProps,
     fromInputProps,
     toDatepickerProps,

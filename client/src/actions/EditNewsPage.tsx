@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
-import { deleteNews } from 'utils/api-util.ts'
+import { deleteNews, uploadNewsMedia } from 'utils/api-util.ts'
 import { NewsAdmin } from 'pages/NewsAdmin.tsx'
 import { NewsFormValues } from 'komponenter/useNewsForm.ts'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 export const EditNewsPage = () => {
   const navigate = useNavigate()
@@ -11,6 +11,7 @@ export const EditNewsPage = () => {
   const { mutate } = useSWRConfig()
   const { data: news } = useSWR(`/news/${id}`, () => fetch(`/news/${id}`).then((res) => res.json()))
   const [loading, setLoading] = useState(false)
+  const pendingFile = useRef<File | null>(null)
 
   async function editNews(data: NewsFormValues) {
     setLoading(true)
@@ -23,6 +24,9 @@ export const EditNewsPage = () => {
         body: JSON.stringify(data),
       })
       if (res.ok) {
+        if (pendingFile.current) {
+          await uploadNewsMedia(id!, pendingFile.current)
+        }
         await mutate('news')
         await mutate(`/news/${id}`)
         navigate('/')
@@ -41,5 +45,5 @@ export const EditNewsPage = () => {
     navigate('/')
   }
 
-  return <NewsAdmin loading={loading} onSubmit={editNews} onDelete={handleDelete} defaultValues={news} newsId={id} />
+  return <NewsAdmin loading={loading} onSubmit={editNews} onDelete={handleDelete} defaultValues={news} onFileSelect={(file) => (pendingFile.current = file)} />
 }

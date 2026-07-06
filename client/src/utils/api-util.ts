@@ -1,10 +1,18 @@
 import { MediaDTO, NewsPage, TagsDTO } from 'utils/admin-util.ts'
 import { mutate } from 'swr'
 
-export async function getNews(page = 0, size = 6, search?: string, tags?: string[], status?: string): Promise<NewsPage> {
+export async function getNews(page = 0, size = 6, search?: string, tags?: string[], filter?: string): Promise<NewsPage> {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (search) params.set('search', search)
-  if (status && status !== 'alle') params.set('status', status)
+  if (filter === 'publisert') {
+    params.set('status', 'PUBLISHED')
+    params.set('expired', 'false')
+  } else if (filter === 'utløpt') {
+    params.set('status', 'PUBLISHED')
+    params.set('expired', 'true')
+  } else if (filter === 'DRAFT') {
+    params.set('status', 'DRAFT')
+  }
   tags?.forEach((tag) => params.append('tag', tag))
 
   const res = await fetch(`/admin/news?${params.toString()}`, {
