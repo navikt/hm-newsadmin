@@ -131,7 +131,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                     icon={<ChevronDownIcon aria-hidden />}
                     iconPosition="right"
                   >
-                    Tags
+                    Type
                   </Button>
                 </ActionMenu.Trigger>
                 <ActionMenu.Content>
@@ -176,11 +176,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 )}
               />
             </VStack>
-            <ToggleGroup
-              value={status}
-              onChange={(v) => setStatus(v as NewsStatus)}
-              label="Status"
-            >
+            <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
               <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
               <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
             </ToggleGroup>
