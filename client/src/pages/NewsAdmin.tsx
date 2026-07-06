@@ -34,9 +34,10 @@ type Props = {
   defaultValues?: NewsFormValues
   newsId?: string
   onFileSelect?: (file: File) => void
+  loading?: boolean
 }
 
-export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSelect }: Props) => {
+export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSelect, loading }: Props) => {
   const isEdit = !!defaultValues?.title
 
   const {
@@ -176,11 +177,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 )}
               />
             </VStack>
-            <ToggleGroup
-              value={status}
-              onChange={(v) => setStatus(v as NewsStatus)}
-              label="Status"
-            >
+            <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
               <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
               <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
             </ToggleGroup>
@@ -212,12 +209,12 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                     </DialogHeader>
                   </Dialog.Popup>
                 </Dialog>
-                <Button type="submit" variant={'primary'} style={{ flex: 1 }}>
+                <Button loading={loading} type="submit" variant={'primary'} style={{ flex: 1 }}>
                   Lagre sak
                 </Button>
               </HStack>
             ) : (
-              <Button type="submit" variant={'primary'} style={{ width: '100%' }}>
+              <Button loading={loading} type="submit" variant={'primary'} style={{ width: '100%' }}>
                 Opprett sak
               </Button>
             )}

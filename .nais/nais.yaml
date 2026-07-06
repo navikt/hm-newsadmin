@@ -19,10 +19,6 @@ spec:
         - application: hm-grunndata-register
           namespace: teamdigihot
           cluster: {{cluster}}
-      external:
-        - host: teamdigihot-unleash-api.nav.cloud.nais.io
-  envFrom:
-    - secret: hm-newsadmin-unleash-secret
   env:
     - name: RUNTIME_ENVIRONMENT
       value: {{runtime_env}}
@@ -38,8 +34,6 @@ spec:
       value: {{hm_register_external_url}}
     - name: VITE_IMAGE_PROXY_EXTERNAL_URL
       value: {{image_proxy_external_url}}
-    - name: UNLEASH_SERVER_API_URL
-      value: 'https://teamdigihot-unleash-api.nav.cloud.nais.io'
     - name: VITE_FARO_URL
       value: {{faro_url}}
   replicas:

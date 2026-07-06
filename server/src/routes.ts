@@ -3,7 +3,6 @@ import express, { Router } from 'express'
 import path from 'path'
 
 import { config } from './config'
-import { getFeaturesHandler } from './features'
 import { createMetrics } from './metrics'
 
 export const routes = {
@@ -33,7 +32,6 @@ export const routes = {
         res.type('.js')
         res.send(`window.appSettings = ${JSON.stringify(appSettings)}`)
       })
-      .get('/features', getFeaturesHandler)
       .get('*splat', express.static(config.build_path))
       .get('*splat', function (req, res) {
         res.sendFile('index.html', { root: path.join(__dirname, '../../client/dist/') })

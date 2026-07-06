@@ -13,8 +13,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
-    "prom-client": "^14.1.0",
-    "unleash-client": "^6.10.1"
+    "prom-client": "^14.1.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",

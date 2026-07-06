@@ -1,19 +1,18 @@
-import { LinkCard, Tag, HStack, VStack } from '@navikt/ds-react'
+import { LinkCard, Tag, HStack, Box } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { useNavigate } from 'react-router-dom'
 import NewsImage from 'komponenter/NewsImage.tsx'
 import { getDisplayStatus, displayStatusTagProps } from 'utils/news-filter-util.ts'
+import './NewsListCard.scss'
 
 export default function NewsListCard({ news }: { news: NewsDTO }) {
   const navigate = useNavigate()
   const { label, variant } = displayStatusTagProps[getDisplayStatus(news)]
   return (
-    <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)} style={{ height: '14rem' }}>
-      <VStack justify="center" height="100%" asChild>
-        <LinkCard.Icon style={{ width: '16rem', flexShrink: 0 }}>
-          <NewsImage imageUrl={news.image_url} />
-        </LinkCard.Icon>
-      </VStack>
+    <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)} className={'card'}>
+      <Box className={'image'}>
+        <NewsImage imageUrl={news.image_url} />
+      </Box>
       <LinkCard.Title
         style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
       >
