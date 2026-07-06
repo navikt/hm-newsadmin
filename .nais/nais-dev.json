@@ -11,6 +11,7 @@
   "image_proxy_url": "https://finnhjelpemiddel.intern.dev.nav.no/imageproxy",
   "image_proxy_external_url": "https://finnhjelpemiddel.ansatt.dev.nav.no/imageproxy",
   "faro_url": "https://telemetry.ekstern.dev.nav.no/collect",
+  "hm_news_url": "http://hm-finnhjelpemiddel-news",
   "replicas": {
     "min": 1,
     "max": 1

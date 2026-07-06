@@ -1,5 +1,6 @@
 import cookieParser from 'cookie-parser'
 import express, { Router } from 'express'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 import path from 'path'
 
 import { config } from './config'
@@ -17,8 +18,13 @@ export const routes = {
       })
   },
   public(): Router {
+    const newsProxy = createProxyMiddleware({
+      target: process.env.HM_NEWS_URL,
+      changeOrigin: true,
+    })
     return Router()
       .use(cookieParser())
+      .use(['/news', '/admin'], newsProxy)
       .get('/settings.js', (_, res) => {
         const appSettings = {
           VITE_HM_REGISTER_URL: process.env.VITE_HM_REGISTER_URL,
