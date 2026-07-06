@@ -6,6 +6,8 @@ import { NewsFormValues } from 'komponenter/useNewsForm.ts'
 import { uploadNewsMedia } from 'utils/api-util.ts'
 import { NewsDTO } from 'utils/admin-util.ts'
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+
 export const CreateNewsPage = () => {
   const navigate = useNavigate()
   const { mutate } = useSWRConfig()
@@ -15,7 +17,7 @@ export const CreateNewsPage = () => {
   async function createNews(data: NewsFormValues) {
     setLoading(true)
     try {
-      const res = await fetch('admin/news', {
+      const res = await fetch(`${base}/admin/news`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
