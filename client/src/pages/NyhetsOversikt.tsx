@@ -20,7 +20,8 @@ export const NyhetsOversikt = () => {
 
   const { data: newsPage } = useSWR<NewsPage>(
     ['news', currentPage, searchTerm, selectedTags, filterValue],
-    () => getNews(currentPage - 1, 6, searchTerm || undefined, selectedTags.length ? selectedTags : undefined, filterValue),
+    () =>
+      getNews(currentPage - 1, 6, searchTerm || undefined, selectedTags.length ? selectedTags : undefined, filterValue),
     { revalidateOnMount: true, revalidateOnFocus: true }
   )
   const news = newsPage?.content ?? []
@@ -54,14 +55,14 @@ export const NyhetsOversikt = () => {
         <VStack gap="space-32" margin="space-20">
           <HStack justify="space-between" align="center">
             <Heading size="large" level="1">
-              Nyheter
+              Aktuelt
             </Heading>
             <Button as={Link} to={'/createNewsPage'} variant={'secondary'}>
-              Opprett nyhet
+              Opprett sak
             </Button>
           </HStack>
           <Search
-            label="Søk etter nyheter"
+            label="Søk"
             variant="secondary"
             hideLabel={false}
             value={searchTerm}
@@ -81,7 +82,7 @@ export const NyhetsOversikt = () => {
             <ToggleGroup
               value={filterValue}
               onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), filter: v }))}
-              label={'Filtrer nyheter'}
+              label={'Status'}
             >
               <ToggleGroup.Item value="alle" label="Alle" />
               <ToggleGroup.Item value="publisert" label="Publisert" />
@@ -91,7 +92,7 @@ export const NyhetsOversikt = () => {
             <ToggleGroup
               value={viewMode}
               onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), view: v }))}
-              label={'Grid / List'}
+              label={'Visning'}
               data-color={'neutral'}
             >
               <ToggleGroup.Item value="grid" aria-label="Rutenett">

@@ -17,7 +17,7 @@ import {
   ActionMenu,
 } from '@navikt/ds-react'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
-import { ArrowLeftIcon, ChevronDownIcon, TrashIcon } from '@navikt/aksel-icons'
+import { ArrowLeftIcon, ChevronDownIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
 import { useState, useEffect } from 'react'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
@@ -87,7 +87,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 as={Link}
                 variant={'tertiary'}
                 icon={<ArrowLeftIcon />}
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/')}
                 style={{ position: 'absolute', right: '100%' }}
               >
                 Tilbake
@@ -148,7 +148,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                     icon={<ChevronDownIcon aria-hidden />}
                     iconPosition="right"
                   >
-                    Tags
+                    Type
                   </Button>
                 </ActionMenu.Trigger>
                 <ActionMenu.Content>
@@ -193,10 +193,23 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 )}
               />
             </VStack>
-            <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
-              <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
-              <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
-            </ToggleGroup>
+            <HStack gap="space-8" align="end">
+              <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
+                <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
+                <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
+              </ToggleGroup>
+              {newsId && (
+                <Button
+                  as={Link}
+                  variant="secondary"
+                  icon={<EyeIcon aria-hidden />}
+                  href={`/news/${newsId}/preview`}
+                  type="button"
+                >
+                  Forhåndsvis
+                </Button>
+              )}
+            </HStack>
             {isEdit ? (
               <HStack gap={'space-8'}>
                 <Dialog>
