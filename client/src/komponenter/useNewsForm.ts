@@ -3,6 +3,11 @@ import { useDatepicker } from '@navikt/ds-react'
 import { useEffect, useRef } from 'react'
 import { NewsStatus } from 'utils/admin-util.ts'
 
+const toLocalISOString = (date: Date): string => {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T00:00:00`
+}
+
 export type NewsFormValues = {
   title: string
   description: string
@@ -45,7 +50,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     fromDate: new Date(),
     defaultSelected: defaultValues?.publishedFrom ? new Date(defaultValues.publishedFrom) : undefined,
     onDateChange: (date) => {
-      setValue('publishedFrom', date?.toISOString() ?? '')
+      setValue('publishedFrom', date ? toLocalISOString(date) : '')
       if (date) {
         const currentTo = getValues('publishedTo')
         if (currentTo && new Date(currentTo) < date) {
@@ -64,7 +69,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     fromDate: fromDateValue,
     defaultSelected: defaultValues?.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
     onDateChange: (date) => {
-      setValue('publishedTo', date?.toISOString() ?? '')
+      setValue('publishedTo', date ? toLocalISOString(date) : '')
     },
   })
 

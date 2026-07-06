@@ -79,7 +79,7 @@ export default defineConfig((env) => ({
         changeOrigin: true,
         secure: false,
         bypass: (req) => {
-          if (req.url?.includes('/edit')) return '/index.html'
+          if (req.url?.includes('/edit') || req.url?.includes('/preview')) return '/index.html'
         },
       },
       '/admin': {
