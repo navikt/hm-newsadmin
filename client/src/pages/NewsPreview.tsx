@@ -4,7 +4,7 @@ import { Button, Detail, Heading, HStack, Page, Skeleton, Tag, VStack, BodyLong 
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
 import NewsArticleImage from 'utils/NewsArticleImage.tsx'
 import { NewsDTO } from 'utils/admin-util.ts'
-import { statusTagProps } from 'utils/news-filter-util.ts'
+import { displayStatusTagProps, getDisplayStatus } from 'utils/news-filter-util.ts'
 
 export const NewsPreview = () => {
   const { id } = useParams()
@@ -16,7 +16,7 @@ export const NewsPreview = () => {
   if (isLoading) return <Skeleton variant="rectangle" height={400} />
   if (!news) return null
 
-  const { label, variant } = statusTagProps[news.status]
+  const { label, variant } = displayStatusTagProps[getDisplayStatus(news)]
 
   return (
     <Page>
