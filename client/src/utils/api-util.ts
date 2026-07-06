@@ -1,13 +1,23 @@
 import { MediaDTO, NewsPage, TagsDTO } from 'utils/admin-util.ts'
 import { mutate } from 'swr'
 
-export async function getNews(page = 0, size = 6, search?: string, tags?: string[], status?: string): Promise<NewsPage> {
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+export async function getNews(page = 0, size = 6, search?: string, tags?: string[], filter?: string): Promise<NewsPage> {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (search) params.set('search', search)
-  if (status && status !== 'alle') params.set('status', status)
+  if (filter === 'publisert') {
+    params.set('status', 'PUBLISHED')
+    params.set('expired', 'false')
+  } else if (filter === 'utløpt') {
+    params.set('status', 'PUBLISHED')
+    params.set('expired', 'true')
+  } else if (filter === 'DRAFT') {
+    params.set('status', 'DRAFT')
+  }
   tags?.forEach((tag) => params.append('tag', tag))
 
-  const res = await fetch(`/admin/news?${params.toString()}`, {
+  const res = await fetch(`${base}/admin/news?${params.toString()}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   })
@@ -24,7 +34,7 @@ export async function getNews(page = 0, size = 6, search?: string, tags?: string
 }
 
 export async function deleteNews(id: string): Promise<void> {
-  const response = await fetch(`/admin/news/${id}`, {
+  const response = await fetch(`${base}/admin/news/${id}`, {
     method: 'DELETE',
   })
   if (!response.ok) {
@@ -36,7 +46,7 @@ export async function deleteNews(id: string): Promise<void> {
 export async function uploadNewsMedia(newsId: string, file: File): Promise<MediaDTO> {
   const formData = new FormData()
   formData.append('files', file)
-  const res = await fetch(`/admin/news/${newsId}/media`, {
+  const res = await fetch(`${base}/admin/news/${newsId}/media`, {
     method: 'POST',
     body: formData,
   })
@@ -45,20 +55,20 @@ export async function uploadNewsMedia(newsId: string, file: File): Promise<Media
 }
 
 export async function getNewsMedia(newsId: string): Promise<MediaDTO[]> {
-  const res = await fetch(`/news/admin/media/${newsId}`)
+  const res = await fetch(`${base}/news/admin/media/${newsId}`)
   if (!res.ok) throw new Error(`Henting av media feilet: ${res.status}`)
   return res.json()
 }
 
 export async function deleteNewsMedia(newsId: string, uri: string): Promise<void> {
-  const res = await fetch(`/news/admin/media/${newsId}/${encodeURIComponent(uri)}`, {
+  const res = await fetch(`${base}/news/admin/media/${newsId}/${encodeURIComponent(uri)}`, {
     method: 'DELETE',
   })
   if (!res.ok) throw new Error(`Sletting av media feilet: ${res.status}`)
 }
 
 export async function getTags(): Promise<TagsDTO[]> {
-  const res = await fetch('/admin/tags', {
+  const res = await fetch(`${base}/admin/tags`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

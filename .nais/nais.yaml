@@ -19,6 +19,9 @@ spec:
         - application: hm-grunndata-register
           namespace: teamdigihot
           cluster: {{cluster}}
+        - application: hm-finnhjelpemiddel-news
+          namespace: teamdigihot
+          cluster: {{cluster}}
   env:
     - name: RUNTIME_ENVIRONMENT
       value: {{runtime_env}}
@@ -36,6 +39,8 @@ spec:
       value: {{image_proxy_external_url}}
     - name: VITE_FARO_URL
       value: {{faro_url}}
+    - name: HM_NEWS_URL
+      value: {{hm_news_url}}
   replicas:
     min: {{replicas.min}}
     max: {{replicas.max}}

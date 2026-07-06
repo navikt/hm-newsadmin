@@ -1,6 +1,6 @@
 import { BodyShort, Button, ErrorMessage, FileObject, FileUpload, Label, VStack } from '@navikt/ds-react'
 import { useId, useState } from 'react'
-import { UploadIcon } from '@navikt/aksel-icons'
+import { UploadIcon, XMarkIcon } from '@navikt/aksel-icons'
 import { uploadNewsMedia } from 'utils/api-util.ts'
 import { mediumImageLoader } from 'utils/image-util.ts'
 
@@ -8,10 +8,11 @@ type Props = {
   newsId?: string
   defaultImageUrl?: string
   onImageUpload?: (uri: string) => void
+  onImageRemove?: () => void
   onFileSelect?: (file: File) => void
 }
 
-export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload, onFileSelect }: Props) => {
+export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload, onImageRemove, onFileSelect }: Props) => {
   const labelId = useId()
   const descId = useId()
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(
@@ -47,18 +48,29 @@ export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload, onFileSele
   return (
     <VStack gap="space-8" align="center">
       {previewUrl && (
-        <img
-          src={previewUrl}
-          alt="Forhåndsvisning"
-          style={{ objectFit: 'contain', width: '100%', maxHeight: '300px', borderRadius: '4px' }}
-        />
+        <div style={{ position: 'relative', width: '100%' }}>
+          <img
+            src={previewUrl}
+            alt="Forhåndsvisning"
+            style={{ objectFit: 'contain', width: '100%', maxHeight: '300px', borderRadius: '4px' }}
+          />
+          <Button
+            type="button"
+            variant="tertiary-neutral"
+            size="small"
+            icon={<XMarkIcon aria-hidden />}
+            aria-label="Fjern bilde"
+            onClick={() => { setPreviewUrl(undefined); onImageRemove?.() }}
+            style={{ position: 'absolute', top: '4px', right: '4px', background: 'white', borderRadius: '50%' }}
+          />
+        </div>
       )}
       <VStack gap="space-2" align="start">
         <Label id={labelId} as="div">
           Last opp bilde
         </Label>
         <BodyShort id={descId} textColor="subtle">
-          Du kan laste opp bilde i PNG- eller JPG-format. Du kan legge ved maks 1 bilde.
+          Du kan laste opp bilde i PNG-, JPG- eller JPEG-format. Du kan legge ved maks 1 bilde.
         </BodyShort>
       </VStack>
       {uploadError && <ErrorMessage showIcon>{uploadError}</ErrorMessage>}
