@@ -1,0 +1,36 @@
+.card {
+  height: 14rem;
+  padding-inline-start: 26rem;
+}
+
+.image {
+  position: absolute;
+  overflow: hidden;
+  border-top-left-radius: calc(var(--ax-radius-12) - 1px);
+  border-bottom-left-radius: calc(var(--ax-radius-12) - 1px);
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 400px;
+}
+
+@media (max-width: 768px) {
+  .card {
+    height: auto;
+    padding-inline-start: 12rem;
+  }
+
+  .image {
+    width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding-inline-start: 9rem;
+  }
+
+  .image {
+    width: 120px;
+  }
+}
