@@ -6,6 +6,13 @@ import Link from 'quill/formats/link'
 
 import './RichTextEditorQuill.scss'
 
+const Parchment = Quill.import('parchment') as any
+const SizeStyle = new Parchment.StyleAttributor('size', 'font-size', {
+  scope: Parchment.Scope.INLINE,
+  whitelist: ['0.75em', '1.5em', '2.5em'],
+})
+Quill.register({ 'formats/size': SizeStyle }, true)
+
 // noinspection JSUnusedGlobalSymbols
 const bindings = {
   tab: {
@@ -15,12 +22,12 @@ const bindings = {
 }
 
 const defaultModules = {
-  toolbar: [['bold', 'italic'], [{ list: 'ordered' }, { list: 'bullet' }], ['link']],
+  toolbar: [['bold', 'italic'], [{ size: ['0.75em', false, '1.5em', '2.5em'] }], [{ list: 'ordered' }, { list: 'bullet' }], ['link']],
   keyboard: {
     bindings: bindings,
   },
 }
-const defaultFormats = ['bold', 'italic', 'list', 'link']
+const defaultFormats = ['bold', 'italic', 'size', 'list', 'link']
 
 type Props = {
   onTextChange: (html: string, rawText: string) => void
@@ -72,7 +79,7 @@ const RichTextEditorQuill = forwardRef(function TempComp(
     }
 
     quill.on(Quill.events.TEXT_CHANGE, () => {
-      onTextChange(quill.getSemanticHTML(), quill.getText())
+      onTextChange(quill.root.innerHTML, quill.getText())
     })
 
     Link.sanitize = (url) => {
