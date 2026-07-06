@@ -58,11 +58,11 @@ export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload, onFileSele
           Last opp bilde
         </Label>
         <BodyShort id={descId} textColor="subtle">
-          Du kan laste opp maks 1 bilde.
+          Du kan laste opp bilde i PNG-, JPG- eller JPEG-format. Du kan legge ved maks 1 bilde.
         </BodyShort>
       </VStack>
       {uploadError && <ErrorMessage showIcon>{uploadError}</ErrorMessage>}
-      <FileUpload.Trigger accept="image/*" onSelect={handleSelect} multiple={false}>
+      <FileUpload.Trigger accept="image/png, image/jpeg" onSelect={handleSelect} multiple={false}>
         <Button
           type="button"
           aria-describedby={`${labelId} ${descId}`}

@@ -3,15 +3,26 @@ import { NewsDTO, NewsStatus } from 'utils/admin-util.ts'
 
 export enum FilterValue {
   alle = 'alle',
-  publisert = 'PUBLISHED',
+  publisert = 'publisert',
+  utløpt = 'utløpt',
   utkast = 'DRAFT',
-  arkiv = 'ARCHIVE',
 }
 
-export const statusTagProps: Record<NewsStatus, { label: string; variant: TagProps['variant'] }> = {
-  PUBLISHED: { label: 'Publisert', variant: 'success' },
-  DRAFT: { label: 'Utkast', variant: 'warning' },
-  ARCHIVE: { label: 'Arkiv', variant: 'neutral' },
+export type DisplayStatus = 'aktiv' | 'planlagt' | 'utløpt' | 'utkast'
+
+export function getDisplayStatus(news: NewsDTO): DisplayStatus {
+  if (news.status === 'DRAFT') return 'utkast'
+  const now = new Date()
+  if (new Date(news.publishedFrom) > now) return 'planlagt'
+  if (new Date(news.publishedTo) < now) return 'utløpt'
+  return 'aktiv'
+}
+
+export const displayStatusTagProps: Record<DisplayStatus, { label: string; variant: TagProps['variant'] }> = {
+  aktiv: { label: 'Aktiv', variant: 'success' },
+  planlagt: { label: 'Planlagt', variant: 'info' },
+  utløpt: { label: 'Utløpt', variant: 'neutral-filled' },
+  utkast: { label: 'Utkast', variant: 'warning' },
 }
 
 export function filterByStatus(news: NewsDTO[], filter: FilterValue): NewsDTO[] {
