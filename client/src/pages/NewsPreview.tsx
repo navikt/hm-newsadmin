@@ -26,7 +26,7 @@ export const NewsPreview = () => {
             <Button
               variant="tertiary"
               icon={<ArrowLeftIcon />}
-              onClick={() => navigate(`/news/${id}/edit`)}
+              onClick={() => navigate(`/aktuelt/${id}/edit`)}
               style={{ position: 'absolute', right: '100%' }}
             >
               Tilbake

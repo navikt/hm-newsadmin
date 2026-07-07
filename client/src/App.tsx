@@ -9,8 +9,8 @@ export function App() {
     <Routes>
       <Route path="/" element={<NyhetsOversikt />} />
       <Route path="/createNewsPage" element={<CreateNewsPage />} />
-      <Route path="/news/:id/edit" element={<EditNewsPage />} />
-      <Route path="/news/:id/preview" element={<NewsPreview />} />
+      <Route path="/aktuelt/:id/edit" element={<EditNewsPage />} />
+      <Route path="/aktuelt/:id/preview" element={<NewsPreview />} />
     </Routes>
   )
 }

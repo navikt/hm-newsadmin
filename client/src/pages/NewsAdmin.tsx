@@ -203,7 +203,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   as={Link}
                   variant="secondary"
                   icon={<EyeIcon aria-hidden />}
-                  href={`/news/${newsId}/preview`}
+                  href={`/aktuelt/${newsId}/preview`}
                   type="button"
                 >
                   Forhåndsvis

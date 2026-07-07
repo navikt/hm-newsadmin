@@ -8,7 +8,7 @@ export default function NewsCard({ news }: { news: NewsDTO }) {
   const navigate = useNavigate()
   const { label, variant } = displayStatusTagProps[getDisplayStatus(news)]
   return (
-    <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)} style={{ minHeight: '490px' }}>
+    <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit`)} style={{ minHeight: '490px' }}>
       <LinkCard.Image aspectRatio="16/9">
         <NewsImage fontSize="5rem" aria-hidden imageUrl={news.image_url} />
       </LinkCard.Image>

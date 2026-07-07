@@ -9,7 +9,7 @@ export default function NewsListCard({ news }: { news: NewsDTO }) {
   const navigate = useNavigate()
   const { label, variant } = displayStatusTagProps[getDisplayStatus(news)]
   return (
-    <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)} className={'card'}>
+    <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit`)} className={'card'}>
       <Box className={'image'}>
         <NewsImage imageUrl={news.image_url} />
       </Box>
