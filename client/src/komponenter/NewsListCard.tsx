@@ -11,7 +11,7 @@ export default function NewsListCard({ news }: { news: NewsDTO }) {
   return (
     <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit`)} className={'card'}>
       <Box className={'image'}>
-        <NewsImage imageUrl={news.image_url} />
+        <NewsImage imageUrl={news.image_url} tags={news.tags} />
       </Box>
       <LinkCard.Title
         style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
