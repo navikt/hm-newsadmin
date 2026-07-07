@@ -1,12 +1,14 @@
 import { Bleed, Box } from '@navikt/ds-react'
-import { largeImageLoader } from 'utils/image-util'
+import { largeImageLoader } from 'utils/image-util.ts'
 import { useState } from 'react'
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 
 function getDefaultImageUrl(tags?: string[]): string | null {
   if (!tags) return null
   const lower = tags.map((t) => t.toLowerCase())
-  if (lower.some((t) => t.includes('nyhetsbrev'))) return '/default-nyhetsbrev.svg'
-  if (lower.some((t) => t.includes('rammeavtale'))) return '/default-rammeavtale.svg'
+  if (lower.some((t) => t.includes('nyhetsbrev'))) return `${base}/default-nyhetsbrev.svg`
+  if (lower.some((t) => t.includes('rammeavtale'))) return `${base}/default-rammeavtale.svg`
   return null
 }
 
@@ -19,10 +21,7 @@ export default function NewsArticleImage({ imageUrl, alt, tags }: { imageUrl?: s
 
   return (
     <Bleed marginInline="space-64">
-      <Box
-        style={{ width: '100%', aspectRatio: '16/9', position: 'relative', overflow: 'hidden' }}
-        borderRadius="12"
-      >
+      <Box style={{ width: '100%', aspectRatio: '16/9', position: 'relative', overflow: 'hidden' }} borderRadius="12">
         <img
           src={src}
           alt={alt}

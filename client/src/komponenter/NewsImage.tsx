@@ -9,11 +9,13 @@ type NewsImageProps = {
   tags?: string[]
 }
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+
 function getDefaultImageUrl(tags?: string[]): string | null {
   if (!tags) return null
   const lower = tags.map((t) => t.toLowerCase())
-  if (lower.some((t) => t.includes('nyhetsbrev'))) return '/default-nyhetsbrev.svg'
-  if (lower.some((t) => t.includes('rammeavtale'))) return '/default-rammeavtale.svg'
+  if (lower.some((t) => t.includes('nyhetsbrev'))) return `${base}/default-nyhetsbrev.svg`
+  if (lower.some((t) => t.includes('rammeavtale'))) return `${base}/default-rammeavtale.svg`
   return null
 }
 

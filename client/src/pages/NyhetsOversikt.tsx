@@ -36,6 +36,7 @@ export const NyhetsOversikt = () => {
       const updated = current.includes(tag) ? current.filter((t) => t !== tag) : [...current, tag]
       if (updated.length === 0) next.delete('tags')
       else next.set('tags', updated.join(','))
+      next.set('page', '1')
       return next
     })
   }
@@ -46,6 +47,7 @@ export const NyhetsOversikt = () => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev)
       next.delete('term')
+      next.set('page', '1')
       return next
     })
 
@@ -66,7 +68,7 @@ export const NyhetsOversikt = () => {
             variant="secondary"
             hideLabel={false}
             value={searchTerm}
-            onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value }))}
+            onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value, page: '1' }))}
             onClear={clearTerm}
           />
           {allTags.length > 0 && (
@@ -81,7 +83,7 @@ export const NyhetsOversikt = () => {
           <HStack justify={'space-between'} align={'center'}>
             <ToggleGroup
               value={filterValue}
-              onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), filter: v }))}
+              onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), filter: v, page: '1' }))}
               label={'Status'}
             >
               <ToggleGroup.Item value="alle" label="Alle" />
@@ -93,7 +95,6 @@ export const NyhetsOversikt = () => {
               value={viewMode}
               onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), view: v }))}
               label={'Visning'}
-              data-color={'neutral'}
             >
               <ToggleGroup.Item value="grid" aria-label="Rutenett">
                 <SquareGridIcon aria-hidden />

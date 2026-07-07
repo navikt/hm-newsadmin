@@ -2,16 +2,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import useSWR from 'swr'
 import { Button, Detail, Heading, HStack, Page, Skeleton, Tag, VStack, BodyLong } from '@navikt/ds-react'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
-import NewsArticleImage from 'utils/NewsArticleImage.tsx'
+import NewsArticleImage from 'komponenter/NewsArticleImage.tsx'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { displayStatusTagProps, getDisplayStatus } from 'utils/news-filter-util.ts'
 
 export const NewsPreview = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { data: news, isLoading } = useSWR<NewsDTO>(`/news/${id}`, () =>
-    fetch(`/news/${id}`).then((res) => res.json())
-  )
+  const { data: news, isLoading } = useSWR<NewsDTO>(`/news/${id}`, () => fetch(`/news/${id}`).then((res) => res.json()))
 
   if (isLoading) return <Skeleton variant="rectangle" height={400} />
   if (!news) return null
