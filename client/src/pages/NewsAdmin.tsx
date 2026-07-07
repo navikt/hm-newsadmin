@@ -112,13 +112,18 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 )}
               </VStack>
             </Box>
-            <TextField
+            <Textarea
               {...register('title', { required: 'Mangler tittel' })}
               label="Tittel"
+              maxLength={60}
               error={errors.title?.message}
-              width="text"
-            ></TextField>
-            <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
+            ></Textarea>
+            <Textarea
+              {...register('description', { required: 'Mangler ingress' })}
+              label="Ingress"
+              maxLength={100}
+              error={errors.description?.message}
+            ></Textarea>
             <HStack justify={'center'}>
               <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
                 <DatePicker {...fromDatepickerProps}>
@@ -161,9 +166,9 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                     <RichTextEditorQuill
                       onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
                       defaultValue={field.value}
-                      error={!!fieldState.error}
+                      // error={!!fieldState.error}
                     />
-                    {fieldState.error && <ErrorMessage showIcon>{fieldState.error.message}</ErrorMessage>}
+                    {/*{fieldState.error && <ErrorMessage showIcon>{fieldState.error.message}</ErrorMessage>}*/}
                   </>
                 )}
               />
