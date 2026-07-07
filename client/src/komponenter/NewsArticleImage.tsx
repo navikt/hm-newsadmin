@@ -1,5 +1,5 @@
 import { Bleed, Box } from '@navikt/ds-react'
-import { largeImageLoader } from 'utils/image-util'
+import { largeImageLoader } from 'utils/image-util.ts'
 import { useState } from 'react'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -21,10 +21,7 @@ export default function NewsArticleImage({ imageUrl, alt, tags }: { imageUrl?: s
 
   return (
     <Bleed marginInline="space-64">
-      <Box
-        style={{ width: '100%', aspectRatio: '16/9', position: 'relative', overflow: 'hidden' }}
-        borderRadius="12"
-      >
+      <Box style={{ width: '100%', aspectRatio: '16/9', position: 'relative', overflow: 'hidden' }} borderRadius="12">
         <img
           src={src}
           alt={alt}
