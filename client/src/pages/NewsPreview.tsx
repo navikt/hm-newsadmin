@@ -21,7 +21,7 @@ export const NewsPreview = () => {
   return (
     <Page>
       <Page.Block as="main" width="text">
-        <VStack gap="space-16" paddingBlock="space-0 space-24">
+        <VStack gap="space-16" paddingBlock="space-16 space-24">
           <HStack align="center" style={{ position: 'relative' }}>
             <Button
               variant="tertiary"
