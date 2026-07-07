@@ -93,7 +93,6 @@ export const NyhetsOversikt = () => {
               value={viewMode}
               onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), view: v }))}
               label={'Visning'}
-              data-color={'neutral'}
             >
               <ToggleGroup.Item value="grid" aria-label="Rutenett">
                 <SquareGridIcon aria-hidden />
