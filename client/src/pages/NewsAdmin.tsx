@@ -114,25 +114,32 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             <Textarea
               {...register('title', { required: 'Mangler tittel' })}
               label="Tittel"
-              maxLength={60}
+              maxLength={100}
               error={errors.title?.message}
             ></Textarea>
-            <Textarea
-              {...register('description', { required: 'Mangler ingress' })}
-              label="Ingress"
-              maxLength={100}
-              error={errors.description?.message}
-            ></Textarea>
-            <HStack justify={'center'}>
-              <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
-                <DatePicker {...fromDatepickerProps}>
-                  <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
-                </DatePicker>
-                <DatePicker {...toDatepickerProps}>
-                  <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
-                </DatePicker>
-              </HStack>
+            <Textarea {...register('description')} label="Ingress" maxLength={100}></Textarea>
+            <HStack gap={'space-48'} justify={'center'} style={{ width: '100%' }}>
+              <DatePicker {...fromDatepickerProps}>
+                <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
+              </DatePicker>
+              <DatePicker {...toDatepickerProps}>
+                <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
+              </DatePicker>
             </HStack>
+            <Label>Innhold</Label>
+            <Controller
+              name="body"
+              control={control}
+              rules={{ required: 'Mangler innhold' }}
+              render={({ field }) => (
+                <>
+                  <RichTextEditorQuill
+                    onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
+                    defaultValue={field.value}
+                  />
+                </>
+              )}
+            />
             <Controller
               name="tags"
               control={control}
@@ -142,6 +149,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   value={field.value?.[0] ?? ''}
                   onChange={(e) => field.onChange([e.target.value])}
                   error={fieldState.error?.message}
+                  style={{ width: 'fit-content' }}
                 >
                   <option value="" disabled>
                     Velg type
@@ -154,23 +162,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 </Select>
               )}
             />
-            <VStack gap="space-8">
-              <Label>Innhold</Label>
-              <Controller
-                name="body"
-                control={control}
-                rules={{ required: 'Mangler innhold' }}
-                render={({ field }) => (
-                  <>
-                    <RichTextEditorQuill
-                      onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
-                      defaultValue={field.value}
-                    />
-                  </>
-                )}
-              />
-            </VStack>
-            <HStack gap="space-8" align="end">
+            <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
               <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
                 <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
                 <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
