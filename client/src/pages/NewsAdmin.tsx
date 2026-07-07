@@ -12,7 +12,6 @@ import {
   TextField,
   ToggleGroup,
   VStack,
-  ErrorMessage,
   Select,
 } from '@navikt/ds-react'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
@@ -161,14 +160,12 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 name="body"
                 control={control}
                 rules={{ required: 'Mangler innhold' }}
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <>
                     <RichTextEditorQuill
                       onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
                       defaultValue={field.value}
-                      // error={!!fieldState.error}
                     />
-                    {/*{fieldState.error && <ErrorMessage showIcon>{fieldState.error.message}</ErrorMessage>}*/}
                   </>
                 )}
               />
