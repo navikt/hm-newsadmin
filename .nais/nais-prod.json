@@ -1,11 +1,8 @@
 {
-  "ingress": [
-    "https://finnhjelpemiddel.nav.no/newsadmin",
-    "https://finnhjelpemiddel.nav.no/newsadmin"
-  ],
+  "ingress": ["https://finnhjelpemiddel.ansatt.nav.no/newsadmin"],
   "cluster": "prod-gcp",
   "runtime_env": "prod",
-  "public_origin": "https://finnhjelpemiddel.nav.no/newsadmin",
+  "public_origin": "https://finnhjelpemiddel.ansatt.nav.no/newsadmin",
   "hm_register_url": "https://finnhjelpemiddel.nav.no",
   "hm_register_external_url": "not_used",
   "image_proxy_url": "https://finnhjelpemiddel.nav.no/imageproxy",

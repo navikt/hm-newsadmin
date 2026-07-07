@@ -24,6 +24,7 @@ export default function NewsPagination({ currentPage, totalPages }: Props) {
       onPageChange={goToPage}
       srHeading={{ tag: 'h2', text: 'Sidenavigasjon' }}
       prevNextTexts
+      data-color={'accent'}
     />
   )
 }

@@ -19,7 +19,7 @@ import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
 import { useState, useEffect } from 'react'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
-import { ImageUpload } from 'utils/ImageUpload.tsx'
+import { ImageUpload } from 'komponenter/ImageUpload.tsx'
 import { useNewsForm, NewsFormValues } from 'komponenter/useNewsForm.ts'
 import useSWR from 'swr'
 import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
@@ -123,25 +123,32 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             <Textarea
               {...register('title', { required: 'Mangler tittel' })}
               label="Tittel"
-              maxLength={60}
+              maxLength={100}
               error={errors.title?.message}
             ></Textarea>
-            <Textarea
-              {...register('description', { required: 'Mangler ingress' })}
-              label="Ingress"
-              maxLength={100}
-              error={errors.description?.message}
-            ></Textarea>
-            <HStack justify={'center'}>
-              <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
-                <DatePicker {...fromDatepickerProps}>
-                  <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
-                </DatePicker>
-                <DatePicker {...toDatepickerProps}>
-                  <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
-                </DatePicker>
-              </HStack>
+            <Textarea {...register('description')} label="Ingress" maxLength={100}></Textarea>
+            <HStack gap={'space-48'} justify={'center'} style={{ width: '100%' }}>
+              <DatePicker {...fromDatepickerProps}>
+                <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
+              </DatePicker>
+              <DatePicker {...toDatepickerProps}>
+                <DatePicker.Input {...toInputProps} label={'Til dato'} error={errors.publishedTo?.message} />
+              </DatePicker>
             </HStack>
+            <Label>Innhold</Label>
+            <Controller
+              name="body"
+              control={control}
+              rules={{ required: 'Mangler innhold' }}
+              render={({ field }) => (
+                <>
+                  <RichTextEditorQuill
+                    onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
+                    defaultValue={field.value}
+                  />
+                </>
+              )}
+            />
             <Controller
               name="tags"
               control={control}
@@ -151,6 +158,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   value={field.value?.[0] ?? ''}
                   onChange={(e) => field.onChange([e.target.value])}
                   error={fieldState.error?.message}
+                  style={{ width: 'fit-content' }}
                 >
                   <option value="" disabled>
                     Velg type
@@ -163,76 +171,62 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 </Select>
               )}
             />
-            <VStack gap="space-8">
-              <Label>Innhold</Label>
-              <Controller
-                name="body"
-                control={control}
-                rules={{ required: 'Mangler innhold' }}
-                render={({ field }) => (
-                  <>
-                    <RichTextEditorQuill
-                      onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
-                      defaultValue={field.value}
-                    />
-                  </>
+            <VStack gap={'space-32'}>
+              <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
+                <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
+                  <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
+                  <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
+                </ToggleGroup>
+                {newsId && (
+                  <Button
+                    as={Link}
+                    variant="secondary"
+                    icon={<EyeIcon aria-hidden />}
+                    href={`/aktuelt/${newsId}/preview`}
+                    type="button"
+                  >
+                    Forhåndsvis
+                  </Button>
                 )}
-              />
-            </VStack>
-            <HStack gap="space-8" align="end">
-              <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
-                <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
-                <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
-              </ToggleGroup>
-              {newsId && (
-                <Button
-                  as={Link}
-                  variant="secondary"
-                  icon={<EyeIcon aria-hidden />}
-                  href={`/aktuelt/${newsId}/preview`}
-                  type="button"
-                >
-                  Forhåndsvis
+              </HStack>
+              {isEdit ? (
+                <HStack gap={'space-8'}>
+                  <Dialog>
+                    <Dialog.Trigger style={{ flex: 1, display: 'flex' }}>
+                      <Button data-color={'danger'} icon={<TrashIcon aria-hidden />} style={{ width: '100%' }}>
+                        Slett
+                      </Button>
+                    </Dialog.Trigger>
+                    <Dialog.Popup role={'alertdialog'} closeOnOutsideClick={false}>
+                      <DialogHeader>
+                        <DialogBody>
+                          <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
+                        </DialogBody>
+                        <DialogFooter>
+                          <Dialog.CloseTrigger>
+                            <Button variant={'secondary'} data-color={'neutral'}>
+                              Avbryt
+                            </Button>
+                          </Dialog.CloseTrigger>
+                          <Dialog.CloseTrigger>
+                            <Button variant={'danger'} onClick={() => onDelete()}>
+                              Ja, slett
+                            </Button>
+                          </Dialog.CloseTrigger>
+                        </DialogFooter>
+                      </DialogHeader>
+                    </Dialog.Popup>
+                  </Dialog>
+                  <Button loading={loading} type="submit" variant={'primary'} style={{ flex: 1 }}>
+                    Lagre sak
+                  </Button>
+                </HStack>
+              ) : (
+                <Button loading={loading} type="submit" variant={'primary'} style={{ width: '100%' }}>
+                  Opprett sak
                 </Button>
               )}
-            </HStack>
-            {isEdit ? (
-              <HStack gap={'space-8'}>
-                <Dialog>
-                  <Dialog.Trigger style={{ flex: 1, display: 'flex' }}>
-                    <Button data-color={'danger'} icon={<TrashIcon aria-hidden />} style={{ width: '100%' }}>
-                      Slett
-                    </Button>
-                  </Dialog.Trigger>
-                  <Dialog.Popup role={'alertdialog'} closeOnOutsideClick={false}>
-                    <DialogHeader>
-                      <DialogBody>
-                        <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
-                      </DialogBody>
-                      <DialogFooter>
-                        <Dialog.CloseTrigger>
-                          <Button variant={'secondary'} data-color={'neutral'}>
-                            Avbryt
-                          </Button>
-                        </Dialog.CloseTrigger>
-                        <Dialog.CloseTrigger>
-                          <Button variant={'danger'} onClick={() => onDelete()}>
-                            Ja, slett
-                          </Button>
-                        </Dialog.CloseTrigger>
-                      </DialogFooter>
-                    </DialogHeader>
-                  </Dialog.Popup>
-                </Dialog>
-                <Button loading={loading} type="submit" variant={'primary'} style={{ flex: 1 }}>
-                  Lagre sak
-                </Button>
-              </HStack>
-            ) : (
-              <Button loading={loading} type="submit" variant={'primary'} style={{ width: '100%' }}>
-                Opprett sak
-              </Button>
-            )}
+            </VStack>
           </VStack>
         </form>
       </Page.Block>

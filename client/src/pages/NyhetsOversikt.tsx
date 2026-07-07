@@ -63,23 +63,25 @@ export const NyhetsOversikt = () => {
               Opprett sak
             </Button>
           </HStack>
-          <Search
-            label="Søk"
-            variant="secondary"
-            hideLabel={false}
-            value={searchTerm}
-            onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value, page: '1' }))}
-            onClear={clearTerm}
-          />
-          {allTags.length > 0 && (
-            <Chips>
-              {allTags.map((tag) => (
-                <Chips.Toggle key={tag} selected={selectedTags.includes(tag)} onClick={() => toggleTag(tag)}>
-                  {tag}
-                </Chips.Toggle>
-              ))}
-            </Chips>
-          )}
+          <VStack gap={'space-16'} style={{ width: '100%', maxWidth: '1200px' }}>
+            <Search
+              label="Søk"
+              variant="secondary"
+              hideLabel={false}
+              value={searchTerm}
+              onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value, page: '1' }))}
+              onClear={clearTerm}
+            />
+            {allTags.length > 0 && (
+              <Chips>
+                {allTags.map((tag) => (
+                  <Chips.Toggle key={tag} selected={selectedTags.includes(tag)} onClick={() => toggleTag(tag)}>
+                    {tag}
+                  </Chips.Toggle>
+                ))}
+              </Chips>
+            )}
+          </VStack>
           <HStack justify={'space-between'} align={'center'}>
             <ToggleGroup
               value={filterValue}
@@ -95,7 +97,6 @@ export const NyhetsOversikt = () => {
               value={viewMode}
               onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), view: v }))}
               label={'Visning'}
-              data-color={'neutral'}
             >
               <ToggleGroup.Item value="grid" aria-label="Rutenett">
                 <SquareGridIcon aria-hidden />
