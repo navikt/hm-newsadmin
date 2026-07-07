@@ -38,9 +38,12 @@ export const NewsPreview = () => {
           )}
           <Heading size="large">{news.title}</Heading>
           <HStack gap="space-8" align="center" wrap>
-            <Detail>
-              {new Date(news.publishedFrom).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </Detail>
+            {new Date(news.updated) > new Date(news.publishedFrom) && (
+              <Detail>
+                Oppdatert:{' '}
+                {new Date(news.updated).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </Detail>
+            )}
             {news.tags?.map((tag) => (
               <Tag key={tag} variant="neutral">
                 {tag}
