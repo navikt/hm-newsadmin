@@ -38,7 +38,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
 
   register('publishedFrom', { required: 'Mangler fra-dato' })
   register('publishedTo', { required: 'Mangler til-dato' })
-  register('tags', { validate: (v) => v?.length > 0 || 'Mangler tag' })
+  register('tags', { required: 'Mangler type' })
   register('image_url')
   register('imageDescription')
   register('status')

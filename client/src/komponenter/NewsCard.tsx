@@ -1,4 +1,4 @@
-import { LinkCard, Tag, HStack } from '@navikt/ds-react'
+import { LinkCard, Tag, HStack, Detail, VStack } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { useNavigate } from 'react-router-dom'
 import NewsImage from 'komponenter/NewsImage.tsx'
@@ -8,9 +8,9 @@ export default function NewsCard({ news }: { news: NewsDTO }) {
   const navigate = useNavigate()
   const { label, variant } = displayStatusTagProps[getDisplayStatus(news)]
   return (
-    <LinkCard onClick={() => navigate(`/news/${news.id}/edit`)} style={{ minHeight: '490px' }}>
+    <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit`)} style={{ minHeight: '490px' }}>
       <LinkCard.Image aspectRatio="16/9">
-        <NewsImage fontSize="5rem" aria-hidden imageUrl={news.image_url} />
+        <NewsImage fontSize="5rem" aria-hidden imageUrl={news.image_url} tags={news.tags} />
       </LinkCard.Image>
       <LinkCard.Title
         style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
@@ -28,14 +28,20 @@ export default function NewsCard({ news }: { news: NewsDTO }) {
         {news.description}
       </LinkCard.Description>
       <LinkCard.Footer>
-        <HStack gap={'space-4'} wrap justify={'space-between'} width={'100%'}>
-          {news.tags?.map((tag) => (
-            <Tag key={tag} variant="neutral">
-              {tag}
-            </Tag>
-          ))}
-          <Tag variant={variant}>{label}</Tag>
-        </HStack>
+        <VStack gap="space-2" width="100%">
+          <Detail>
+            Oppdatert:{' '}
+            {new Date(news.updated).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </Detail>
+          <HStack gap={'space-4'} wrap justify={'space-between'} width={'100%'}>
+            {news.tags?.map((tag) => (
+              <Tag key={tag} variant="neutral">
+                {tag}
+              </Tag>
+            ))}
+            <Tag variant={variant}>{label}</Tag>
+          </HStack>
+        </VStack>
       </LinkCard.Footer>
     </LinkCard>
   )

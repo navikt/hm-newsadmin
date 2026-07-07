@@ -47,5 +47,5 @@ export const EditNewsPage = () => {
     navigate('/')
   }
 
-  return <NewsAdmin loading={loading} onSubmit={editNews} onDelete={handleDelete} defaultValues={news} onFileSelect={(file) => (pendingFile.current = file)} />
+  return <NewsAdmin loading={loading} onSubmit={editNews} onDelete={handleDelete} defaultValues={news} newsId={id} onFileSelect={(file) => (pendingFile.current = file)} />
 }

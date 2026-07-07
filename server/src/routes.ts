@@ -21,10 +21,11 @@ export const routes = {
     const newsProxy = createProxyMiddleware({
       target: process.env.HM_NEWS_URL,
       changeOrigin: true,
+      pathFilter: ['/news/**', '/admin/**'],
     })
     return Router()
       .use(cookieParser())
-      .use(['/news', '/admin'], newsProxy)
+      .use(newsProxy)
       .get('/settings.js', (_, res) => {
         const appSettings = {
           VITE_HM_REGISTER_URL: process.env.VITE_HM_REGISTER_URL,

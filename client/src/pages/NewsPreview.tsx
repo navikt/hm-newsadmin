@@ -21,24 +21,29 @@ export const NewsPreview = () => {
   return (
     <Page>
       <Page.Block as="main" width="text">
-        <VStack gap="space-16" paddingBlock="space-0 space-24">
+        <VStack gap="space-16" paddingBlock="space-16 space-24">
           <HStack align="center" style={{ position: 'relative' }}>
             <Button
               variant="tertiary"
               icon={<ArrowLeftIcon />}
-              onClick={() => navigate(`/news/${id}/edit`)}
+              onClick={() => navigate(`/aktuelt/${id}/edit`)}
               style={{ position: 'absolute', right: '100%' }}
             >
               Tilbake
             </Button>
             <Heading size="medium">Forhåndsvisning</Heading>
           </HStack>
-          {news.image_url && <NewsArticleImage imageUrl={news.image_url} alt={news.title} />}
+          {(news.image_url || news.tags?.length) && (
+            <NewsArticleImage imageUrl={news.image_url} alt={news.title} tags={news.tags} />
+          )}
           <Heading size="large">{news.title}</Heading>
           <HStack gap="space-8" align="center" wrap>
-            <Detail>
-              {new Date(news.publishedFrom).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </Detail>
+            {new Date(news.updated) > new Date(news.publishedFrom) && (
+              <Detail>
+                Oppdatert:{' '}
+                {new Date(news.updated).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </Detail>
+            )}
             {news.tags?.map((tag) => (
               <Tag key={tag} variant="neutral">
                 {tag}
