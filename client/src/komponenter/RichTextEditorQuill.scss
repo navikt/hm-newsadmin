@@ -62,3 +62,13 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.ql-snow .ql-picker.ql-size {
+  .ql-picker-label,
+  .ql-picker-item {
+    &::before { content: 'Normal'; }
+    &[data-value='0.75em']::before { content: 'Liten'; }
+    &[data-value='1.5em']::before { content: 'Stor'; }
+    &[data-value='2.5em']::before { content: 'Veldig stor'; }
+  }
+}
