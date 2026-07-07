@@ -162,60 +162,62 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 </Select>
               )}
             />
-            <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
-              <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
-                <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
-                <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
-              </ToggleGroup>
-              {newsId && (
-                <Button
-                  as={Link}
-                  variant="secondary"
-                  icon={<EyeIcon aria-hidden />}
-                  href={`/aktuelt/${newsId}/preview`}
-                  type="button"
-                >
-                  Forhåndsvis
+            <VStack gap={'space-32'}>
+              <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
+                <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
+                  <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
+                  <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
+                </ToggleGroup>
+                {newsId && (
+                  <Button
+                    as={Link}
+                    variant="secondary"
+                    icon={<EyeIcon aria-hidden />}
+                    href={`/aktuelt/${newsId}/preview`}
+                    type="button"
+                  >
+                    Forhåndsvis
+                  </Button>
+                )}
+              </HStack>
+              {isEdit ? (
+                <HStack gap={'space-8'}>
+                  <Dialog>
+                    <Dialog.Trigger style={{ flex: 1, display: 'flex' }}>
+                      <Button data-color={'danger'} icon={<TrashIcon aria-hidden />} style={{ width: '100%' }}>
+                        Slett
+                      </Button>
+                    </Dialog.Trigger>
+                    <Dialog.Popup role={'alertdialog'} closeOnOutsideClick={false}>
+                      <DialogHeader>
+                        <DialogBody>
+                          <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
+                        </DialogBody>
+                        <DialogFooter>
+                          <Dialog.CloseTrigger>
+                            <Button variant={'secondary'} data-color={'neutral'}>
+                              Avbryt
+                            </Button>
+                          </Dialog.CloseTrigger>
+                          <Dialog.CloseTrigger>
+                            <Button variant={'danger'} onClick={() => onDelete()}>
+                              Ja, slett
+                            </Button>
+                          </Dialog.CloseTrigger>
+                        </DialogFooter>
+                      </DialogHeader>
+                    </Dialog.Popup>
+                  </Dialog>
+                  <Button loading={loading} type="submit" variant={'primary'} style={{ flex: 1 }}>
+                    Lagre sak
+                  </Button>
+                </HStack>
+              ) : (
+                <Button loading={loading} type="submit" variant={'primary'} style={{ width: '100%' }}>
+                  Opprett sak
                 </Button>
               )}
-            </HStack>
-            {isEdit ? (
-              <HStack gap={'space-8'}>
-                <Dialog>
-                  <Dialog.Trigger style={{ flex: 1, display: 'flex' }}>
-                    <Button data-color={'danger'} icon={<TrashIcon aria-hidden />} style={{ width: '100%' }}>
-                      Slett
-                    </Button>
-                  </Dialog.Trigger>
-                  <Dialog.Popup role={'alertdialog'} closeOnOutsideClick={false}>
-                    <DialogHeader>
-                      <DialogBody>
-                        <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
-                      </DialogBody>
-                      <DialogFooter>
-                        <Dialog.CloseTrigger>
-                          <Button variant={'secondary'} data-color={'neutral'}>
-                            Avbryt
-                          </Button>
-                        </Dialog.CloseTrigger>
-                        <Dialog.CloseTrigger>
-                          <Button variant={'danger'} onClick={() => onDelete()}>
-                            Ja, slett
-                          </Button>
-                        </Dialog.CloseTrigger>
-                      </DialogFooter>
-                    </DialogHeader>
-                  </Dialog.Popup>
-                </Dialog>
-                <Button loading={loading} type="submit" variant={'primary'} style={{ flex: 1 }}>
-                  Lagre sak
-                </Button>
-              </HStack>
-            ) : (
-              <Button loading={loading} type="submit" variant={'primary'} style={{ width: '100%' }}>
-                Opprett sak
-              </Button>
-            )}
+            </VStack>
           </VStack>
         </form>
       </Page.Block>
