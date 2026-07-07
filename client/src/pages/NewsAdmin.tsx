@@ -16,7 +16,7 @@ import {
 } from '@navikt/ds-react'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
 import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
 import { ImageUpload } from 'utils/ImageUpload.tsx'
@@ -55,6 +55,15 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
   const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
   const [status, setStatus] = useState<NewsStatus>(defaultValues?.status ?? 'DRAFT')
+
+  useEffect(() => {
+    if (tags && defaultValues?.tags) {
+      const ids = defaultValues.tags
+        .map((name) => tags.find((t) => t.tag === name)?.id)
+        .filter((id): id is string => Boolean(id))
+      setValue('tags', ids)
+    }
+  }, [tags, defaultValues?.tags])
 
   return (
     <Page>
@@ -147,7 +156,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                     Velg type
                   </option>
                   {tags?.map((tag) => (
-                    <option key={tag.id} value={tag.tag}>
+                    <option key={tag.id} value={tag.id}>
                       {tag.tag}
                     </option>
                   ))}
