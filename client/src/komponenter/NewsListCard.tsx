@@ -1,4 +1,4 @@
-import { LinkCard, Tag, HStack, Box } from '@navikt/ds-react'
+import { LinkCard, Tag, HStack, Detail, VStack, Box } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { useNavigate } from 'react-router-dom'
 import NewsImage from 'komponenter/NewsImage.tsx'
@@ -29,14 +29,20 @@ export default function NewsListCard({ news }: { news: NewsDTO }) {
         {news.description}
       </LinkCard.Description>
       <LinkCard.Footer>
-        <HStack gap="space-2" wrap justify={'space-between'} width="100%">
-          {news.tags?.map((tag) => (
-            <Tag key={tag} variant="neutral">
-              {tag}
-            </Tag>
-          ))}
-          <Tag variant={variant}>{label}</Tag>
-        </HStack>
+        <VStack gap="space-2" width="100%">
+          <Detail>
+            Oppdatert:{' '}
+            {new Date(news.updated).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </Detail>
+          <HStack gap="space-2" wrap justify={'space-between'} width="100%">
+            {news.tags?.map((tag) => (
+              <Tag key={tag} variant="neutral">
+                {tag}
+              </Tag>
+            ))}
+            <Tag variant={variant}>{label}</Tag>
+          </HStack>
+        </VStack>
       </LinkCard.Footer>
     </LinkCard>
   )

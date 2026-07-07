@@ -2,7 +2,6 @@ import {
   BodyLong,
   Box,
   Button,
-  Chips,
   DatePicker,
   Dialog,
   HStack,
@@ -13,12 +12,11 @@ import {
   TextField,
   ToggleGroup,
   VStack,
-  ErrorMessage,
-  ActionMenu,
+  Select,
 } from '@navikt/ds-react'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
-import { ArrowLeftIcon, ChevronDownIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
-import { useState, useEffect } from 'react'
+import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
+import { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
 import { ImageUpload } from 'utils/ImageUpload.tsx'
@@ -56,31 +54,12 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
 
   const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [status, setStatus] = useState<NewsStatus>(defaultValues?.status ?? 'DRAFT')
-
-  useEffect(() => {
-    if (tags && defaultValues?.tags) {
-      const ids = defaultValues.tags
-        .map((name) => tags.find((t) => t.tag === name)?.id)
-        .filter((id): id is string => Boolean(id))
-      setSelectedTagIds(ids)
-      setValue('tags', ids)
-    }
-  }, [tags, defaultValues?.tags])
-
-  const toggleTag = (id: string) => {
-    setSelectedTagIds((prev) => {
-      const next = prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
-      setValue('tags', next, { shouldValidate: true })
-      return next
-    })
-  }
 
   return (
     <Page>
       <Page.Block as="main" width="text">
-        <form onSubmit={handleSubmit((data) => onSubmit({ ...data, tags: selectedTagIds, status }))}>
+        <form onSubmit={handleSubmit((data) => onSubmit({ ...data, status }))}>
           <VStack gap="space-16" paddingBlock={'space-0 space-24'}>
             <HStack align={'center'} style={{ position: 'relative' }}>
               <Button
@@ -105,9 +84,19 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 <ImageUpload
                   newsId={newsId}
                   defaultImageUrl={defaultValues?.image_url}
-                  onImageUpload={(uri) => { setValue('image_url', uri); setHasImage(true) }}
-                  onImageRemove={() => { setValue('image_url', ''); setValue('imageDescription', ''); setHasImage(false) }}
-                  onFileSelect={(file) => { onFileSelect?.(file); setHasImage(true) }}
+                  onImageUpload={(uri) => {
+                    setValue('image_url', uri)
+                    setHasImage(true)
+                  }}
+                  onImageRemove={() => {
+                    setValue('image_url', '')
+                    setValue('imageDescription', '')
+                    setHasImage(false)
+                  }}
+                  onFileSelect={(file) => {
+                    onFileSelect?.(file)
+                    setHasImage(true)
+                  }}
                 />
                 {hasImage && (
                   <TextField
@@ -122,13 +111,18 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 )}
               </VStack>
             </Box>
-            <TextField
+            <Textarea
               {...register('title', { required: 'Mangler tittel' })}
               label="Tittel"
+              maxLength={60}
               error={errors.title?.message}
-              width="text"
-            ></TextField>
-            <Textarea {...register('description')} label="Ingress" maxLength={250}></Textarea>
+            ></Textarea>
+            <Textarea
+              {...register('description', { required: 'Mangler ingress' })}
+              label="Ingress"
+              maxLength={100}
+              error={errors.description?.message}
+            ></Textarea>
             <HStack justify={'center'}>
               <HStack align={'start'} gap={'space-64'} paddingInline={'space-32'} justify={'center'}>
                 <DatePicker {...fromDatepickerProps}>
@@ -139,56 +133,39 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 </DatePicker>
               </HStack>
             </HStack>
-            <VStack gap="space-8">
-              <ActionMenu>
-                <ActionMenu.Trigger>
-                  <Button
-                    data-color="neutral"
-                    variant="secondary"
-                    icon={<ChevronDownIcon aria-hidden />}
-                    iconPosition="right"
-                  >
-                    Type
-                  </Button>
-                </ActionMenu.Trigger>
-                <ActionMenu.Content>
-                  <ActionMenu.Group label="Tags">
-                    {tags?.map((tag) => (
-                      <ActionMenu.Item key={tag.id} onSelect={() => toggleTag(tag.id)}>
-                        {tag.tag}
-                      </ActionMenu.Item>
-                    ))}
-                  </ActionMenu.Group>
-                </ActionMenu.Content>
-              </ActionMenu>
-              {errors.tags && <ErrorMessage showIcon>{errors.tags.message}</ErrorMessage>}
-              {selectedTagIds.length > 0 && (
-                <Chips>
-                  {selectedTagIds.map((id) => {
-                    const tag = tags?.find((t) => t.id === id)
-                    return tag ? (
-                      <Chips.Removable key={id} onDelete={() => toggleTag(id)}>
-                        {tag.tag}
-                      </Chips.Removable>
-                    ) : null
-                  })}
-                </Chips>
+            <Controller
+              name="tags"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Select
+                  label="Type"
+                  value={field.value?.[0] ?? ''}
+                  onChange={(e) => field.onChange([e.target.value])}
+                  error={fieldState.error?.message}
+                >
+                  <option value="" disabled>
+                    Velg type
+                  </option>
+                  {tags?.map((tag) => (
+                    <option key={tag.id} value={tag.tag}>
+                      {tag.tag}
+                    </option>
+                  ))}
+                </Select>
               )}
-            </VStack>
+            />
             <VStack gap="space-8">
               <Label>Innhold</Label>
               <Controller
                 name="body"
                 control={control}
                 rules={{ required: 'Mangler innhold' }}
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <>
                     <RichTextEditorQuill
                       onTextChange={(html, rawText) => field.onChange(rawText.trim() ? html : '')}
                       defaultValue={field.value}
-                      error={!!fieldState.error}
                     />
-                    {fieldState.error && <ErrorMessage showIcon>{fieldState.error.message}</ErrorMessage>}
                   </>
                 )}
               />
