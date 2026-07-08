@@ -31,8 +31,14 @@ export default function NewsCard({ news, searchParams }: { news: NewsDTO; search
       <LinkCard.Footer>
         <VStack gap="space-2" width="100%">
           <Detail>
-            Oppdatert:{' '}
-            {new Date(news.updated).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' })}
+            Fra:{' '}
+            {new Date(news.publishedFrom).toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+            {news.publishedTo && (
+              <>
+                {' '}– til{' '}
+                {new Date(news.publishedTo).toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+              </>
+            )}
           </Detail>
           <HStack gap={'space-4'} wrap justify={'space-between'} width={'100%'}>
             {news.tags?.map((tag) => (
