@@ -33,7 +33,7 @@ export const NewsPreview = () => {
             </Button>
             <Heading size="medium">Forhåndsvisning</Heading>
           </HStack>
-          {(news.image_url || news.tags?.length) && (
+          {news.image_url && (
             <NewsArticleImage imageUrl={news.image_url} alt={news.title} tags={news.tags} />
           )}
           <Heading size="large">{news.title}</Heading>
