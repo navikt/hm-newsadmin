@@ -128,7 +128,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               error={errors.title?.message}
             ></Textarea>
             <Textarea {...register('description')} label="Ingress" maxLength={100}></Textarea>
-            <HStack gap={'space-48'} justify={'center'} style={{ width: '100%' }}>
+            <HStack gap={'space-16'} justify={'start'} style={{ width: '100%' }}>
               <DatePicker {...fromDatepickerProps}>
                 <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
               </DatePicker>
@@ -183,7 +183,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                     as={Link}
                     variant="secondary"
                     icon={<EyeIcon aria-hidden />}
-                    href={`/aktuelt/${newsId}/preview${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
+                    href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/aktuelt/${newsId}/preview${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}'}
                     type="button"
                   >
                     Forhåndsvis

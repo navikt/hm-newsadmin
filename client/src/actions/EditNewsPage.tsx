@@ -4,6 +4,8 @@ import { deleteNews, uploadNewsMedia } from 'utils/api-util.ts'
 import { NewsAdmin } from 'pages/NewsAdmin.tsx'
 import { NewsFormValues } from 'komponenter/useNewsForm.ts'
 import { useRef, useState } from 'react'
+import { Toast } from 'komponenter/Toast.tsx'
+import { CheckmarkIcon } from '@navikt/aksel-icons'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 
@@ -16,6 +18,7 @@ export const EditNewsPage = () => {
   const { mutate } = useSWRConfig()
   const { data: news } = useSWR(`/news/${id}`, () => fetch(`${base}/news/${id}`).then((res) => res.json()))
   const [loading, setLoading] = useState(false)
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
   const pendingFile = useRef<File | null>(null)
 
   async function editNews(data: NewsFormValues) {
@@ -34,6 +37,8 @@ export const EditNewsPage = () => {
         }
         await mutate('news')
         await mutate(`/news/${id}`)
+        setToastMessage('Lagret')
+        setTimeout(() => setToastMessage(null), 3000)
         navigate(homeUrl)
       }
     } catch (error) {
@@ -50,5 +55,18 @@ export const EditNewsPage = () => {
     navigate(homeUrl)
   }
 
+  return (
+    <>
+      <NewsAdmin
+        loading={loading}
+        onSubmit={editNews}
+        onDelete={handleDelete}
+        defaultValues={news}
+        newsId={id}
+        onFileSelect={(file) => (pendingFile.current = file)}
+      />
+      <Toast message={toastMessage} icon={<CheckmarkIcon aria-hidden />} />
+    </>
+  )
   return <NewsAdmin loading={loading} onSubmit={editNews} onDelete={handleDelete} defaultValues={news} newsId={id} onFileSelect={(file) => (pendingFile.current = file)} returnTo={returnTo} />
 }
