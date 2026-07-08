@@ -3,7 +3,8 @@ import { NewsDTO, NewsStatus } from 'utils/admin-util.ts'
 
 export enum FilterValue {
   alle = 'alle',
-  publisert = 'publisert',
+  aktiv = 'aktiv',
+  kommende = 'kommende',
   utløpt = 'utløpt',
   utkast = 'DRAFT',
 }
@@ -20,7 +21,7 @@ export function getDisplayStatus(news: NewsDTO): DisplayStatus {
 
 export const displayStatusTagProps: Record<DisplayStatus, { label: string; variant: TagProps['variant'] }> = {
   aktiv: { label: 'Aktiv', variant: 'success' },
-  planlagt: { label: 'Planlagt', variant: 'info' },
+  planlagt: { label: 'Ferdigstilt', variant: 'info' },
   utløpt: { label: 'Utløpt', variant: 'neutral-filled' },
   utkast: { label: 'Utkast', variant: 'warning' },
 }

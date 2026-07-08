@@ -6,12 +6,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 export async function getNews(page = 0, size = 6, search?: string, tags?: string[], filter?: string): Promise<NewsPage> {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (search) params.set('search', search)
-  if (filter === 'publisert') {
+  if (filter === 'aktiv') {
     params.set('status', 'PUBLISHED')
-    params.set('expired', 'false')
+    params.set('publishingState', 'ACTIVE')
+  } else if (filter === 'kommende') {
+    params.set('status', 'PUBLISHED')
+    params.set('publishingState', 'UPCOMING')
   } else if (filter === 'utløpt') {
     params.set('status', 'PUBLISHED')
-    params.set('expired', 'true')
+    params.set('publishingState', 'EXPIRED')
   } else if (filter === 'DRAFT') {
     params.set('status', 'DRAFT')
   }
