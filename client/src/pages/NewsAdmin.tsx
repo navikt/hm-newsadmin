@@ -182,7 +182,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   <Button
                     variant="secondary"
                     icon={<EyeIcon aria-hidden />}
-                    onClick={() => navigate(`/aktuelt/${newsId}/preview${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)}
+                    onClick={() => window.open(`https://finnhjelpemiddel.ekstern.dev.nav.no/aktuelt/${newsId}`, '_blank')}
                     type="button"
                   >
                     Forhåndsvis
