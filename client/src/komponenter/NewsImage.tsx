@@ -36,7 +36,7 @@ export default function NewsImage({ fontSize = '5rem', alt, imageUrl, tags }: Ne
       style={{
         backgroundColor: 'var(--ax-bg-neutral-soft)',
         width: '100%',
-        height: '100%',
+        aspectRatio: '16/9',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
