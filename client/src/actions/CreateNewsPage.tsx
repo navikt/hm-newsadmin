@@ -4,7 +4,6 @@ import { useSWRConfig } from 'swr'
 import { NewsAdmin } from 'pages/NewsAdmin.tsx'
 import { NewsFormValues } from 'komponenter/useNewsForm.ts'
 import { uploadNewsMedia } from 'utils/api-util.ts'
-import { NewsDTO } from 'utils/admin-util.ts'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 
@@ -32,7 +31,7 @@ export const CreateNewsPage = () => {
         await uploadNewsMedia(newsId, pendingFile.current)
       }
       await mutate('news')
-      navigate('/')
+      navigate(`/aktuelt/${newsId}/edit`)
     } catch (error) {
       console.error(error)
     } finally {
