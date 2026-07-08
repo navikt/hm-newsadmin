@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import NewsImage from 'komponenter/NewsImage.tsx'
 import { getDisplayStatus, displayStatusTagProps } from 'utils/news-filter-util.ts'
 
-export default function NewsCard({ news }: { news: NewsDTO }) {
+export default function NewsCard({ news, searchParams }: { news: NewsDTO; searchParams: URLSearchParams }) {
   const navigate = useNavigate()
   const { label, variant } = displayStatusTagProps[getDisplayStatus(news)]
+  const returnTo = searchParams.toString()
   return (
-    <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit`)} style={{ minHeight: '490px' }}>
+    <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)} style={{ minHeight: '490px' }}>
       <LinkCard.Image aspectRatio="16/9">
         <NewsImage fontSize="5rem" aria-hidden imageUrl={news.image_url} tags={news.tags} />
       </LinkCard.Image>

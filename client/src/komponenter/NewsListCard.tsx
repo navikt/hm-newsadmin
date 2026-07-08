@@ -5,11 +5,12 @@ import NewsImage from 'komponenter/NewsImage.tsx'
 import { getDisplayStatus, displayStatusTagProps } from 'utils/news-filter-util.ts'
 import './NewsListCard.scss'
 
-export default function NewsListCard({ news }: { news: NewsDTO }) {
+export default function NewsListCard({ news, searchParams }: { news: NewsDTO; searchParams: URLSearchParams }) {
   const navigate = useNavigate()
   const { label, variant } = displayStatusTagProps[getDisplayStatus(news)]
+  const returnTo = searchParams.toString()
   return (
-    <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit`)} className={'card'}>
+    <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)} className={'card'}>
       <Box className={'image'}>
         <NewsImage imageUrl={news.image_url} tags={news.tags} />
       </Box>

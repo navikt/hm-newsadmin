@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
 import { deleteNews, uploadNewsMedia } from 'utils/api-util.ts'
 import { NewsAdmin } from 'pages/NewsAdmin.tsx'
@@ -10,6 +10,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 export const EditNewsPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const [searchParams] = useSearchParams()
+  const returnTo = searchParams.get('returnTo') ?? ''
+  const homeUrl = returnTo ? `/?${returnTo}` : '/'
   const { mutate } = useSWRConfig()
   const { data: news } = useSWR(`/news/${id}`, () => fetch(`${base}/news/${id}`).then((res) => res.json()))
   const [loading, setLoading] = useState(false)
@@ -31,7 +34,7 @@ export const EditNewsPage = () => {
         }
         await mutate('news')
         await mutate(`/news/${id}`)
-        navigate('/')
+        navigate(homeUrl)
       }
     } catch (error) {
       console.error(error)
@@ -44,8 +47,8 @@ export const EditNewsPage = () => {
 
   async function handleDelete() {
     await deleteNews(id!)
-    navigate('/')
+    navigate(homeUrl)
   }
 
-  return <NewsAdmin loading={loading} onSubmit={editNews} onDelete={handleDelete} defaultValues={news} newsId={id} onFileSelect={(file) => (pendingFile.current = file)} />
+  return <NewsAdmin loading={loading} onSubmit={editNews} onDelete={handleDelete} defaultValues={news} newsId={id} onFileSelect={(file) => (pendingFile.current = file)} returnTo={returnTo} />
 }

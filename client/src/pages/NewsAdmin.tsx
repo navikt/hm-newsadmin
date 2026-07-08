@@ -33,9 +33,10 @@ type Props = {
   newsId?: string
   onFileSelect?: (file: File) => void
   loading?: boolean
+  returnTo?: string
 }
 
-export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSelect, loading }: Props) => {
+export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSelect, loading, returnTo }: Props) => {
   const isEdit = !!defaultValues?.title
 
   const {
@@ -75,7 +76,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 as={Link}
                 variant={'tertiary'}
                 icon={<ArrowLeftIcon />}
-                onClick={() => navigate('/')}
+                onClick={() => navigate(returnTo ? `/?${returnTo}` : '/')}
                 style={{ position: 'absolute', right: '100%' }}
               >
                 Tilbake
@@ -182,7 +183,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                     as={Link}
                     variant="secondary"
                     icon={<EyeIcon aria-hidden />}
-                    href={`/aktuelt/${newsId}/preview`}
+                    href={`/aktuelt/${newsId}/preview${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
                     type="button"
                   >
                     Forhåndsvis

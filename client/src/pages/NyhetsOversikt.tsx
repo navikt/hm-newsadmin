@@ -109,13 +109,13 @@ export const NyhetsOversikt = () => {
           {viewMode === 'grid' ? (
             <HGrid gap="space-12" columns={{ xs: 'repeat(auto-fit, minmax(10rem, 1fr))', md: 3 }}>
               {sortedNews.map((news: NewsDTO) => (
-                <NewsCard key={news.id} news={news} />
+                <NewsCard key={news.id} news={news} searchParams={searchParams} />
               ))}
             </HGrid>
           ) : (
             <VStack gap="space-12">
               {sortedNews.map((news: NewsDTO) => (
-                <NewsListCard key={news.id} news={news} />
+                <NewsListCard key={news.id} news={news} searchParams={searchParams} />
               ))}
             </VStack>
           )}
