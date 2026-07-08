@@ -89,9 +89,10 @@ export const NyhetsOversikt = () => {
               label={'Status'}
             >
               <ToggleGroup.Item value="alle" label="Alle" />
-              <ToggleGroup.Item value="publisert" label="Publisert" />
-              <ToggleGroup.Item value="utløpt" label="Utløpt" />
+              <ToggleGroup.Item value="aktiv" label="Aktiv" />
+              <ToggleGroup.Item value="kommende" label="Ferdigstilt" />
               <ToggleGroup.Item value="DRAFT" label="Utkast" />
+              <ToggleGroup.Item value="utløpt" label="Utløpt" />
             </ToggleGroup>
             <ToggleGroup
               value={viewMode}
