@@ -21,7 +21,7 @@ export function getDisplayStatus(news: NewsDTO): DisplayStatus {
 
 export const displayStatusTagProps: Record<DisplayStatus, { label: string; variant: TagProps['variant'] }> = {
   aktiv: { label: 'Aktiv', variant: 'success' },
-  planlagt: { label: 'Kommende', variant: 'info' },
+  planlagt: { label: 'Ferdigstilt', variant: 'info' },
   utløpt: { label: 'Utløpt', variant: 'neutral-filled' },
   utkast: { label: 'Utkast', variant: 'warning' },
 }
