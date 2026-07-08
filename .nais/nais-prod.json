@@ -7,6 +7,7 @@
   "hm_register_external_url": "not_used",
   "image_proxy_url": "https://finnhjelpemiddel.nav.no/imageproxy",
   "faro_url": "https://telemetry.nav.no/collect",
+  "hm_news_url": "http://hm-finnhjelpemiddel-news",
   "image_proxy_external_url": "not_used",
   "replicas": {
     "min": 1,
