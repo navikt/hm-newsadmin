@@ -183,7 +183,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                     as={Link}
                     variant="secondary"
                     icon={<EyeIcon aria-hidden />}
-                    href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/aktuelt/${newsId}/preview${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}'}
+                    href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/aktuelt/${newsId}/preview${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
                     type="button"
                   >
                     Forhåndsvis
