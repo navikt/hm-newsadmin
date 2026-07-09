@@ -18,6 +18,7 @@ export type NewsFormValues = {
   imageDescription: string
   status: NewsStatus
   tags: string[]
+  comment: string
 }
 
 export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
@@ -42,6 +43,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
   register('image_url')
   register('imageDescription')
   register('status')
+  register('comment')
 
   const publishedFrom = watch('publishedFrom')
   const fromDateValue = publishedFrom ? new Date(publishedFrom) : new Date()

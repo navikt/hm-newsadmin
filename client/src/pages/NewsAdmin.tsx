@@ -189,6 +189,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   </Button>
                 )}
               </HStack>
+              <Textarea {...register('comment')} label="Kommentar" description="Intern merknad, vises ikke til brukere" />
               {isEdit ? (
                 <HStack gap={'space-8'}>
                   <Dialog>
