@@ -204,9 +204,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   <Button
                     variant="secondary"
                     icon={<EyeIcon aria-hidden />}
-                    onClick={() =>
-                      window.open(`https://finnhjelpemiddel.ekstern.dev.nav.no/aktuelt/${newsId}`, '_blank')
-                    }
+                    onClick={() => window.open(`https://finnhjelpemiddel.nav.no/aktuelt/${newsId}`, '_blank')}
                     type="button"
                   >
                     Forhåndsvis
