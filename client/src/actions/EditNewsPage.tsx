@@ -17,7 +17,7 @@ export const EditNewsPage = () => {
   const returnTo = searchParams.get('returnTo') ?? ''
   const homeUrl = returnTo ? `/?${returnTo}` : '/'
   const { mutate } = useSWRConfig()
-  const { data: news } = useSWR(`/news/${id}`, () => fetch(`${base}/news/${id}`).then((res) => res.json()))
+  const { data: news } = useSWR(`/admin/news/${id}`, () => fetch(`${base}/admin/news/${id}`).then((res) => res.json()))
   const selectedImageFile = useRef<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [toastMessage, setToastMessage] = useState<string | null>(null)
@@ -34,7 +34,7 @@ export const EditNewsPage = () => {
       })
       if (res.ok) {
         await mutate('news')
-        await mutate(`/news/${id}`)
+        await mutate(`/admin/news/${id}`)
         setToastMessage('Lagret')
         setTimeout(() => setToastMessage(null), 3000)
       }

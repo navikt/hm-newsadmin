@@ -37,6 +37,7 @@ const newsSchema = z.object({
   imageDescription: z.string().optional(),
   status: z.enum(newsStatusValues),
   tags: z.array(z.string(), { error: 'Mangler type' }).min(1, { error: 'Mangler type' }),
+  comment: z.string(),
 })
 
 export type NewsFormValues = z.infer<typeof newsSchema>
