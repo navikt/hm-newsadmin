@@ -3,10 +3,9 @@ import { Link, useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
 import { getNews, getTags } from 'utils/api-util.ts'
 import NewsCard from 'komponenter/NewsCard.tsx'
-import NewsListCard from 'komponenter/NewsListCard.tsx'
 import { FilterValue } from 'utils/news-filter-util.ts'
 import { SquareGridIcon, BulletListIcon } from '@navikt/aksel-icons'
-import { NewsDTO, NewsPage } from 'utils/admin-util.ts'
+import { NewsPage } from 'utils/admin-util.ts'
 import NewsPagination from 'komponenter/NewsPagination.tsx'
 
 export const NyhetsOversikt = () => {
@@ -109,14 +108,14 @@ export const NyhetsOversikt = () => {
           </HStack>
           {viewMode === 'grid' ? (
             <HGrid gap="space-12" columns={{ xs: 'repeat(auto-fit, minmax(10rem, 1fr))', md: 3 }}>
-              {sortedNews.map((news: NewsDTO) => (
-                <NewsCard key={news.id} news={news} searchParams={searchParams} />
+              {sortedNews.map((news) => (
+                <NewsCard key={news.id} news={news} searchParams={searchParams} variant={viewMode} />
               ))}
             </HGrid>
           ) : (
             <VStack gap="space-12">
-              {sortedNews.map((news: NewsDTO) => (
-                <NewsListCard key={news.id} news={news} searchParams={searchParams} />
+              {sortedNews.map((news) => (
+                <NewsCard key={news.id} news={news} searchParams={searchParams} variant={viewMode} />
               ))}
             </VStack>
           )}

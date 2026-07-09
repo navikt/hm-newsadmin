@@ -1,6 +1,6 @@
 import { Tag, HStack, VStack, BodyShort } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
-import './NewsListCard.scss'
+import './NewsCard.scss'
 import { displayStatusTagProps, getDisplayStatus } from 'utils/news-filter-util.ts'
 
 export default function NewsCardFooter({ news }: { news: NewsDTO }) {
