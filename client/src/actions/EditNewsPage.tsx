@@ -39,7 +39,6 @@ export const EditNewsPage = () => {
         await mutate(`/news/${id}`)
         setToastMessage('Lagret')
         setTimeout(() => setToastMessage(null), 3000)
-        navigate(homeUrl)
       }
     } catch (error) {
       console.error(error)
@@ -64,9 +63,9 @@ export const EditNewsPage = () => {
         defaultValues={news}
         newsId={id}
         onFileSelect={(file) => (pendingFile.current = file)}
+        returnTo={homeUrl}
       />
       <Toast message={toastMessage} icon={<CheckmarkIcon aria-hidden />} />
     </>
   )
-  return <NewsAdmin loading={loading} onSubmit={editNews} onDelete={handleDelete} defaultValues={news} newsId={id} onFileSelect={(file) => (pendingFile.current = file)} returnTo={returnTo} />
 }
