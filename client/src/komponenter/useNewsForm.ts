@@ -1,14 +1,16 @@
 import { useForm } from 'react-hook-form'
 import { useDatepicker } from '@navikt/ds-react'
 import { useEffect, useRef } from 'react'
-import { NewsStatus } from 'utils/admin-util.ts'
+import { newsStatusValues } from 'utils/admin-util.ts'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 const toLocalISOString = (date: Date): string => {
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T00:00:00`
 }
 
-export type NewsFormValues = {
+/*export type NewsFormValues = {
   title: string
   description: string
   body: string
@@ -19,6 +21,21 @@ export type NewsFormValues = {
   status: NewsStatus
   tags: string[]
 }
+ */
+
+const newsSchema = z.object({
+  title: z.string({ error: 'Mangler tittel' }).min(1, { error: 'Mangler tittel' }).max(100),
+  description: z.string().max(100),
+  body: z.string(),
+  publishedFrom: z.string({ error: 'Mangler fra-dato' }).min(1, { error: 'Mangler fra-dato' }),
+  publishedTo: z.string({ error: 'Mangler til-dato' }).min(1, { error: 'Mangler til-dato' }),
+  image_url: z.string(),
+  imageDescription: z.string(),
+  status: z.enum(newsStatusValues),
+  tags: z.array(z.string(), { error: 'Mangler type' }).min(1, { error: 'Mangler type' }),
+})
+
+export type NewsFormValues = z.infer<typeof newsSchema>
 
 export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
   const {
@@ -30,15 +47,18 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     watch,
     reset,
     formState: { errors },
-  } = useForm<NewsFormValues>({ defaultValues })
+  } = useForm<NewsFormValues>({
+    resolver: zodResolver(newsSchema),
+    defaultValues,
+  })
 
   useEffect(() => {
     if (defaultValues) reset(defaultValues)
   }, [defaultValues])
 
-  register('publishedFrom', { required: 'Mangler fra-dato' })
-  register('publishedTo', { required: 'Mangler til-dato' })
-  register('tags', { required: 'Mangler type' })
+  register('publishedFrom')
+  register('publishedTo')
+  register('tags')
   register('image_url')
   register('imageDescription')
   register('status')

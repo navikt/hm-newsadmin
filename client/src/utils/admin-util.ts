@@ -12,7 +12,8 @@ export interface NewsPage {
   totalElements: number
 }
 
-export type NewsStatus = 'PUBLISHED' | 'DRAFT' | 'ARCHIVE'
+export const newsStatusValues = ['PUBLISHED', 'DRAFT', 'ARCHIVE'] as const
+export type NewsStatus = (typeof newsStatusValues)[number]
 
 export interface NewsDTO {
   id: string
