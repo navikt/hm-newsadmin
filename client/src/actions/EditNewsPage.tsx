@@ -1,11 +1,12 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
-import { deleteNews, uploadNewsMedia } from 'utils/api-util.ts'
+import { deleteNews } from 'utils/api-util.ts'
 import { NewsAdmin } from 'pages/NewsAdmin.tsx'
 import { NewsFormValues } from 'komponenter/useNewsForm.ts'
 import { useRef, useState } from 'react'
 import { Toast } from 'komponenter/Toast.tsx'
 import { CheckmarkIcon } from '@navikt/aksel-icons'
+import { uploadImageFile } from 'utils/image-util.ts'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 
@@ -17,24 +18,21 @@ export const EditNewsPage = () => {
   const homeUrl = returnTo ? `/?${returnTo}` : '/'
   const { mutate } = useSWRConfig()
   const { data: news } = useSWR(`/news/${id}`, () => fetch(`${base}/news/${id}`).then((res) => res.json()))
+  const selectedImageFile = useRef<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [toastMessage, setToastMessage] = useState<string | null>(null)
-  const pendingFile = useRef<File | null>(null)
 
   async function editNews(data: NewsFormValues) {
     setLoading(true)
     try {
+      const uri = await uploadImageFile(id!, selectedImageFile.current)
+      if (uri) data = { ...data, imageUrl: uri }
       const res = await fetch(`${base}/admin/news/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
       if (res.ok) {
-        if (pendingFile.current) {
-          await uploadNewsMedia(id!, pendingFile.current)
-        }
         await mutate('news')
         await mutate(`/news/${id}`)
         setToastMessage('Lagret')
@@ -62,7 +60,7 @@ export const EditNewsPage = () => {
         onDelete={handleDelete}
         defaultValues={news}
         newsId={id}
-        onFileSelect={(file) => (pendingFile.current = file)}
+        onFileSelect={(file) => (selectedImageFile.current = file)}
         returnTo={homeUrl}
       />
       <Toast message={toastMessage} icon={<CheckmarkIcon aria-hidden />} />

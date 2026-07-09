@@ -1,48 +1,28 @@
 import { BodyShort, Button, ErrorMessage, FileObject, FileUpload, Label, VStack } from '@navikt/ds-react'
 import { useId, useState } from 'react'
 import { UploadIcon, XMarkIcon } from '@navikt/aksel-icons'
-import { uploadNewsMedia } from 'utils/api-util.ts'
 import { mediumImageLoader } from 'utils/image-util.ts'
 
 type Props = {
-  newsId?: string
   defaultImageUrl?: string
-  onImageUpload?: (uri: string) => void
   onImageRemove?: () => void
   onFileSelect?: (file: File) => void
 }
 
-export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload, onImageRemove, onFileSelect }: Props) => {
+export const ImageUpload = ({ defaultImageUrl, onImageRemove, onFileSelect }: Props) => {
   const labelId = useId()
   const descId = useId()
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(
     defaultImageUrl ? mediumImageLoader(defaultImageUrl) : undefined
   )
-  const [isUploading, setIsUploading] = useState(false)
-  const [uploadError, setUploadError] = useState<string | undefined>()
+  const [uploadError] = useState<string | undefined>()
 
-  async function handleSelect(files: FileObject[]) {
+  function handleSelect(files: FileObject[]) {
     const file = files[0]?.file
     if (!file) return
 
     setPreviewUrl(URL.createObjectURL(file))
-    setUploadError(undefined)
-
-    if (!newsId) {
-      onFileSelect?.(file)
-      return
-    }
-
-    setIsUploading(true)
-    try {
-      const media = await uploadNewsMedia(newsId, file)
-      const uri = media.uri
-      if (uri) onImageUpload?.(uri)
-    } catch {
-      setUploadError('Kunne ikke laste opp bildet. Prøv igjen.')
-    } finally {
-      setIsUploading(false)
-    }
+    onFileSelect?.(file)
   }
 
   return (
@@ -80,7 +60,6 @@ export const ImageUpload = ({ newsId, defaultImageUrl, onImageUpload, onImageRem
           aria-describedby={`${labelId} ${descId}`}
           variant="secondary"
           icon={<UploadIcon aria-hidden />}
-          loading={isUploading}
         >
           {previewUrl ? 'Bytt bilde' : 'Velg fil'}
         </Button>

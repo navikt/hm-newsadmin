@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { useSWRConfig } from 'swr'
 import { NewsAdmin } from 'pages/NewsAdmin.tsx'
 import { NewsFormValues } from 'komponenter/useNewsForm.ts'
-import { uploadNewsMedia } from 'utils/api-util.ts'
+import { uploadImageFile } from 'utils/image-util.ts'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 
 export const CreateNewsPage = () => {
   const navigate = useNavigate()
   const { mutate } = useSWRConfig()
-  const pendingFile = useRef<File | null>(null)
+  const selectedImageFile = useRef<File | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function createNews(data: NewsFormValues) {
@@ -18,18 +18,13 @@ export const CreateNewsPage = () => {
     try {
       const res = await fetch(`${base}/admin/news`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
       if (!res.ok) return
 
       const newsId: string = await res.json()
-
-      if (pendingFile.current) {
-        await uploadNewsMedia(newsId, pendingFile.current)
-      }
+      await uploadImageFile(newsId, selectedImageFile.current)
       await mutate('news')
       navigate(`/aktuelt/${newsId}/edit`)
     } catch (error) {
@@ -44,7 +39,7 @@ export const CreateNewsPage = () => {
       loading={loading}
       onSubmit={createNews}
       onDelete={() => {}}
-      onFileSelect={(file) => (pendingFile.current = file)}
+      onFileSelect={(file) => (selectedImageFile.current = file)}
     />
   )
 }

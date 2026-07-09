@@ -16,7 +16,7 @@ const toLocalISOString = (date: Date): string => {
   body: string
   publishedFrom: string
   publishedTo: string
-  image_url: string
+  imageUrl: string
   imageDescription: string
   status: NewsStatus
   tags: string[]
@@ -25,13 +25,16 @@ const toLocalISOString = (date: Date): string => {
  */
 
 const newsSchema = z.object({
-  title: z.string({ error: 'Mangler tittel' }).min(1, { error: 'Mangler tittel' }).max(100),
-  description: z.string().max(100),
+  title: z
+    .string({ error: 'Mangler tittel' })
+    .min(1, { error: 'Mangler tittel' })
+    .max(100, { error: 'Tittelen kan ikke være lengre enn 100 tegn' }),
+  description: z.string().max(100, { error: 'Ingressen kan ikke være lengre enn 100 tegn' }),
   body: z.string(),
   publishedFrom: z.string({ error: 'Mangler fra-dato' }).min(1, { error: 'Mangler fra-dato' }),
   publishedTo: z.string({ error: 'Mangler til-dato' }).min(1, { error: 'Mangler til-dato' }),
-  image_url: z.string(),
-  imageDescription: z.string(),
+  imageUrl: z.string().optional(),
+  imageDescription: z.string().optional(),
   status: z.enum(newsStatusValues),
   tags: z.array(z.string(), { error: 'Mangler type' }).min(1, { error: 'Mangler type' }),
 })
@@ -47,6 +50,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     getValues,
     watch,
     reset,
+    setError,
     formState: { errors },
   } = useForm<NewsFormValues>({
     resolver: zodResolver(newsSchema),
@@ -60,7 +64,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
   register('publishedFrom')
   register('publishedTo')
   register('tags')
-  register('image_url')
+  register('imageUrl')
   register('imageDescription')
   register('status')
   register('comment')
@@ -105,6 +109,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     control,
     errors,
     watch,
+    setError,
     fromDatepickerProps,
     fromInputProps,
     toDatepickerProps,

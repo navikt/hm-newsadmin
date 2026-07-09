@@ -1,4 +1,5 @@
 import { IMAGE_PROXY_URL } from 'environments'
+import { uploadNewsMedia } from 'utils/api-util.ts'
 
 enum Size {
   SMALL = '400',
@@ -31,4 +32,10 @@ export function getDefaultAlt(tags?: string[]): string {
   if (lower.some((t) => t.includes('nyhetsbrev'))) return 'Standardbilde for nyhetsbrev'
   if (lower.some((t) => t.includes('rammeavtale'))) return 'Standardbilde for rammeavtale'
   return ''
+}
+
+export async function uploadImageFile(newsId: string, file: File | null): Promise<string | null> {
+  if (!file) return null
+  const media = await uploadNewsMedia(newsId, file)
+  return media.uri ?? null
 }

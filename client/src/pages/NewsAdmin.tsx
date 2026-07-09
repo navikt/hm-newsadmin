@@ -44,6 +44,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
     handleSubmit,
     control,
     errors,
+    setError,
     fromDatepickerProps,
     fromInputProps,
     toDatepickerProps,
@@ -51,11 +52,15 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
     setValue,
   } = useNewsForm(isEdit ? defaultValues : undefined)
 
-  const [hasImage, setHasImage] = useState(!!defaultValues?.image_url)
+  const [hasImage, setHasImage] = useState(!!defaultValues?.imageUrl)
 
   const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
   const [status, setStatus] = useState<NewsStatus>(defaultValues?.status ?? 'DRAFT')
+
+  useEffect(() => {
+    setValue('status', defaultValues?.status ?? 'DRAFT')
+  }, [])
 
   useEffect(() => {
     if (tags && defaultValues?.tags) {
@@ -69,7 +74,13 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
   return (
     <Page>
       <Page.Block as="main" width="text">
-        <form onSubmit={handleSubmit((data) => onSubmit({ ...data, status }))}>
+        <form onSubmit={handleSubmit((data) => {
+          if (hasImage && !data.imageDescription?.trim()) {
+            setError('imageDescription', { message: 'Alt-tekst er obligatorisk når bilde er lastet opp' })
+            return
+          }
+          onSubmit({ ...data, status })
+        }, (errors) => console.log('Valideringsfeil:', errors))}>
           <VStack gap="space-16" paddingBlock={'space-0 space-24'}>
             <HStack align={'center'} style={{ position: 'relative' }}>
               <Button
@@ -92,14 +103,9 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             >
               <VStack gap="space-8">
                 <ImageUpload
-                  newsId={newsId}
-                  defaultImageUrl={defaultValues?.image_url}
-                  onImageUpload={(uri) => {
-                    setValue('image_url', uri)
-                    setHasImage(true)
-                  }}
+                  defaultImageUrl={defaultValues?.imageUrl}
                   onImageRemove={() => {
-                    setValue('image_url', '')
+                    setValue('imageUrl', '')
                     setValue('imageDescription', '')
                     setHasImage(false)
                   }}
@@ -127,7 +133,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               maxLength={100}
               error={errors.title?.message}
             ></Textarea>
-            <Textarea {...register('description')} label="Ingress" maxLength={100}></Textarea>
+            <Textarea {...register('description')} label="Ingress" maxLength={100} error={errors.description?.message}></Textarea>
             <HStack gap={'space-16'} justify={'start'} style={{ width: '100%' }}>
               <DatePicker {...fromDatepickerProps}>
                 <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
@@ -174,7 +180,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             />
             <VStack gap={'space-32'}>
               <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
-                <ToggleGroup value={status} onChange={(v) => setStatus(v as NewsStatus)} label="Status">
+                <ToggleGroup value={status} onChange={(v) => { setStatus(v as NewsStatus); setValue('status', v as NewsStatus) }} label="Status">
                   <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
                   <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
                 </ToggleGroup>
