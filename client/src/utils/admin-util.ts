@@ -27,6 +27,7 @@ export interface NewsDTO {
   publishedTo: Date
   status: NewsStatus
   tags?: string[]
+  comment?: string
 }
 
 export interface CreateNewsDto {
