@@ -13,6 +13,7 @@ import {
   ToggleGroup,
   VStack,
   Select,
+  Bleed,
 } from '@navikt/ds-react'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
 import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
@@ -74,24 +75,27 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
   return (
     <Page>
       <Page.Block as="main" width="text">
-        <form onSubmit={handleSubmit((data) => {
-          if (hasImage && !data.imageDescription?.trim()) {
-            setError('imageDescription', { message: 'Alt-tekst er obligatorisk når bilde er lastet opp' })
-            return
-          }
-          onSubmit({ ...data, status })
-        }, (errors) => console.log('Valideringsfeil:', errors))}>
+        <form
+          onSubmit={handleSubmit(
+            (data) => {
+              if (hasImage && !data.imageDescription?.trim()) {
+                setError('imageDescription', { message: 'Alt-tekst er obligatorisk når bilde er lastet opp' })
+                return
+              }
+              onSubmit({ ...data, status })
+            },
+            (errors) => console.log('Valideringsfeil:', errors)
+          )}
+        >
           <VStack gap="space-16" paddingBlock={'space-0 space-24'}>
             <HStack align={'center'} style={{ position: 'relative' }}>
-              <Button
-                as={Link}
-                variant={'tertiary'}
-                icon={<ArrowLeftIcon />}
+              <Link
                 onClick={() => navigate(returnTo ? `/?${returnTo}` : '/')}
-                style={{ position: 'absolute', right: '100%' }}
+                style={{ position: 'absolute', right: 'calc(100% + 2rem)' }}
               >
+                <ArrowLeftIcon />
                 Tilbake
-              </Button>
+              </Link>
               <h2>{isEdit ? 'Rediger' : 'Opprett'}</h2>
             </HStack>
             <Box
@@ -133,7 +137,12 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               maxLength={100}
               error={errors.title?.message}
             ></Textarea>
-            <Textarea {...register('description')} label="Ingress" maxLength={100} error={errors.description?.message}></Textarea>
+            <Textarea
+              {...register('description')}
+              label="Ingress"
+              maxLength={100}
+              error={errors.description?.message}
+            ></Textarea>
             <HStack gap={'space-16'} justify={'start'} style={{ width: '100%' }}>
               <DatePicker {...fromDatepickerProps}>
                 <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
@@ -180,7 +189,14 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             />
             <VStack gap={'space-32'}>
               <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
-                <ToggleGroup value={status} onChange={(v) => { setStatus(v as NewsStatus); setValue('status', v as NewsStatus) }} label="Status">
+                <ToggleGroup
+                  value={status}
+                  onChange={(v) => {
+                    setStatus(v as NewsStatus)
+                    setValue('status', v as NewsStatus)
+                  }}
+                  label="Status"
+                >
                   <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
                   <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
                 </ToggleGroup>
@@ -188,14 +204,20 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   <Button
                     variant="secondary"
                     icon={<EyeIcon aria-hidden />}
-                    onClick={() => window.open(`https://finnhjelpemiddel.ekstern.dev.nav.no/aktuelt/${newsId}`, '_blank')}
+                    onClick={() =>
+                      window.open(`https://finnhjelpemiddel.ekstern.dev.nav.no/aktuelt/${newsId}`, '_blank')
+                    }
                     type="button"
                   >
                     Forhåndsvis
                   </Button>
                 )}
               </HStack>
-              <Textarea {...register('comment')} label="Kommentar" description="Intern merknad, vises ikke til brukere" />
+              <Textarea
+                {...register('comment')}
+                label="Kommentar"
+                description="Intern merknad, vises ikke til brukere"
+              />
               {isEdit ? (
                 <HStack gap={'space-8'}>
                   <Dialog>
