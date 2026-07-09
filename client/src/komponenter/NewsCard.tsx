@@ -1,15 +1,17 @@
-import { LinkCard, Tag, HStack, Detail, VStack } from '@navikt/ds-react'
+import { LinkCard } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
 import { useNavigate } from 'react-router-dom'
 import NewsImage from 'komponenter/NewsImage.tsx'
-import { getDisplayStatus, displayStatusTagProps } from 'utils/news-filter-util.ts'
+import NewsCardFooter from 'komponenter/NewsCardFooter.tsx'
 
 export default function NewsCard({ news, searchParams }: { news: NewsDTO; searchParams: URLSearchParams }) {
   const navigate = useNavigate()
-  const { label, variant } = displayStatusTagProps[getDisplayStatus(news)]
   const returnTo = searchParams.toString()
   return (
-    <LinkCard onClick={() => navigate(`/aktuelt/${news.id}/edit${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)} style={{ minHeight: '490px' }}>
+    <LinkCard
+      onClick={() => navigate(`/aktuelt/${news.id}/edit${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)}
+      style={{ minHeight: '490px' }}
+    >
       <LinkCard.Image aspectRatio="16/9">
         <NewsImage fontSize="5rem" aria-hidden imageUrl={news.image_url} tags={news.tags} />
       </LinkCard.Image>
@@ -29,26 +31,7 @@ export default function NewsCard({ news, searchParams }: { news: NewsDTO; search
         {news.description}
       </LinkCard.Description>
       <LinkCard.Footer>
-        <VStack gap="space-2" width="100%">
-          <Detail>
-            Fra:{' '}
-            {new Date(news.publishedFrom).toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
-            {news.publishedTo && (
-              <>
-                {' '}– til{' '}
-                {new Date(news.publishedTo).toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit', year: 'numeric' })}
-              </>
-            )}
-          </Detail>
-          <HStack gap={'space-4'} wrap justify={'space-between'} width={'100%'}>
-            {news.tags?.map((tag) => (
-              <Tag key={tag} variant="neutral">
-                {tag}
-              </Tag>
-            ))}
-            <Tag variant={variant}>{label}</Tag>
-          </HStack>
-        </VStack>
+        <NewsCardFooter news={news} />
       </LinkCard.Footer>
     </LinkCard>
   )
