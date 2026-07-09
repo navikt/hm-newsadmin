@@ -51,7 +51,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
     setValue,
   } = useNewsForm(isEdit ? defaultValues : undefined)
 
-  const [hasImage, setHasImage] = useState(!!defaultValues?.image_url)
+  const [hasImage, setHasImage] = useState(!!defaultValues?.imageUrl)
 
   const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
@@ -93,13 +93,13 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               <VStack gap="space-8">
                 <ImageUpload
                   newsId={newsId}
-                  defaultImageUrl={defaultValues?.image_url}
+                  defaultImageUrl={defaultValues?.imageUrl}
                   onImageUpload={(uri) => {
-                    setValue('image_url', uri)
+                    setValue('imageUrl', uri)
                     setHasImage(true)
                   }}
                   onImageRemove={() => {
-                    setValue('image_url', '')
+                    setValue('imageUrl', '')
                     setValue('imageDescription', '')
                     setHasImage(false)
                   }}

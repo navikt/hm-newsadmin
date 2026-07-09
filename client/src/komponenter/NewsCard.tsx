@@ -22,11 +22,11 @@ export default function NewsCard({ news, searchParams, variant = 'grid' }: NewsC
     >
       {isList ? (
         <Box className={'image'}>
-          <NewsImage imageUrl={news.image_url} tags={news.tags} />
+          <NewsImage imageUrl={news.imageUrl} tags={news.tags} />
         </Box>
       ) : (
         <LinkCard.Image aspectRatio="16/9">
-          <NewsImage fontSize="5rem" aria-hidden imageUrl={news.image_url} tags={news.tags} />
+          <NewsImage fontSize="5rem" aria-hidden imageUrl={news.imageUrl} tags={news.tags} />
         </LinkCard.Image>
       )}
       <LinkCard.Title

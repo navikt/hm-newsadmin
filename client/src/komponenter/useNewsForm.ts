@@ -16,7 +16,7 @@ const toLocalISOString = (date: Date): string => {
   body: string
   publishedFrom: string
   publishedTo: string
-  image_url: string
+  imageUrl: string
   imageDescription: string
   status: NewsStatus
   tags: string[]
@@ -30,15 +30,22 @@ const newsSchema = z.object({
   body: z.string(),
   publishedFrom: z.string({ error: 'Mangler fra-dato' }).min(1, { error: 'Mangler fra-dato' }),
   publishedTo: z.string({ error: 'Mangler til-dato' }).min(1, { error: 'Mangler til-dato' }),
-  image_url: z.string(),
+  imageUrl: z.string(),
   imageDescription: z.string(),
   status: z.enum(newsStatusValues),
   tags: z.array(z.string(), { error: 'Mangler type' }).min(1, { error: 'Mangler type' }),
+  comment: z.string(),
 })
 
 export type NewsFormValues = z.infer<typeof newsSchema>
 
 export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
+  const normalized: Partial<NewsFormValues> = {
+    imageUrl: '',
+    imageDescription: '',
+    comment: '',
+    ...defaultValues,
+  }
   const {
     register,
     handleSubmit,
@@ -50,17 +57,17 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     formState: { errors },
   } = useForm<NewsFormValues>({
     resolver: zodResolver(newsSchema),
-    defaultValues,
+    defaultValues: normalized,
   })
 
   useEffect(() => {
-    if (defaultValues) reset(defaultValues)
+    if (defaultValues) reset(normalized)
   }, [defaultValues])
 
   register('publishedFrom')
   register('publishedTo')
   register('tags')
-  register('image_url')
+  register('imageUrl')
   register('imageDescription')
   register('status')
   register('comment')

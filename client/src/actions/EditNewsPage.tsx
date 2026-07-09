@@ -16,7 +16,7 @@ export const EditNewsPage = () => {
   const returnTo = searchParams.get('returnTo') ?? ''
   const homeUrl = returnTo ? `/?${returnTo}` : '/'
   const { mutate } = useSWRConfig()
-  const { data: news } = useSWR(`/news/${id}`, () => fetch(`${base}/news/${id}`).then((res) => res.json()))
+  const { data: news } = useSWR(`/admin/news/${id}`, () => fetch(`${base}/admin/news/${id}`).then((res) => res.json()))
   const [loading, setLoading] = useState(false)
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const pendingFile = useRef<File | null>(null)
@@ -36,7 +36,7 @@ export const EditNewsPage = () => {
           await uploadNewsMedia(id!, pendingFile.current)
         }
         await mutate('news')
-        await mutate(`/news/${id}`)
+        await mutate(`/admin/news/${id}`)
         setToastMessage('Lagret')
         setTimeout(() => setToastMessage(null), 3000)
       }
