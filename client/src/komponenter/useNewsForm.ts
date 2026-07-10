@@ -65,11 +65,11 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     fromDate: new Date(),
     defaultSelected: defaultValues?.publishedFrom ? new Date(defaultValues.publishedFrom) : undefined,
     onDateChange: (date) => {
-      setValue('publishedFrom', date ? toLocalISOString(date) : '')
+      setValue('publishedFrom', date ? toLocalISOString(date) : '', { shouldValidate: true })
       if (date) {
         const currentTo = getValues('publishedTo')
         if (currentTo && new Date(currentTo) < date) {
-          setValue('publishedTo', '')
+          setValue('publishedTo', '', { shouldValidate: true })
           resetToDateRef.current?.()
         }
       }
@@ -84,7 +84,7 @@ export const useNewsForm = (defaultValues?: Partial<NewsFormValues>) => {
     fromDate: fromDateValue,
     defaultSelected: defaultValues?.publishedTo ? new Date(defaultValues.publishedTo) : undefined,
     onDateChange: (date) => {
-      setValue('publishedTo', date ? toLocalISOString(date) : '')
+      setValue('publishedTo', date ? toLocalISOString(date) : '', { shouldValidate: true })
     },
   })
 
