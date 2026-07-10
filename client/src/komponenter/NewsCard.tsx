@@ -13,11 +13,11 @@ interface NewsCardProps {
 
 export default function NewsCard({ news, searchParams, variant = 'grid' }: NewsCardProps) {
   const navigate = useNavigate()
-  const returnTo = searchParams.toString()
+  const query = searchParams.toString()
   const isList = variant === 'list'
   return (
     <LinkCard
-      onClick={() => navigate(`/aktuelt/${news.id}/edit${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)}
+      onClick={() => navigate(`/aktuelt/${news.id}/edit${query ? `?${query}` : ''}`)}
       {...(isList ? { className: 'card' } : { style: { minHeight: '490px' } })}
     >
       {isList ? (

@@ -14,8 +14,7 @@ export const EditNewsPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [searchParams] = useSearchParams()
-  const returnTo = searchParams.get('returnTo') ?? ''
-  const homeUrl = returnTo ? `/?${returnTo}` : '/'
+  const backUrl = searchParams.size ? `/?${searchParams.toString()}` : '/'
   const { mutate } = useSWRConfig()
   const { data: news } = useSWR(`/admin/news/${id}`, () => fetch(`${base}/admin/news/${id}`).then((res) => res.json()))
   const selectedImageFile = useRef<File | null>(null)
@@ -49,7 +48,7 @@ export const EditNewsPage = () => {
 
   async function handleDelete() {
     await deleteNews(id!)
-    navigate(homeUrl)
+    navigate(backUrl)
   }
 
   return (
@@ -61,7 +60,7 @@ export const EditNewsPage = () => {
         defaultValues={news}
         newsId={id}
         onFileSelect={(file) => (selectedImageFile.current = file)}
-        returnTo={homeUrl}
+        returnTo={backUrl}
       />
       <Toast message={toastMessage} icon={<CheckmarkIcon aria-hidden />} />
     </>

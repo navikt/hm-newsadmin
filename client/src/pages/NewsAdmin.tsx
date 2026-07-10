@@ -91,7 +91,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
           <VStack gap="space-16" paddingBlock={'space-0 space-24'}>
             <HStack align={'center'} style={{ position: 'relative' }}>
               <Link
-                onClick={() => navigate(returnTo ? `/?${returnTo}` : '/')}
+                onClick={() => navigate(returnTo ?? '/')}
                 style={{ position: 'absolute', right: 'calc(100% + 2rem)' }}
               >
                 <ArrowLeftIcon />
