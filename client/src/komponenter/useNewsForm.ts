@@ -10,20 +10,6 @@ const toLocalISOString = (date: Date): string => {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T00:00:00`
 }
 
-/*export type NewsFormValues = {
-  title: string
-  description: string
-  body: string
-  publishedFrom: string
-  publishedTo: string
-  imageUrl: string
-  imageDescription: string
-  status: NewsStatus
-  tags: string[]
-  comment: string
-}
- */
-
 const newsSchema = z.object({
   title: z
     .string({ error: 'Mangler tittel' })

@@ -13,7 +13,6 @@ const SizeStyle = new Parchment.StyleAttributor('size', 'font-size', {
 })
 Quill.register({ 'formats/size': SizeStyle }, true)
 
-// noinspection JSUnusedGlobalSymbols
 const bindings = {
   tab: {
     key: 9,

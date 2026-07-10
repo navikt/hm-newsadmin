@@ -57,19 +57,6 @@ export async function uploadNewsMedia(newsId: string, file: File): Promise<Media
   return res.json()
 }
 
-export async function getNewsMedia(newsId: string): Promise<MediaDTO[]> {
-  const res = await fetch(`${base}/news/admin/media/${newsId}`)
-  if (!res.ok) throw new Error(`Henting av media feilet: ${res.status}`)
-  return res.json()
-}
-
-export async function deleteNewsMedia(newsId: string, uri: string): Promise<void> {
-  const res = await fetch(`${base}/news/admin/media/${newsId}/${encodeURIComponent(uri)}`, {
-    method: 'DELETE',
-  })
-  if (!res.ok) throw new Error(`Sletting av media feilet: ${res.status}`)
-}
-
 export async function getTags(): Promise<TagsDTO[]> {
   const res = await fetch(`${base}/admin/tags`, {
     method: 'GET',
