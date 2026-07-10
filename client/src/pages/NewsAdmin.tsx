@@ -26,7 +26,7 @@ import useSWR from 'swr'
 import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
 import { useNavigate } from 'react-router-dom'
-import { HM_REGISTER_URL } from 'environments'
+import { FINNHJELPEMIDDEL_PUBLIC_URL } from 'environments'
 
 type Props = {
   onSubmit: (data: NewsFormValues) => void
@@ -205,7 +205,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   <Button
                     variant="secondary"
                     icon={<EyeIcon aria-hidden />}
-                    onClick={() => window.open(`${HM_REGISTER_URL()}/aktuelt/${newsId}`, '_blank')}
+                    onClick={() => window.open(`${FINNHJELPEMIDDEL_PUBLIC_URL()}/aktuelt/${newsId}`, '_blank')}
                     type="button"
                   >
                     Forhåndsvis
