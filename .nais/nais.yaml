@@ -33,10 +33,6 @@ spec:
       value: {{hm_register_url}}
     - name: VITE_IMAGE_PROXY_URL
       value: {{image_proxy_url}}
-    - name: VITE_HM_REGISTER_EXTERNAL_URL
-      value: {{hm_register_external_url}}
-    - name: VITE_IMAGE_PROXY_EXTERNAL_URL
-      value: {{image_proxy_external_url}}
     - name: VITE_FARO_URL
       value: {{faro_url}}
     - name: HM_NEWS_URL
