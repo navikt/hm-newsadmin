@@ -21,7 +21,7 @@ export const NyhetsOversikt = () => {
     ['news', currentPage, searchTerm, selectedTags, filterValue],
     () =>
       getNews(currentPage - 1, 6, searchTerm || undefined, selectedTags.length ? selectedTags : undefined, filterValue),
-    { revalidateOnMount: true, revalidateOnFocus: true }
+    { revalidateOnMount: true, revalidateOnFocus: true, keepPreviousData: true }
   )
   const news = newsPage?.content ?? []
   const totalPages = newsPage?.totalPages ?? 1
