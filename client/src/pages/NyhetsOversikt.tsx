@@ -14,14 +14,14 @@ export const NyhetsOversikt = () => {
   const searchTerm = searchParams.get('term') || ''
   const filterValue = (searchParams.get('filter') as FilterValue) || FilterValue.alle
   const viewMode = (searchParams.get('view') as 'grid' | 'list') || 'grid'
-  const selectedTags = searchParams.get('tags') ? searchParams.get('tags')!.split(',') : []
+  const selectedTags = searchParams.getAll('tag')
   const currentPage = Number(searchParams.get('page') ?? '1')
 
   const { data: newsPage } = useSWR<NewsPage>(
     ['news', currentPage, searchTerm, selectedTags, filterValue],
     () =>
       getNews(currentPage - 1, 6, searchTerm || undefined, selectedTags.length ? selectedTags : undefined, filterValue),
-    { revalidateOnMount: true, revalidateOnFocus: true }
+    { revalidateOnMount: true, revalidateOnFocus: true, keepPreviousData: true }
   )
   const news = newsPage?.content ?? []
   const totalPages = newsPage?.totalPages ?? 1
@@ -31,11 +31,11 @@ export const NyhetsOversikt = () => {
   const toggleTag = (tag: string) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev)
-      const current = prev.get('tags') ? prev.get('tags')!.split(',') : []
+      const current = prev.getAll('tag')
       const updated = current.includes(tag) ? current.filter((t) => t !== tag) : [...current, tag]
-      if (updated.length === 0) next.delete('tags')
-      else next.set('tags', updated.join(','))
-      next.set('page', '1')
+      next.delete('tag')
+      next.delete('page')
+      updated.forEach((t) => next.append('tag', t))
       return next
     })
   }
@@ -46,7 +46,7 @@ export const NyhetsOversikt = () => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev)
       next.delete('term')
-      next.set('page', '1')
+      next.delete('page')
       return next
     })
 
@@ -68,7 +68,14 @@ export const NyhetsOversikt = () => {
               variant="secondary"
               hideLabel={false}
               value={searchTerm}
-              onChange={(value) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), term: value, page: '1' }))}
+              onChange={(value) =>
+                setSearchParams((prev) => {
+                  const next = new URLSearchParams(prev)
+                  next.set('term', value)
+                  next.delete('page')
+                  return next
+                })
+              }
               onClear={clearTerm}
             />
             {allTags.length > 0 && (
@@ -84,7 +91,14 @@ export const NyhetsOversikt = () => {
           <HStack justify={'space-between'} align={'center'}>
             <ToggleGroup
               value={filterValue}
-              onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), filter: v, page: '1' }))}
+              onChange={(v) =>
+                setSearchParams((prev) => {
+                  const next = new URLSearchParams(prev)
+                  next.set('filter', v)
+                  next.delete('page')
+                  return next
+                })
+              }
               label={'Status'}
             >
               <ToggleGroup.Item value="alle" label="Alle" />
@@ -95,7 +109,13 @@ export const NyhetsOversikt = () => {
             </ToggleGroup>
             <ToggleGroup
               value={viewMode}
-              onChange={(v) => setSearchParams((prev) => ({ ...Object.fromEntries(prev), view: v }))}
+              onChange={(v) =>
+                setSearchParams((prev) => {
+                  const next = new URLSearchParams(prev)
+                  next.set('view', v)
+                  return next
+                })
+              }
               label={'Visning'}
             >
               <ToggleGroup.Item value="grid" aria-label="Rutenett">

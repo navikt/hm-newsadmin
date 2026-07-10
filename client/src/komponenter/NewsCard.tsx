@@ -1,6 +1,6 @@
 import { LinkCard, Box } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import NewsImage from 'komponenter/NewsImage.tsx'
 import NewsCardFooter from 'komponenter/NewsCardFooter.tsx'
 import './NewsCard.scss'
@@ -12,17 +12,14 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({ news, searchParams, variant = 'grid' }: NewsCardProps) {
-  const navigate = useNavigate()
   const query = searchParams.toString()
+  const href = `/aktuelt/${news.id}/edit${query ? `?${query}` : ''}`
   const isList = variant === 'list'
   return (
-    <LinkCard
-      onClick={() => navigate(`/aktuelt/${news.id}/edit${query ? `?${query}` : ''}`)}
-      {...(isList ? { className: 'card' } : { style: { minHeight: '490px' } })}
-    >
+    <LinkCard {...(isList ? { className: 'card' } : { style: { minHeight: '490px' } })}>
       {isList ? (
         <Box className={'image'}>
-          <NewsImage imageUrl={news.imageUrl} tags={news.tags} />
+          <NewsImage aria-hidden imageUrl={news.imageUrl} tags={news.tags} />
         </Box>
       ) : (
         <LinkCard.Image aspectRatio="16/9">
@@ -32,7 +29,9 @@ export default function NewsCard({ news, searchParams, variant = 'grid' }: NewsC
       <LinkCard.Title
         style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
       >
-        {news.title}
+        <LinkCard.Anchor asChild>
+          <Link to={href}>{news.title}</Link>
+        </LinkCard.Anchor>
       </LinkCard.Title>
       <LinkCard.Description
         style={{
