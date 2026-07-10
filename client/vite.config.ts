@@ -27,7 +27,7 @@ function htmlPlugin({ development }: { development?: boolean }): Plugin {
           tag: 'script',
           children: `window.appSettings = {
             GIT_COMMIT: 'unknown',
-            VITE_HM_REGISTER_URL: 'http://localhost:8080',
+            VITE_HM_REGISTER_URL: 'http://localhost:3000',
             VITE_IMAGE_PROXY_URL: 'https://finnhjelpemiddel.intern.dev.nav.no/imageproxy',
             MILJO: 'local',
           }`,

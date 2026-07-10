@@ -21,7 +21,6 @@ function getFaro(): Faro | null {
       ...getWebInstrumentations({
         captureConsole: false,
       }),
-      // new TracingInstrumentation(),
     ],
   })
   return faro

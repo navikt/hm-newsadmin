@@ -26,6 +26,7 @@ import useSWR from 'swr'
 import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
 import { useNavigate } from 'react-router-dom'
+import { HM_REGISTER_URL } from 'environments'
 
 type Props = {
   onSubmit: (data: NewsFormValues) => void
@@ -90,7 +91,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
           <VStack gap="space-16" paddingBlock={'space-0 space-24'}>
             <HStack align={'center'} style={{ position: 'relative' }}>
               <Link
-                onClick={() => navigate(returnTo ? `/?${returnTo}` : '/')}
+                onClick={() => navigate(returnTo ?? '/')}
                 style={{ position: 'absolute', right: 'calc(100% + 2rem)' }}
               >
                 <ArrowLeftIcon />
@@ -204,9 +205,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                   <Button
                     variant="secondary"
                     icon={<EyeIcon aria-hidden />}
-                    onClick={() =>
-                      window.open(`https://finnhjelpemiddel.ekstern.dev.nav.no/aktuelt/${newsId}`, '_blank')
-                    }
+                    onClick={() => window.open(`${HM_REGISTER_URL()}/aktuelt/${newsId}`, '_blank')}
                     type="button"
                   >
                     Forhåndsvis
