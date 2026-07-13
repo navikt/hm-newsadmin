@@ -1,7 +1,7 @@
 import { BodyLong, Button, Chips, Heading, HGrid, HStack, Page, Search, ToggleGroup, VStack } from '@navikt/ds-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { getNews, getTags } from 'utils/api-util.ts'
+import { getNews, getTags, NEWS_PAGE_SIZE } from 'utils/api-util.ts'
 import NewsCard from 'komponenter/NewsCard.tsx'
 import { FilterValue } from 'utils/news-filter-util.ts'
 import { SquareGridIcon, BulletListIcon } from '@navikt/aksel-icons'
@@ -20,7 +20,7 @@ export const NyhetsOversikt = () => {
   const { data: newsPage } = useSWR<NewsPage>(
     ['news', currentPage, searchTerm, selectedTags, filterValue],
     () =>
-      getNews(currentPage - 1, 6, searchTerm || undefined, selectedTags.length ? selectedTags : undefined, filterValue),
+      getNews(currentPage - 1, NEWS_PAGE_SIZE, searchTerm || undefined, selectedTags.length ? selectedTags : undefined, filterValue),
     { revalidateOnMount: true, revalidateOnFocus: true, keepPreviousData: true }
   )
   const news = newsPage?.content ?? []
@@ -62,7 +62,7 @@ export const NyhetsOversikt = () => {
               Opprett sak
             </Button>
           </HStack>
-          <VStack gap={'space-16'} style={{ width: '100%', maxWidth: '1200px' }}>
+          <VStack gap={'space-16'}>
             <Search
               label="Søk"
               variant="secondary"

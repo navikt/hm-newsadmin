@@ -1,5 +1,7 @@
 import { Faro, getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk'
 
+const APP_NAME = 'hm-newsadmin'
+
 let faro: Faro | null = null
 
 export function initInstrumentation(): void {
@@ -15,7 +17,7 @@ function getFaro(): Faro | null {
     paused: process.env.NODE_ENV !== 'production',
     url: window.appSettings.VITE_FARO_URL,
     app: {
-      name: 'hm-newsadmin',
+      name: APP_NAME,
     },
     instrumentations: [
       ...getWebInstrumentations({

@@ -3,7 +3,9 @@ import { mutate } from 'swr'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 
-export async function getNews(page = 0, size = 6, search?: string, tags?: string[], filter?: string): Promise<NewsPage> {
+export const NEWS_PAGE_SIZE = 6
+
+export async function getNews(page = 0, size = NEWS_PAGE_SIZE, search?: string, tags?: string[], filter?: string): Promise<NewsPage> {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (search) params.set('search', search)
   if (filter === 'aktiv') {

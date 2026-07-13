@@ -1,7 +1,6 @@
 import cookieParser from 'cookie-parser'
 import express, { Router } from 'express'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-import path from 'path'
 
 import { config } from './config'
 import { createMetrics } from './metrics'
@@ -21,7 +20,7 @@ export const routes = {
     const newsProxy = createProxyMiddleware({
       target: process.env.HM_NEWS_URL,
       changeOrigin: true,
-      pathFilter: ['/news/**', '/admin/**'],
+      pathFilter: config.proxy_path_filter,
     })
     return Router()
       .use(cookieParser())
@@ -41,7 +40,7 @@ export const routes = {
       })
       .get('*splat', express.static(config.build_path))
       .get('*splat', function (req, res) {
-        res.sendFile('index.html', { root: path.join(__dirname, '../../client/dist/') })
+        res.sendFile('index.html', { root: config.build_path })
       })
   },
 }
