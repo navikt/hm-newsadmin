@@ -10,8 +10,8 @@ const toLocalISOString = (date: Date): string => {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T00:00:00`
 }
 
-const MAX_TITLE_LENGTH = 100
-const MAX_DESCRIPTION_LENGTH = 100
+export const MAX_TITLE_LENGTH = 100
+export const MAX_DESCRIPTION_LENGTH = 100
 
 const newsSchema = z.object({
   title: z

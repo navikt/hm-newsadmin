@@ -40,8 +40,6 @@ export const NyhetsOversikt = () => {
     })
   }
 
-  const sortedNews = news
-
   const clearTerm = () =>
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev)
@@ -128,18 +126,18 @@ export const NyhetsOversikt = () => {
           </HStack>
           {viewMode === 'grid' ? (
             <HGrid gap="space-12" columns={{ xs: 'repeat(auto-fit, minmax(10rem, 1fr))', md: 3 }}>
-              {sortedNews.map((news) => (
+              {news.map((news) => (
                 <NewsCard key={news.id} news={news} searchParams={searchParams} variant={viewMode} />
               ))}
             </HGrid>
           ) : (
             <VStack gap="space-12">
-              {sortedNews.map((news) => (
+              {news.map((news) => (
                 <NewsCard key={news.id} news={news} searchParams={searchParams} variant={viewMode} />
               ))}
             </VStack>
           )}
-          {newsPage && sortedNews.length === 0 && <BodyLong>Ingen nyheter matchet søket ditt.</BodyLong>}
+          {newsPage && news.length === 0 && <BodyLong>Ingen nyheter matchet søket ditt.</BodyLong>}
           {totalPages > 1 && (
             <HStack justify="center">
               <NewsPagination currentPage={currentPage} totalPages={totalPages} />

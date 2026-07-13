@@ -5,21 +5,12 @@ import { initInstrumentation } from 'faro/faro'
 
 import '@navikt/ds-css'
 import { App } from 'App'
-
-export function baseUrl(url: string = '') {
-  if (process.env.NODE_ENV === 'production') {
-    return `/newsadmin${url}`
-  } else {
-    return url
-  }
-}
-
 initInstrumentation()
 
 const container = document.getElementById('root')!
 createRoot(container).render(
   <>
-    <BrowserRouter basename={baseUrl()}>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <App />
     </BrowserRouter>
   </>

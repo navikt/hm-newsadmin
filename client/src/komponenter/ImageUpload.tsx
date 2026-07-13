@@ -9,18 +9,27 @@ type Props = {
   onFileSelect?: (file: File) => void
 }
 
+const ALLOWED_TYPES = ['image/png', 'image/jpeg']
+
 export const ImageUpload = ({ defaultImageUrl, onImageRemove, onFileSelect }: Props) => {
   const labelId = useId()
   const descId = useId()
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(
     defaultImageUrl ? mediumImageLoader(defaultImageUrl) : undefined
   )
-  const [uploadError] = useState<string | undefined>()
+  const [uploadError, setUploadError] = useState<string | undefined>()
 
   function handleSelect(files: FileObject[]) {
     const file = files[0]?.file
     if (!file) return
 
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setUploadError('Kun PNG- og JPEG-bilder er tillatt')
+      return
+    }
+
+    setUploadError(undefined)
+    if (previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl)
     setPreviewUrl(URL.createObjectURL(file))
     onFileSelect?.(file)
   }
@@ -40,7 +49,11 @@ export const ImageUpload = ({ defaultImageUrl, onImageRemove, onFileSelect }: Pr
             size="small"
             icon={<XMarkIcon aria-hidden />}
             aria-label="Fjern bilde"
-            onClick={() => { setPreviewUrl(undefined); onImageRemove?.() }}
+            onClick={() => {
+              if (previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl)
+              setPreviewUrl(undefined)
+              onImageRemove?.()
+            }}
             style={{ position: 'absolute', top: '4px', right: '4px', background: 'white', borderRadius: '50%' }}
           />
         </div>

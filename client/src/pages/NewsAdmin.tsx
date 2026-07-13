@@ -17,11 +17,11 @@ import {
 } from '@navikt/ds-react'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
 import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
 import { ImageUpload } from 'komponenter/ImageUpload.tsx'
-import { useNewsForm, NewsFormValues } from 'komponenter/useNewsForm.ts'
+import {useNewsForm, NewsFormValues, MAX_TITLE_LENGTH, MAX_DESCRIPTION_LENGTH} from 'komponenter/useNewsForm.ts'
 import useSWR from 'swr'
 import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
@@ -39,7 +39,8 @@ type Props = {
 }
 
 export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSelect, loading, returnTo }: Props) => {
-  const isEdit = !!defaultValues?.title
+  const isEdit = !!newsId
+  const createDefaults = useMemo(() => ({ status: 'DRAFT' as NewsStatus }), [])
 
   const {
     register,
@@ -47,22 +48,19 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
     control,
     errors,
     setError,
+    watch,
     fromDatepickerProps,
     fromInputProps,
     toDatepickerProps,
     toInputProps,
     setValue,
-  } = useNewsForm(isEdit ? defaultValues : undefined)
+  } = useNewsForm(isEdit ? defaultValues : createDefaults)
 
   const [hasImage, setHasImage] = useState(!!defaultValues?.imageUrl)
 
   const navigate = useNavigate()
   const { data: tags } = useSWR<TagsDTO[]>('tags', () => getTags())
-  const [status, setStatus] = useState<NewsStatus>(defaultValues?.status ?? 'DRAFT')
-
-  useEffect(() => {
-    setValue('status', defaultValues?.status ?? 'DRAFT')
-  }, [])
+  const status = watch('status')
 
   useEffect(() => {
     if (tags && defaultValues?.tags) {
@@ -83,7 +81,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 setError('imageDescription', { message: 'Alt-tekst er obligatorisk når bilde er lastet opp' })
                 return
               }
-              onSubmit({ ...data, status })
+              onSubmit(data)
             },
             (errors) => console.log('Valideringsfeil:', errors)
           )}
@@ -135,13 +133,13 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             <Textarea
               {...register('title', { required: 'Mangler tittel' })}
               label="Tittel"
-              maxLength={100}
+              maxLength={MAX_TITLE_LENGTH}
               error={errors.title?.message}
             ></Textarea>
             <Textarea
               {...register('description')}
               label="Ingress"
-              maxLength={100}
+              maxLength={MAX_DESCRIPTION_LENGTH}
               error={errors.description?.message}
             ></Textarea>
             <HStack gap={'space-16'} justify={'start'} style={{ width: '100%' }}>
@@ -192,10 +190,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
                 <ToggleGroup
                   value={status}
-                  onChange={(v) => {
-                    setStatus(v as NewsStatus)
-                    setValue('status', v as NewsStatus)
-                  }}
+                  onChange={(v) => setValue('status', v as NewsStatus)}
                   label="Status"
                 >
                   <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>

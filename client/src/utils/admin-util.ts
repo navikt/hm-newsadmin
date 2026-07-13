@@ -31,36 +31,7 @@ export interface NewsDTO {
   comment?: string
 }
 
-export interface CreateNewsDto {
-  title: string
-  description: string
-  body: string
-  imageUrl?: string
-  imageDescription?: string
-  publishedFrom: Date
-  publishedTo: Date
-  tags: string[]
-}
-
-export interface EditNewsDto {
-  title: string
-  description: string
-  body: string
-  imageUrl?: string
-  imageDescription?: string
-  publishedFrom: Date
-  publishedTo: Date
-  tags: string[]
-}
-
 export interface TagsDTO {
   id: string
   tag: string
-}
-
-export enum NewsFilter {
-  Alle = 'alle',
-  Fremtidig = 'fremtidig',
-  Publisert = 'publisert',
-  Historikk = 'historikk',
 }
