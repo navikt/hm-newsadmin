@@ -13,7 +13,6 @@ import {
   ToggleGroup,
   VStack,
   Select,
-  Bleed,
 } from '@navikt/ds-react'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
 import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
@@ -221,23 +220,22 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                       </Button>
                     </Dialog.Trigger>
                     <Dialog.Popup role={'alertdialog'} closeOnOutsideClick={false}>
-                      <DialogHeader>
-                        <DialogBody>
-                          <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
-                        </DialogBody>
-                        <DialogFooter>
-                          <Dialog.CloseTrigger>
-                            <Button variant={'secondary'} data-color={'neutral'}>
-                              Avbryt
-                            </Button>
-                          </Dialog.CloseTrigger>
-                          <Dialog.CloseTrigger>
-                            <Button variant={'danger'} onClick={() => onDelete()}>
-                              Ja, slett
-                            </Button>
-                          </Dialog.CloseTrigger>
-                        </DialogFooter>
-                      </DialogHeader>
+                      <DialogHeader>Slett nyhet</DialogHeader>
+                      <DialogBody>
+                        <BodyLong>Du er i ferd med å slette denne nyheten. Denne handlingen kan ikke angres</BodyLong>
+                      </DialogBody>
+                      <DialogFooter>
+                        <Dialog.CloseTrigger>
+                          <Button variant={'secondary'} data-color={'neutral'}>
+                            Avbryt
+                          </Button>
+                        </Dialog.CloseTrigger>
+                        <Dialog.CloseTrigger>
+                          <Button variant={'danger'} onClick={() => onDelete()}>
+                            Ja, slett
+                          </Button>
+                        </Dialog.CloseTrigger>
+                      </DialogFooter>
                     </Dialog.Popup>
                   </Dialog>
                   <Button loading={loading} type="submit" variant={'primary'} style={{ flex: 1 }}>
