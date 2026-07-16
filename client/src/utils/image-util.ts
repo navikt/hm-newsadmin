@@ -21,6 +21,7 @@ export function getDefaultImageUrl(tags?: string[]): string | null {
   const lower = tags.map((t) => t.toLowerCase())
   if (lower.some((t) => t.includes('nyhetsbrev'))) return `${base}/default-nyhetsbrev.svg`
   if (lower.some((t) => t.includes('rammeavtale'))) return `${base}/default-rammeavtale.svg`
+  if (lower.some((t) => t.includes('funksjon'))) return `${base}/default-funksjonalitet.svg`
   return null
 }
 
@@ -29,6 +30,7 @@ export function getDefaultAlt(tags?: string[]): string {
   const lower = tags.map((t) => t.toLowerCase())
   if (lower.some((t) => t.includes('nyhetsbrev'))) return 'Standardbilde for nyhetsbrev'
   if (lower.some((t) => t.includes('rammeavtale'))) return 'Standardbilde for rammeavtale'
+  if (lower.some((t) => t.includes('funksjon'))) return 'Standardbilde for ny funksjon'
   return ''
 }
 
