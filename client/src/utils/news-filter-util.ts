@@ -1,5 +1,6 @@
-import { TagProps } from '@navikt/ds-react'
 import { NewsDTO } from 'utils/admin-util.ts'
+
+import { TagProps } from '@navikt/ds-react'
 
 export enum FilterValue {
   alle = 'alle',

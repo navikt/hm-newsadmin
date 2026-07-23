@@ -21,7 +21,12 @@ const bindings = {
 }
 
 const defaultModules = {
-  toolbar: [['bold', 'italic'], [{ size: ['0.75em', false, '1.5em', '2.5em'] }], [{ list: 'ordered' }, { list: 'bullet' }], ['link']],
+  toolbar: [
+    ['bold', 'italic'],
+    [{ size: ['0.75em', false, '1.5em', '2.5em'] }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link'],
+  ],
   keyboard: {
     bindings: bindings,
   },

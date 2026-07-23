@@ -1,12 +1,14 @@
+import { useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+
+import { Toast } from 'komponenter/Toast.tsx'
+import { NewsFormValues } from 'komponenter/useNewsForm.ts'
+import { NewsAdmin } from 'pages/NewsAdmin.tsx'
 import useSWR, { useSWRConfig } from 'swr'
 import { deleteNews } from 'utils/api-util.ts'
-import { NewsAdmin } from 'pages/NewsAdmin.tsx'
-import { NewsFormValues } from 'komponenter/useNewsForm.ts'
-import { useRef, useState } from 'react'
-import { Toast } from 'komponenter/Toast.tsx'
-import { CheckmarkIcon } from '@navikt/aksel-icons'
 import { uploadImageFile } from 'utils/image-util.ts'
+
+import { CheckmarkIcon } from '@navikt/aksel-icons'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 

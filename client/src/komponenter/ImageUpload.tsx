@@ -1,7 +1,9 @@
-import { BodyShort, Button, ErrorMessage, FileObject, FileUpload, Label, VStack } from '@navikt/ds-react'
 import { useId, useState } from 'react'
-import { UploadIcon, XMarkIcon } from '@navikt/aksel-icons'
+
 import { mediumImageLoader } from 'utils/image-util.ts'
+
+import { UploadIcon, XMarkIcon } from '@navikt/aksel-icons'
+import { BodyShort, Button, ErrorMessage, FileObject, FileUpload, Label, VStack } from '@navikt/ds-react'
 
 type Props = {
   defaultImageUrl?: string

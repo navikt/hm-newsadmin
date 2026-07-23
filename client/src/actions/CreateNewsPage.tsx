@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSWRConfig } from 'swr'
-import { NewsAdmin } from 'pages/NewsAdmin.tsx'
+
 import { NewsFormValues } from 'komponenter/useNewsForm.ts'
+import { NewsAdmin } from 'pages/NewsAdmin.tsx'
+import { useSWRConfig } from 'swr'
 import { uploadImageFile } from 'utils/image-util.ts'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')

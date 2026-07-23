@@ -1,6 +1,7 @@
-import { Box } from '@navikt/ds-react'
+import { getDefaultAlt, getDefaultImageUrl, mediumImageLoader } from 'utils/image-util.ts'
+
 import { NewspaperIcon } from '@navikt/aksel-icons'
-import { mediumImageLoader, getDefaultImageUrl, getDefaultAlt } from 'utils/image-util.ts'
+import { Box } from '@navikt/ds-react'
 
 type NewsImageProps = {
   imageUrl?: string
@@ -13,13 +14,7 @@ export default function NewsImage({ fontSize = '5rem', alt, imageUrl, tags }: Ne
   const src = imageUrl ? mediumImageLoader(imageUrl) : getDefaultImageUrl(tags)
   const altText = alt ?? getDefaultAlt(tags)
   if (src) {
-    return (
-      <img
-        src={src}
-        alt={altText ?? ''}
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-      />
-    )
+    return <img src={src} alt={altText ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
   }
   return (
     <Box

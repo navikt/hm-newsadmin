@@ -1,8 +1,11 @@
-import { LinkCard, Box } from '@navikt/ds-react'
-import { NewsDTO } from 'utils/admin-util.ts'
 import { Link } from 'react-router-dom'
-import NewsImage from 'komponenter/NewsImage.tsx'
+
 import NewsCardFooter from 'komponenter/NewsCardFooter.tsx'
+import NewsImage from 'komponenter/NewsImage.tsx'
+import { NewsDTO } from 'utils/admin-util.ts'
+
+import { Box, LinkCard } from '@navikt/ds-react'
+
 import './NewsCard.scss'
 
 interface NewsCardProps {

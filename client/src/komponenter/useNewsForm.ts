@@ -1,9 +1,11 @@
-import { useForm } from 'react-hook-form'
-import { useDatepicker } from '@navikt/ds-react'
 import { useEffect, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+
 import { newsStatusValues } from 'utils/admin-util.ts'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useDatepicker } from '@navikt/ds-react'
 
 const toLocalISOString = (date: Date): string => {
   const pad = (n: number) => String(n).padStart(2, '0')
@@ -18,7 +20,9 @@ const newsSchema = z.object({
     .string({ error: 'Mangler tittel' })
     .min(1, { error: 'Mangler tittel' })
     .max(MAX_TITLE_LENGTH, { error: `Tittelen kan ikke være lengre enn ${MAX_TITLE_LENGTH} tegn` }),
-  description: z.string().max(MAX_DESCRIPTION_LENGTH, { error: `Ingressen kan ikke være lengre enn ${MAX_DESCRIPTION_LENGTH} tegn` }),
+  description: z
+    .string()
+    .max(MAX_DESCRIPTION_LENGTH, { error: `Ingressen kan ikke være lengre enn ${MAX_DESCRIPTION_LENGTH} tegn` }),
   body: z.string(),
   publishedFrom: z.string({ error: 'Mangler fra-dato' }).min(1, { error: 'Mangler fra-dato' }),
   publishedTo: z.string({ error: 'Mangler til-dato' }).min(1, { error: 'Mangler til-dato' }),

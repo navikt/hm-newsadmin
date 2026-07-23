@@ -5,6 +5,7 @@ import { initInstrumentation } from 'faro/faro'
 
 import '@navikt/ds-css'
 import { App } from 'App'
+
 initInstrumentation()
 
 const container = document.getElementById('root')!

@@ -1,3 +1,16 @@
+import { useEffect, useMemo, useState } from 'react'
+import { Controller } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+
+import { FINNHJELPEMIDDEL_PUBLIC_URL } from 'environments'
+import { ImageUpload } from 'komponenter/ImageUpload.tsx'
+import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
+import { MAX_DESCRIPTION_LENGTH, MAX_TITLE_LENGTH, NewsFormValues, useNewsForm } from 'komponenter/useNewsForm.ts'
+import useSWR from 'swr'
+import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
+import { getTags } from 'utils/api-util.ts'
+
+import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
 import {
   BodyLong,
   Box,
@@ -8,24 +21,13 @@ import {
   Label,
   Link,
   Page,
-  Textarea,
+  Select,
   TextField,
+  Textarea,
   ToggleGroup,
   VStack,
-  Select,
 } from '@navikt/ds-react'
 import { DialogBody, DialogFooter, DialogHeader } from '@navikt/ds-react/Dialog'
-import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
-import { useState, useEffect, useMemo } from 'react'
-import { Controller } from 'react-hook-form'
-import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
-import { ImageUpload } from 'komponenter/ImageUpload.tsx'
-import {useNewsForm, NewsFormValues, MAX_TITLE_LENGTH, MAX_DESCRIPTION_LENGTH} from 'komponenter/useNewsForm.ts'
-import useSWR from 'swr'
-import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
-import { getTags } from 'utils/api-util.ts'
-import { useNavigate } from 'react-router-dom'
-import { FINNHJELPEMIDDEL_PUBLIC_URL } from 'environments'
 
 type Props = {
   onSubmit: (data: NewsFormValues) => void
@@ -187,11 +189,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             />
             <VStack gap={'space-32'}>
               <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
-                <ToggleGroup
-                  value={status}
-                  onChange={(v) => setValue('status', v as NewsStatus)}
-                  label="Status"
-                >
+                <ToggleGroup value={status} onChange={(v) => setValue('status', v as NewsStatus)} label="Status">
                   <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
                   <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
                 </ToggleGroup>

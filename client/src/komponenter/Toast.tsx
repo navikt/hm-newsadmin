@@ -1,7 +1,9 @@
-import { Box } from '@navikt/ds-react'
 import { ReactNode, useEffect, useRef, useState } from 'react'
-import styles from './Toast.module.scss'
 import { CSSTransition } from 'react-transition-group'
+
+import { Box } from '@navikt/ds-react'
+
+import styles from './Toast.module.scss'
 
 export interface ToastProps {
   message: ReactNode
