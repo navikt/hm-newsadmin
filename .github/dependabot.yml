@@ -11,10 +11,9 @@ updates:
       interval: daily
       time: "10:15"
     groups:
-      Minor-and-patch:
+      minor:
         update-types:
           - "minor"
-          - "patch"
     open-pull-requests-limit: 5
     ignore:
       - dependency-name: "*"
@@ -29,6 +28,9 @@ updates:
       interval: daily
     cooldown:
       default-days: 7
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
