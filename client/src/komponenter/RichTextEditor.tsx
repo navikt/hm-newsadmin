@@ -83,7 +83,7 @@ const RichTextEditorQuill = forwardRef(function TempComp(
     }
 
     quill.on(Quill.events.TEXT_CHANGE, () => {
-      onTextChange(quill.root.innerHTML, quill.getText())
+      onTextChange(quill.getSemanticHTML(), quill.getText())
     })
 
     Link.sanitize = (url) => {
