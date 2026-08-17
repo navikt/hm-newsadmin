@@ -13,16 +13,12 @@ const toLocalISOString = (date: Date): string => {
 }
 
 export const MAX_TITLE_LENGTH = 100
-export const MAX_DESCRIPTION_LENGTH = 100
 
 const newsSchema = z.object({
   title: z
     .string({ error: 'Mangler tittel' })
     .min(1, { error: 'Mangler tittel' })
     .max(MAX_TITLE_LENGTH, { error: `Tittelen kan ikke være lengre enn ${MAX_TITLE_LENGTH} tegn` }),
-  description: z
-    .string()
-    .max(MAX_DESCRIPTION_LENGTH, { error: `Ingressen kan ikke være lengre enn ${MAX_DESCRIPTION_LENGTH} tegn` }),
   body: z.string(),
   publishedFrom: z.string({ error: 'Mangler fra-dato' }).min(1, { error: 'Mangler fra-dato' }),
   publishedTo: z.string({ error: 'Mangler til-dato' }).min(1, { error: 'Mangler til-dato' }),

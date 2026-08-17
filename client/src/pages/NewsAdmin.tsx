@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { FINNHJELPEMIDDEL_PUBLIC_URL } from 'environments'
 import { ImageUpload } from 'komponenter/ImageUpload.tsx'
 import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
-import { MAX_DESCRIPTION_LENGTH, MAX_TITLE_LENGTH, NewsFormValues, useNewsForm } from 'komponenter/useNewsForm.ts'
+import { MAX_TITLE_LENGTH, NewsFormValues, useNewsForm } from 'komponenter/useNewsForm.ts'
 import useSWR from 'swr'
 import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
 import { getTags } from 'utils/api-util.ts'
@@ -136,12 +136,6 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               label="Tittel"
               maxLength={MAX_TITLE_LENGTH}
               error={errors.title?.message}
-            ></Textarea>
-            <Textarea
-              {...register('description')}
-              label="Ingress"
-              maxLength={MAX_DESCRIPTION_LENGTH}
-              error={errors.description?.message}
             ></Textarea>
             <HStack gap={'space-16'} justify={'start'} style={{ width: '100%' }}>
               <DatePicker {...fromDatepickerProps}>
