@@ -191,7 +191,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               <HStack gap="space-8" align="end" justify={'space-between'} style={{ width: '100%' }}>
                 <ToggleGroup value={status} onChange={(v) => setValue('status', v as NewsStatus)} label="Status">
                   <ToggleGroup.Item value="DRAFT">Utkast</ToggleGroup.Item>
-                  <ToggleGroup.Item value="PUBLISHED">Publisert</ToggleGroup.Item>
+                  <ToggleGroup.Item value="PUBLISHED">Ferdigstilt</ToggleGroup.Item>
                 </ToggleGroup>
                 {newsId && (
                   <Button
