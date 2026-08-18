@@ -1,5 +1,5 @@
 import { mutate } from 'swr'
-import { MediaDTO, NewsPage, TagsDTO } from 'utils/admin-util.ts'
+import { MediaDTO, NewsPage, TagsDTO } from 'utils/admin-util.tsx'
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 

@@ -7,7 +7,7 @@ import { ImageUpload } from 'komponenter/ImageUpload.tsx'
 import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
 import { MAX_TITLE_LENGTH, NewsFormValues, useNewsForm } from 'komponenter/useNewsForm.ts'
 import useSWR from 'swr'
-import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
+import { NewsStatus, TagsDTO } from 'utils/admin-util.tsx'
 import { getTags } from 'utils/api-util.ts'
 
 import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
@@ -22,8 +22,8 @@ import {
   Link,
   Page,
   Select,
-  TextField,
   Textarea,
+  TextField,
   ToggleGroup,
   VStack,
 } from '@navikt/ds-react'
@@ -90,7 +90,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
           <VStack gap="space-16" paddingBlock={'space-0 space-24'}>
             <HStack align={'center'} style={{ position: 'relative' }}>
               <Link
-                onClick={() => navigate(returnTo ?? '/')}
+                href={returnTo ?? '/'}
                 style={{ position: 'absolute', right: 'calc(100% + 2rem)' }}
               >
                 <ArrowLeftIcon />

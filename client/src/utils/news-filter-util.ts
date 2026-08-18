@@ -1,4 +1,4 @@
-import { NewsDTO } from 'utils/admin-util.ts'
+import { NewsDTO } from 'utils/admin-util.tsx'
 
 import { TagProps } from '@navikt/ds-react'
 

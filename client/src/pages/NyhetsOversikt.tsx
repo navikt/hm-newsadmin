@@ -3,19 +3,16 @@ import { Link, useSearchParams } from 'react-router-dom'
 import NewsCard from 'komponenter/NewsCard.tsx'
 import NewsPagination from 'komponenter/NewsPagination.tsx'
 import useSWR from 'swr'
-import { NewsPage } from 'utils/admin-util.ts'
-import { NEWS_PAGE_SIZE, getNews, getTags } from 'utils/api-util.ts'
+import { NewsPage } from 'utils/admin-util.tsx'
+import { getNews, getTags, NEWS_PAGE_SIZE } from 'utils/api-util.ts'
 import { FilterValue } from 'utils/news-filter-util.ts'
-
-import { BulletListIcon, SquareGridIcon } from '@navikt/aksel-icons'
-import { BodyLong, Button, Chips, HGrid, HStack, Heading, Page, Search, ToggleGroup, VStack } from '@navikt/ds-react'
+import { BodyLong, Button, Chips, Heading, HGrid, HStack, Page, Search, ToggleGroup, VStack } from '@navikt/ds-react'
 
 export const NyhetsOversikt = () => {
   const { data: tagsData } = useSWR('tags', () => getTags())
   const [searchParams, setSearchParams] = useSearchParams()
   const searchTerm = searchParams.get('term') || ''
   const filterValue = (searchParams.get('filter') as FilterValue) || FilterValue.alle
-  const viewMode = (searchParams.get('view') as 'grid' | 'list') || 'grid'
   const selectedTags = searchParams.getAll('tag')
   const currentPage = Number(searchParams.get('page') ?? '1')
 
@@ -113,38 +110,14 @@ export const NyhetsOversikt = () => {
               <ToggleGroup.Item value="DRAFT" label="Utkast" />
               <ToggleGroup.Item value="utløpt" label="Utløpt" />
             </ToggleGroup>
-            <ToggleGroup
-              value={viewMode}
-              onChange={(v) =>
-                setSearchParams((prev) => {
-                  const next = new URLSearchParams(prev)
-                  next.set('view', v)
-                  return next
-                })
-              }
-              label={'Visning'}
-            >
-              <ToggleGroup.Item value="grid" aria-label="Rutenett">
-                <SquareGridIcon aria-hidden />
-              </ToggleGroup.Item>
-              <ToggleGroup.Item value="list" aria-label="Liste">
-                <BulletListIcon aria-hidden />
-              </ToggleGroup.Item>
-            </ToggleGroup>
           </HStack>
-          {viewMode === 'grid' ? (
+
             <HGrid gap="space-12" columns={{ xs: 'repeat(auto-fit, minmax(10rem, 1fr))', md: 3 }}>
               {news.map((news) => (
-                <NewsCard key={news.id} news={news} searchParams={searchParams} variant={viewMode} />
+                <NewsCard key={news.id} news={news} searchParams={searchParams}/>
               ))}
             </HGrid>
-          ) : (
-            <VStack gap="space-12">
-              {news.map((news) => (
-                <NewsCard key={news.id} news={news} searchParams={searchParams} variant={viewMode} />
-              ))}
-            </VStack>
-          )}
+
           {newsPage && news.length === 0 && <BodyLong>Ingen nyheter matchet søket ditt.</BodyLong>}
           {totalPages > 1 && (
             <HStack justify="center">
