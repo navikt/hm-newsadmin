@@ -12,7 +12,7 @@ import { getTags } from 'utils/api-util.ts'
 
 import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
 import {
-  BodyLong,
+  BodyLong, BodyShort,
   Box,
   Button,
   DatePicker,
@@ -149,7 +149,6 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             <Controller
               name="body"
               control={control}
-              rules={{ required: 'Mangler innhold' }}
               render={({ field }) => (
                 <>
                   <RichTextEditorQuill
@@ -159,6 +158,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 </>
               )}
             />
+            <BodyShort weight={'semibold'} style={{color: 'var(--ax-text-danger-subtle)'}}>{errors.body?.message && "Mangler Innhold"}</BodyShort>
             <Controller
               name="tags"
               control={control}
