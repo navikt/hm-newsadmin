@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom'
 import { FINNHJELPEMIDDEL_PUBLIC_URL } from 'environments'
 import { ImageUpload } from 'komponenter/ImageUpload.tsx'
 import RichTextEditorQuill from 'komponenter/RichTextEditor.tsx'
-import { MAX_DESCRIPTION_LENGTH, MAX_TITLE_LENGTH, NewsFormValues, useNewsForm } from 'komponenter/useNewsForm.ts'
+import { MAX_TITLE_LENGTH, NewsFormValues, useNewsForm } from 'komponenter/useNewsForm.ts'
 import useSWR from 'swr'
-import { NewsStatus, TagsDTO } from 'utils/admin-util.ts'
+import { NewsStatus, TagsDTO } from 'utils/admin-util.tsx'
 import { getTags } from 'utils/api-util.ts'
 
 import { ArrowLeftIcon, EyeIcon, TrashIcon } from '@navikt/aksel-icons'
 import {
-  BodyLong,
+  BodyLong, BodyShort,
   Box,
   Button,
   DatePicker,
@@ -22,8 +22,8 @@ import {
   Link,
   Page,
   Select,
-  TextField,
   Textarea,
+  TextField,
   ToggleGroup,
   VStack,
 } from '@navikt/ds-react'
@@ -90,7 +90,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
           <VStack gap="space-16" paddingBlock={'space-0 space-24'}>
             <HStack align={'center'} style={{ position: 'relative' }}>
               <Link
-                onClick={() => navigate(returnTo ?? '/')}
+                href={returnTo ?? '/'}
                 style={{ position: 'absolute', right: 'calc(100% + 2rem)' }}
               >
                 <ArrowLeftIcon />
@@ -137,12 +137,6 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
               maxLength={MAX_TITLE_LENGTH}
               error={errors.title?.message}
             ></Textarea>
-            <Textarea
-              {...register('description')}
-              label="Ingress"
-              maxLength={MAX_DESCRIPTION_LENGTH}
-              error={errors.description?.message}
-            ></Textarea>
             <HStack gap={'space-16'} justify={'start'} style={{ width: '100%' }}>
               <DatePicker {...fromDatepickerProps}>
                 <DatePicker.Input {...fromInputProps} label={'Fra dato'} error={errors.publishedFrom?.message} />
@@ -155,7 +149,6 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
             <Controller
               name="body"
               control={control}
-              rules={{ required: 'Mangler innhold' }}
               render={({ field }) => (
                 <>
                   <RichTextEditorQuill
@@ -165,6 +158,7 @@ export const NewsAdmin = ({ onSubmit, onDelete, defaultValues, newsId, onFileSel
                 </>
               )}
             />
+            <BodyShort weight={'semibold'} style={{color: 'var(--ax-text-danger-subtle)'}}>{errors.body?.message && "Mangler Innhold"}</BodyShort>
             <Controller
               name="tags"
               control={control}
