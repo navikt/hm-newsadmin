@@ -1,6 +1,6 @@
-import { TagProps } from '@navikt/ds-react'
+import { Box, TagProps } from '@navikt/ds-react'
 import { ReactElement } from 'react'
-import { DocPencilIcon, LightBulbIcon, NewsletterIcon } from '@navikt/aksel-icons'
+import { DocPencilIcon, LightBulbIcon, MegaphoneSpeakingIcon, NewsletterIcon } from '@navikt/aksel-icons'
 
 
 export interface MediaDTO {
@@ -17,15 +17,24 @@ export interface NewsPage {
   totalElements: number
 }
 
+export type TagConfig = {
+  tagColor: TagProps['data-color']
+  defaultBackgroundColor: string
+  defaultIcon: ReactElement
+}
+
 export enum NewsTag {
   NYHETSBREV = 'Nyhetsbrev',
   RAMMEAVTALE = 'Rammeavtale',
   NY_FUNKSJON = 'Ny funksjon',
+  AVTALER = 'Avtaler',
+  FRA_HJELPEMIDDELOMRÅDET = 'Fra hjelpemiddelområdet',
+  TIPS_OG_TRIKS = 'Tips og triks'
 }
 
 export const newsTagMeta: Record<
   NewsTag,
-  { tagColor: TagProps['data-color']; defaultBackgroundColor: string; defaultIcon: ReactElement }
+  TagConfig
 > = {
   [NewsTag.NYHETSBREV]: {
     tagColor: 'info',
@@ -42,6 +51,39 @@ export const newsTagMeta: Record<
     defaultBackgroundColor: 'var(--ax-bg-warning-soft)',
     defaultIcon: <LightBulbIcon color={'var(--ax-bg-warning-moderate-pressed)'} />
   },
+  [NewsTag.FRA_HJELPEMIDDELOMRÅDET]: {
+    tagColor: 'info',
+    defaultBackgroundColor: 'var(--ax-bg-info-moderate)',
+    defaultIcon:  <Box paddingInline={'space-12 space-0'}>
+      <MegaphoneSpeakingIcon color={'var(--ax-bg-accent-moderate-pressed)'} aria-hidden />
+    </Box>
+  },
+  [NewsTag.AVTALER]: {
+    tagColor: 'danger',
+    defaultBackgroundColor: 'var(--ax-bg-brand-magenta-soft)',
+    defaultIcon: <DocPencilIcon color={'var(--ax-bg-brand-magenta-moderate-pressed)'} />
+  },
+  [NewsTag.TIPS_OG_TRIKS]: {
+    tagColor: 'warning',
+    defaultBackgroundColor: 'var(--ax-bg-warning-soft)',
+    defaultIcon: <LightBulbIcon color={'var(--ax-bg-warning-moderate-pressed)'} />
+  },
+}
+
+export const getTagConfig = (tag: NewsTag): TagConfig => {
+  if (!Object.values(NewsTag).includes(tag)) {
+    return {
+      tagColor: 'info',
+      defaultBackgroundColor: 'var(--ax-bg-info-moderate)',
+      defaultIcon: (
+        <Box paddingInline={'space-12 space-0'}>
+          <MegaphoneSpeakingIcon color={'var(--ax-bg-accent-moderate-pressed)'} aria-hidden />
+        </Box>
+      ),
+    }
+  }
+
+  return newsTagMeta[tag]
 }
 
 
