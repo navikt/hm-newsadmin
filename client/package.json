@@ -33,7 +33,7 @@
     "react-hook-form": "^7.53.1",
     "react-i18next": "^17.0.7",
     "react-player": "^3.4.0",
-    "react-router-dom": "7.18.0",
+    "react-router-dom": "7.18.4",
     "react-transition-group": "^4.4.5",
     "styled-components": "^6.1.13",
     "swr": "^2.4.1",
