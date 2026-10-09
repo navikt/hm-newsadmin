@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 import NewsCardFooter from 'komponenter/NewsCardFooter.tsx'
 import NewsImage from 'komponenter/NewsImage.tsx'
-import { NewsDTO, newsTagMeta } from 'utils/admin-util.tsx'
+import { getTagConfig, NewsDTO, newsTagMeta } from 'utils/admin-util.tsx'
 
 import { Box, LinkCard } from '@navikt/ds-react'
 
@@ -17,7 +17,7 @@ export default function NewsCard({ news, searchParams}: NewsCardProps) {
   const query = searchParams.toString()
   const href = `/aktuelt/${news.id}/edit${query ? `?${query}` : ''}`
 
-  const tagMetaData = newsTagMeta[news.tags[0]]
+  const tagMetaData = getTagConfig(news.tags[0])
 
   return (
     <LinkCard style={{minHeight: '450px' } }>

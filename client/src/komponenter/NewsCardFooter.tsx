@@ -1,4 +1,4 @@
-import { NewsDTO, newsTagMeta } from 'utils/admin-util.tsx'
+import { getTagConfig, NewsDTO } from 'utils/admin-util.tsx'
 import { displayStatusTagProps, getDisplayStatus } from 'utils/news-filter-util.ts'
 
 import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
@@ -24,7 +24,7 @@ export default function NewsCardFooter({ news }: { news: NewsDTO }) {
       </BodyShort>
       <HStack gap={'space-4'} wrap justify={'space-between'} width={'100%'}>
         {news.tags?.map((tag) => {
-          const meta = newsTagMeta[tag]
+          const meta = getTagConfig(tag)
           return (
             <Tag key={tag} size={'small'} variant={'moderate'} data-color={meta?.tagColor ?? 'neutral'}>
               {tag}
