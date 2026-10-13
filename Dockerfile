@@ -23,7 +23,9 @@ RUN npm run && npm run build
 FROM node:25-alpine AS server-dependencies
 WORKDIR /app
 COPY server/package.json server/package-lock.json ./
-RUN npm install --omit=dev
+RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
+    NODE_AUTH_TOKEN=$(cat /run/secrets/NODE_AUTH_TOKEN) \
+    npm install --omit=dev
 
 FROM gcr.io/distroless/nodejs24-debian13 AS runtime
 
