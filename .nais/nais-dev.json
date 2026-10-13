@@ -16,5 +16,6 @@
     "min": 1,
     "max": 1
   },
+  "news_audience": "api://dev-gcp.teamdigihot.hm-finnhjelpemiddel-news/.default",
   "app_name": "hm-newsadmin"
 }

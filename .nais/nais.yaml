@@ -37,6 +37,8 @@ spec:
       value: {{faro_url}}
     - name: HM_NEWS_URL
       value: {{hm_news_url}}
+    - name: NEWS_AUDIENCE
+      value: {{news_audience}}
   replicas:
     min: {{replicas.min}}
     max: {{replicas.max}}

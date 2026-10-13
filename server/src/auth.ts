@@ -16,12 +16,12 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     return localDev(pathname, req, next)
   }
 
-  const token = getToken(req.headers.authorization ?? '')
+  const token = getToken(req)
   if (!token) {
     res.redirect(loginUrl)
   }
 
-  const validationResult = await validateToken(token)
+  const validationResult = await validateToken(token!)
   if (!validationResult.ok && validationResult.errorType === 'token expired') {
     res.redirect(loginUrl)
   } else if (!validationResult.ok) {
@@ -38,7 +38,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     group = categoryAdminGroupDev
   }
 
-  const azureToken = parseAzureUserToken(token)
+  const azureToken = parseAzureUserToken(token!)
   if (!azureToken.ok) {
     console.info('azuretoken not ok: ', azureToken.error)
     return errorResponse('azure token not ok')
@@ -48,14 +48,14 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   if (pathname.startsWith('/admin')) {
-    const audience = process.env.NEWS_AUDIENCE || 'test'
+    const audience = process.env.NEWS_AUDIENCE
 
     if (!audience) {
       console.info('ingen miljøvariabler for backend_audience')
       return errorResponse('no audience')
     }
 
-    const obo = await requestOboToken(token, audience)
+    const obo = await requestOboToken(token!, audience)
     if (!obo.ok) {
       console.info('obo not ok:', obo.error)
       return errorResponse('obo token not ok')
