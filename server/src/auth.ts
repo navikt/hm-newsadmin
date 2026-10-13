@@ -9,9 +9,8 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
   const pathname = req.path
   const origin = req.host
-  const refererUrl = req.headers.referer
-  const loginUrl = `https://${origin}/oauth2/login?redirect=${refererUrl}`
-
+  const loginUrl = `https://${origin}/oauth2/login?redirect=${origin}${pathname}`
+  
   if (isLocal) {
     return localDev(pathname, req, next)
   }
