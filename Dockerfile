@@ -15,8 +15,8 @@ FROM node:26-alpine AS server-builder
 WORKDIR /app
 COPY server/package.json server/package-lock.json ./
 RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
-    NODE_AUTH_TOKEN=$(cat /run/secrets/NODE_AUTH_TOKEN) \
-    npm ci
+        echo '//npm.pkg.github.com/:_authToken='$(cat /run/secrets/NODE_AUTH_TOKEN) >> .npmrc
+RUN npm ci
 COPY server .
 RUN npm run && npm run build
 
@@ -24,8 +24,8 @@ FROM node:26-alpine AS server-dependencies
 WORKDIR /app
 COPY server/package.json server/package-lock.json ./
 RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
-    NODE_AUTH_TOKEN=$(cat /run/secrets/NODE_AUTH_TOKEN) \
-    npm install --omit=dev
+    echo '//npm.pkg.github.com/:_authToken='$(cat /run/secrets/NODE_AUTH_TOKEN) >> .npmrc
+RUN npm install --omit=dev
 
 FROM gcr.io/distroless/nodejs24-debian13 AS runtime
 
