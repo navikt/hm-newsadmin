@@ -7,4 +7,5 @@ export const config = {
   node_env: process.env.NODE_ENV || 'production',
   nais_cluster_name: process.env.NAIS_CLUSTER_NAME,
   proxy_path_filter: ['/news/**', '/admin/**'],
+  public_origin_redirect: process.env.PUBLIC_ORIGIN || 'localhost:3000'
 }
