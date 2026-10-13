@@ -42,3 +42,9 @@ spec:
   replicas:
     min: {{replicas.min}}
     max: {{replicas.max}}
+  azure:
+    application:
+      enabled: true
+      claims:
+        groups:
+          - id: {{access_group}}
