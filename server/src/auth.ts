@@ -18,12 +18,15 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
   const token = getToken(req)
   if (!token) {
+    console.info('no token:', req.headers)
     res.redirect(loginUrl)
+    return
   }
 
   const validationResult = await validateToken(token!)
   if (!validationResult.ok && validationResult.errorType === 'token expired') {
     res.redirect(loginUrl)
+    return 
   } else if (!validationResult.ok) {
     console.info('validation not ok:', validationResult.error)
     return errorResponse('token validation')
@@ -45,6 +48,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
   } else if (azureToken.ok && (!azureToken.groups || !azureToken.groups.includes(group))) {
     console.info('not a member of correct azure group')
     res.redirect(`${origin}/tilgang`)
+    return 
   }
 
   if (pathname.startsWith('/admin')) {
