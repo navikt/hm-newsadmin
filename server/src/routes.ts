@@ -27,7 +27,6 @@ export const routes = {
     return Router()
       .use(cookieParser())
       .use(auth)
-      .use(loginRedirect)
       .use(newsProxy)
       .get('/settings.js', (_, res) => {
         const appSettings = {
