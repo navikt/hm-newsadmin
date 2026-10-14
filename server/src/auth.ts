@@ -1,7 +1,6 @@
 import { NextFunction, type Request, type Response } from 'express'
 
 import { getToken, parseAzureUserToken, requestOboToken, validateToken } from '@navikt/oasis'
-import { config } from './config'
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   console.info('auth')
@@ -10,7 +9,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
   const pathname = req.path
   const origin = req.host
-  const loginUrl = `https://${origin}/oauth2/login?redirect=${config.public_origin_redirect}`
+  const loginUrl = `https://${origin}/oauth2/login`
   
   if (isLocal) {
     return localDev(pathname, req, next)
