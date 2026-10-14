@@ -55,8 +55,8 @@ function htmlPlugin({ development }: { development?: boolean }): Plugin {
 }
 
 export default defineConfig((env) => ({
-  base: env.mode === 'development' ? '/' : '/newsadmin',
-  plugins: [htmlPlugin({ development: env.mode === 'test' || env.mode === 'development' }), react()],
+  base: env.mode === 'dev' ? '/' : '/newsadmin',
+  plugins: [htmlPlugin({ development: env.mode === 'test' || env.mode === 'dev' }), react()],
   resolve: {
     tsconfigPaths: true,
   },
