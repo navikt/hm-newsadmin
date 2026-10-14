@@ -17,15 +17,16 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
   const token = getToken(req)
   if (!token) {
     console.info('no token')
-    res.status(401).send()
-    return 
+    res.status(401)
+    return next()
   }
 
   const validationResult = await validateToken(token!)
   if (!validationResult.ok && validationResult.errorType === 'token expired') {
     console.info('token expired')
-    res.status(401).send()
-    return 
+    res.status(401)
+    return next()
+
   } else if (!validationResult.ok) {
     console.info('validation not ok:', validationResult.error)
     return errorResponse('token validation')

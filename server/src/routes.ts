@@ -28,6 +28,7 @@ export const routes = {
       .use(cookieParser())
       .use(auth)
       .use(newsProxy)
+      .use(loginRedirect)
       .get('/settings.js', (_, res) => {
         const appSettings = {
           VITE_HM_REGISTER_URL: process.env.VITE_HM_REGISTER_URL,
@@ -41,16 +42,18 @@ export const routes = {
       })
       .get('*splat', express.static(config.build_path))
       .get('*splat', function (req, res) {
+        console.info('res:', res.getHeaders())
         res.sendFile('index.html', { root: config.build_path })
       })
-  },
+  }
 }
 
 const loginRedirect = (req: Request, res: Response, next: NextFunction) => {
     if (res.statusCode === 401) {
       const redirect = req.headers.referer || config.public_origin_redirect
       const loginUrl = `https://${req.host}/oauth2/login?redirect=${redirect}`
+      console.info('redirect')
       res.redirect(loginUrl)
     }
-    next()
+    return next()
 }
