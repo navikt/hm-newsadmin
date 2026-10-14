@@ -1,5 +1,5 @@
 import cookieParser from 'cookie-parser'
-import express, { Router } from 'express'
+import express, { NextFunction, Request, Response, Router } from 'express'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 
 import { auth } from './auth'
@@ -27,6 +27,7 @@ export const routes = {
     return Router()
       .use(cookieParser())
       .use(auth)
+      .use(loginRedirect)
       .use(newsProxy)
       .get('/settings.js', (_, res) => {
         const appSettings = {
@@ -44,4 +45,13 @@ export const routes = {
         res.sendFile('index.html', { root: config.build_path })
       })
   },
+}
+
+const loginRedirect = (req: Request, res: Response, next: NextFunction) => {
+    if (res.statusCode === 401) {
+      const redirect = req.headers.referer || config.public_origin_redirect
+      const loginUrl = `https://${req.host}/oauth2/login?redirect=${redirect}`
+      res.redirect(loginUrl)
+    }
+    next()
 }

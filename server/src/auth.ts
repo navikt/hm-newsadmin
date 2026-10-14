@@ -1,7 +1,6 @@
 import { NextFunction, type Request, type Response } from 'express'
 
 import { getToken, parseAzureUserToken, requestOboToken, validateToken } from '@navikt/oasis'
-import { config } from './config'
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   console.info('auth')
@@ -10,7 +9,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
   const pathname = req.path
   const origin = req.host
-  const loginUrl = `https://${origin}/oauth2/login?redirect=${config.public_origin_redirect}`
   
   if (isLocal) {
     return localDev(pathname, req, next)
@@ -18,15 +16,16 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
   const token = getToken(req)
   if (!token) {
-    console.info('no token:', req.headers)
-    res.redirect(loginUrl)
-    return
+    console.info('no token')
+    res.status(401)
+    return next()
   }
 
   const validationResult = await validateToken(token!)
   if (!validationResult.ok && validationResult.errorType === 'token expired') {
-    res.redirect(loginUrl)
-    return 
+    console.info('token expired')
+    res.status(401)
+    return next()
   } else if (!validationResult.ok) {
     console.info('validation not ok:', validationResult.error)
     return errorResponse('token validation')
