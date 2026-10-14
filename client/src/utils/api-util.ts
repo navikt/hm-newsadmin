@@ -31,6 +31,7 @@ export async function getNews(
   const res = await fetch(`${base}/admin/news?${params.toString()}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
+    credentials: "include"
   })
 
   const data = await res.json()
@@ -47,6 +48,7 @@ export async function getNews(
 export async function deleteNews(id: string): Promise<void> {
   const response = await fetch(`${base}/admin/news/${id}`, {
     method: 'DELETE',
+    credentials: "include"
   })
   if (!response.ok) {
     throw new Error(`Sletting feilet: ${response.status}`)
@@ -60,6 +62,7 @@ export async function uploadNewsMedia(newsId: string, file: File): Promise<Media
   const res = await fetch(`${base}/admin/news/${newsId}/media`, {
     method: 'POST',
     body: formData,
+    credentials: "include"
   })
   if (!res.ok) throw new Error(`Bildeoplasting feilet: ${res.status}`)
   return res.json()
@@ -71,6 +74,7 @@ export async function getTags(): Promise<TagsDTO[]> {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: "include"
   })
 
   if (!res.ok) {
