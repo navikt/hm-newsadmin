@@ -1,4 +1,4 @@
-FROM node:25-alpine AS client-builder
+FROM node:26-alpine AS client-builder
 WORKDIR /app
 COPY client/package.json client/package-lock.json ./
 RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
@@ -11,7 +11,7 @@ ENV CLUSTER ${CLUSTER}
 
 RUN npm run && npm run build
 
-FROM node:25-alpine AS server-builder
+FROM node:26-alpine AS server-builder
 WORKDIR /app
 COPY server/package.json server/package-lock.json ./
 RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
@@ -20,7 +20,7 @@ RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
 COPY server .
 RUN npm run && npm run build
 
-FROM node:25-alpine AS server-dependencies
+FROM node:26-alpine AS server-dependencies
 WORKDIR /app
 COPY server/package.json server/package-lock.json ./
 RUN npm install --omit=dev
