@@ -1,8 +1,6 @@
-import { expect, vi } from 'vitest'
+import { vi } from 'vitest'
 
-import * as matchers from '@testing-library/jest-dom/matchers'
-
-expect.extend(matchers)
+import '@testing-library/jest-dom/vitest'
 
 vi.mock('environments', () => ({
   HM_REGISTER_URL: vi.fn(() => 'http://localhost:8080'),
